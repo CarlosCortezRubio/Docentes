@@ -23,6 +23,10 @@
     </form>
 @stop
 @section('content')
+    @extends('examen.partials.agregar')
+    @extends('examen.partials.editar')
+    @extends('examen.partials.eliminar')
+    @extends('examen.partials.plus')
     <div class="card">
         <div class="card-header">
             <div class='col'>
@@ -91,10 +95,7 @@
             </table>
         </div>
     </div>
-    @extends('examen.partials.agregar')
-    @extends('examen.partials.editar')
-    @extends('examen.partials.eliminar')
-    @extends('examen.partials.plus')
+    
 @stop
 @section('css')
 <style>
