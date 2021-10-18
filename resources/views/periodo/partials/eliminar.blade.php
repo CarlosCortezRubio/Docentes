@@ -2,13 +2,13 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger">
-                <h5 class="modal-title">Desactivar Periodo</h5>
+                <h5 class="modal-title">Inhabilitar Periodo</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
             <div class="modal-body">
-                <p>¿Desea Desactivar el periodo actual?</p>
+                <p>¿Desea inhabilitar el periodo actual?</p>
             </div>
             <div class="modal-footer centrar-content">
                 <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
