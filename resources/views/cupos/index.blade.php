@@ -21,35 +21,184 @@
                 <option value="2022">2022</option>
             </select>
         </div>
+        @if (getTipoUsuario()=='Administrador' && getSeccion()==null)
         <div class="col-md col-sm col-xs">
             <label for="">Secciòn</label>
             <select class="buscar browser-default custom-select">
                 <option >Todos</option>
-                <option value="">Superior</option>
-                <option value="">Escolar</option>
-                <option value="">Post. Escolar</option>
+                @foreach ($secciones as $k => $secc)
+                <option value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
+                @endforeach
             </select>
         </div>
+        @endif
         <div class="col-md col-sm col-xs flex-center btn-search">
             <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> Buscar</button>
         </div>
     </form>
 @stop
 @section('content')
+    <!--------------------------MODALS------------------------------------>
+    <div class="modal fade" id="modaladd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title">Registrar</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                <form action="" class='formulario'>
+                        <div class="form-group">
+                            <div class="row ">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Programa de Estudio</label>
+                                    <select class="browser-default custom-select">
+                                        <option value="">---- Seleccione -----</option>
+                                        <option value="">Guitarra</option>
+                                        <option value="">Violín</option>
+                                        <option value="">Violonchelo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Periodo</label>
+                                    <select class="form-control" name="espec" id="espec">
+                                        <option value="">---- Seleccione -----</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Secciòn</label>
+                                    <select class="browser-default custom-select">
+                                        <option value="">---- Seleccione -----</option>
+                                        @foreach ($secciones as $k => $secc)
+                                        <option value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Cantidad Cupos</label>
+                                    <input type="number" class="form-control" placeholder="Ingrese Cupos" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Guardar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--------------------------------------------------------------------->
+    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title">Editar</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                <form action="" class='formulario'>
+                        <div class="form-group">
+                            <div class="row ">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Programa de Estudio</label>
+                                    <select class="browser-default custom-select">
+                                        <option value="">---- Seleccione -----</option>
+                                        <option selected value="">Guitarra</option>
+                                        <option value="">Violín</option>
+                                        <option value="">Violonchelo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Periodo</label>
+                                    <select class="form-control" name="espec" id="espec">
+                                        <option value="">---- Seleccione -----</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Secciòn</label>
+                                    <select class="browser-default custom-select">
+                                        <option value="">---- Seleccione -----</option>
+                                        @foreach ($secciones as $k => $secc)
+                                        <option value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Cantidad Cupos</label>
+                                    <input type="number" class="form-control" placeholder="Ingrese Cupos" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Editar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--------------------------------------------------------------------->
+    <div class="modal fade" id="modaldelete" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title">Eliminar</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Desea eliminar la configuraciòn de cupos?</p>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--------------------------BODY--------------------------------------->
     <div class="card">
         <div class="card-header">
             <div class='col'>
                 <button data-toggle="modal" data-target="#modaladd" class='btn btn-success'><i class="fa fa-plus" aria-hidden="true"></i> Nuevo</button>
             </div>
         </div>
-        <div class="card-body"> 
+        <div class="card-body">
             <table class="table tablaresponse tprincipal table-striped">
                 <thead class="thead">
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Programa de Estudio</th>
                         <th scope="col">Periodo</th>
+                        @if (getTipoUsuario()=='Administrador' && getSeccion()==null)
                         <th scope="col">Seccion</th>
+                        @endif
                         <th scope="col">Cantidad de Cupos</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -59,42 +208,20 @@
                         <th scope="row">1</th>
                         <td>Guitarra</td>
                         <td>2019</td>
+                        @if (getTipoUsuario()=='Administrador' && getSeccion()==null)
                         <td>Escolar</td>
+                        @endif
                         <td>25</td>
                         <td>
                             <button data-toggle="modal" data-target="#modaledit" class='btn btn-primary fa fa-pencil'></button>
                             <button data-toggle="modal" data-target="#modaldelete" class='btn btn-danger fa fa-trash'></button>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Violin</td>
-                        <td>2020</td>
-                        <td>Escolar</td>
-                        <td>12</td>
-                        <td>
-                            <button data-toggle="modal" data-target="#modaledit" class='btn btn-primary fa fa-pencil'></button>
-                            <button data-toggle="modal" data-target="#modaldelete" class='btn btn-danger fa fa-trash'></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Violonchelo</td>
-                        <td>2021</td>
-                        <td>Escolar</td>
-                        <td>12</td>
-                        <td>
-                            <button data-toggle="modal" data-target="#modaledit" class='btn btn-primary fa fa-pencil'></button>
-                            <button data-toggle="modal" data-target="#modaldelete" class='btn btn-danger fas fa-trash'></button>
-                        </td>  
-                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    @extends('cupos.partials.agregar')
-    @extends('cupos.partials.editar')
-    @extends('cupos.partials.eliminar')
+    <!--------------------------------------------------------------------->
 @stop
 @section('css')
 <style>

@@ -22,7 +22,14 @@ Route::get('/limpiar', function () {
 Auth::routes();
 Route::middleware(['auth'])->group(function() {
     Route::get('/Principal', 'HomeController@index')->name('home');
+    ///////////////PERIODOS////////////////
     Route::get('/Periodos', 'periodo\PeriodoController@index')->name('periodo');
+    Route::post('/Periodos/Nuevo', 'periodo\PeriodoController@insert')->name('periodo.insert');
+    Route::post('/Periodos/Actualizar', 'periodo\PeriodoController@update')->name('periodo.update');
+    Route::post('/Periodos/ActualizarEstado', 'periodo\PeriodoController@updateEstado')->name('periodo.update.estado');
+    Route::get('/Periodos/Mensaje', 'periodo\PeriodoController@MensajeEstado')->name('periodo.mensaje');
+
+    ///////////////////////////////////////
     Route::get('/Cupos', 'cupo\CuposController@index')->name('cupo');
     Route::get('/Examen', 'examen\ExamenController@index')->name('examen');
     Route::get('/Evaluacion', 'evaluacion\EvaluacionController@index')->name('evaluacion');

@@ -225,7 +225,7 @@ return [
     */
 
     'menu' => [
-        
+
         [
             'text' => 'Inicio',
             'route'  => 'home',
@@ -453,6 +453,31 @@ return [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                ],
+            ],
+        ],
+        'JqueryUI' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => 'http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'http://code.jquery.com/ui/1.10.1/jquery-ui.js',
+                ],
+            ],
+        ],
+        'datepicker' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'http://code.google.com/p/jquery-ui/source/browse/branches/labs/datepicker2/ui/i18n/jquery.ui.datepicker-es.js?r=3875',
                 ],
             ],
         ],
