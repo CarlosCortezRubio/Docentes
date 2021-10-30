@@ -30,6 +30,7 @@ class PeriodoController extends Controller
     }
 
     public function insert(Request $request){
+        //return $request;
         $periodo=new Periodo;
         try {
             DB::beginTransaction();
@@ -44,44 +45,54 @@ class PeriodoController extends Controller
             $periodo->save();
             DB::commit();
         } catch (Exception $e) {
-
+            dd($e);
         }
-
-
         return redirect()->back();
     }
 
     public function update(Request $request){
         $periodo=Periodo::find($request->id_periodo);
-        $periodo->anio=$request->anio;
-        $periodo->peri_insc_inic=$request->peri_insc_inic;
-        $periodo->peri_insc_fin=$request->peri_insc_fin;
-        $periodo->peri_eval_inic=$request->peri_eval_inic;
-        $periodo->peri_eval_fin=$request->peri_eval_fin;
-        $periodo->user_actu=Auth::user()->id;
-        $periodo->codi_secc_sec=$request->codi_secc_sec;
-        $periodo->update();
+        try {
+            DB::beginTransaction();
+            $periodo->anio=$request->anio;
+            $periodo->peri_insc_inic=$request->peri_insc_inic;
+            $periodo->peri_insc_fin=$request->peri_insc_fin;
+            $periodo->peri_eval_inic=$request->peri_eval_inic;
+            $periodo->peri_eval_fin=$request->peri_eval_fin;
+            $periodo->user_actu=Auth::user()->id;
+            $periodo->codi_secc_sec=$request->codi_secc_sec;
+            $periodo->update();
+            DB::commit();
+        } catch (Exception $e) {
+            dd($e);
+        }
         return redirect()->back();
     }
     public function updateEstado(Request $request){
         $periodo=Periodo::find($request->id_periodo);
         $periodos=Periodo::where('codi_secc_sec',$periodo->codi_secc_sec)->get();
-        foreach ($periodos as $per) {
-            if ($per->estado=='A') {
-                $per->estado='I';
-                $per->user_actu=Auth::user()->id;
-                $per->update();
+        try {
+            DB::beginTransaction();
+            foreach ($periodos as $per) {
+                if ($per->estado=='A') {
+                    $per->estado='I';
+                    $per->user_actu=Auth::user()->id;
+                    $per->update();
+                }
             }
-        }
-        if ($periodo->estado=='A') {
-            $periodo->estado='I';
-            $per->user_actu=Auth::user()->id;
-        } else if($periodo->estado=='I') {
-            $periodo->estado='A';
-            $per->user_actu=Auth::user()->id;
-        }
+            if ($periodo->estado=='A') {
+                $periodo->estado='I';
+                $per->user_actu=Auth::user()->id;
+            } else if($periodo->estado=='I') {
+                $periodo->estado='A';
+                $per->user_actu=Auth::user()->id;
+            }
 
-        $periodo->update();
+            $periodo->update();
+            DB::commit();
+        } catch (Exception $e) {
+            dd($e);
+        }
         return redirect()->back();
     }
 

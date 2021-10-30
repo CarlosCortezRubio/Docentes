@@ -20,8 +20,9 @@ class CrearTablaPeriodo extends Migration
             $table->dateTime('peri_insc_fin');
             $table->dateTime('peri_eval_inic');
             $table->dateTime('peri_eval_fin');
+            $table->char('estado',1);
             $table->bigInteger('user_regi');
-            $table->bigInteger('user_actu');
+            $table->bigInteger('user_actu')->nullable();
             $table->foreign('user_regi')->references('id')->on('admision.adm_usuario');
             $table->foreign('user_actu')->references('id')->on('admision.adm_usuario');
             $table->char('codi_secc_sec',5);

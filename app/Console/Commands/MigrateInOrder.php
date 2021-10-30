@@ -45,9 +45,7 @@ class MigrateInOrder extends Command
         */
         $migrations = [
 
-            '2021_10_30_053815_crear_tabla_periodo.php',
-            '2021_10_26_235440_create_cupos_table.php',
-            '2021_10_30_054555_crear_tabla_tipo_usuarios.php',
+            
             '2021_10_30_054852_crear_tabla_detalle_usuario.php'
         ];
 

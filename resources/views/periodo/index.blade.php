@@ -252,14 +252,11 @@
                             @endif
                             <td>{{ $peri_insc_inic."    ||    ".$peri_insc_fin}}</td>
                             <td>{{ $peri_eval_inic."    ||    ".$peri_eval_fin}}</td>
-                            <td style="color: @if ($per->estado=='I')red @else green @endif">@if ($per->estado=='A') Activo @else Inactivo @endif</td>
+                            <td style="color: @if ($per->estado=='I')red @elseif ($per->estado=='A') green @endif">@if ($per->estado=='A') Activo @elseif ($per->estado=='I') Inactivo @endif</td>
                             <td>
                                 @if ($per->estado=='A')
                                     <button onclick="desactivado('{{  $per->id_periodo  }}');" class='btn btn-danger fa fa-times'></button>
                                 @else
-                                    <form method="get" id="formensaje">
-                                        <input type="text">
-                                    </form>
                                     <button onclick="mensaje('{{  $per->id_periodo  }}');" class='btn btn-success fa fa-check'></button>
                                 @endif
                                 <button onclick=editar({{"'".$per->id_periodo."','".$per->anio."','".$per->codi_secc_sec."','".$peri_insc_inic."','".$peri_insc_fin."','".$peri_eval_inic."','".$peri_eval_fin."'"}});  class='btn btn-primary fa fa-pencil'></button>
@@ -326,7 +323,7 @@
         $.ajax({
             type: "GET",
             url: '{{ route("periodo.mensaje") }}',
-            data: $("#formulario").serialize(),,
+            data: {'idperiodo':id_periodo},
             success: function (data) {
                 $('#mensajeCambio').html(data);
                 $("#modalActivado").modal('show');
