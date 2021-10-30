@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCuposTable extends Migration
+class CrearTablaPeriodo extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,18 @@ class CreateCuposTable extends Migration
      */
     public function up()
     {
-        Schema::create('admision.adm_cupos', function (Blueprint $table) {
-            $table->id('id_cupos');
-            $table->integer('cant_cupo');
-            $table->string('observacion');
-            $table->char('estado',10);
-            $table->bigInteger('id_periodo');
-            $table->foreign('id_periodo')->references('id_periodo')->on('admision.adm_periodo');
+        Schema::create('admision.adm_periodo', function (Blueprint $table) {
+            $table->id('id_periodo');
+            $table->char('anio',4);
+            $table->dateTime('peri_insc_inic');
+            $table->dateTime('peri_insc_fin');
+            $table->dateTime('peri_eval_inic');
+            $table->dateTime('peri_eval_fin');
             $table->bigInteger('user_regi');
             $table->bigInteger('user_actu');
             $table->foreign('user_regi')->references('id')->on('admision.adm_usuario');
             $table->foreign('user_actu')->references('id')->on('admision.adm_usuario');
+            $table->char('codi_secc_sec',5);
             $table->timestamps();
         });
     }
@@ -35,6 +36,6 @@ class CreateCuposTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.adm_cupos');
+        Schema::dropIfExists('admision.adm_periodo');
     }
 }
