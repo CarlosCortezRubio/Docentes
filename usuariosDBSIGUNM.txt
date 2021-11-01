@@ -1,0 +1,73 @@
+-- Role: enterprisedb
+-- DROP ROLE enterprisedb;
+
+CREATE ROLE enterprisedb WITH
+  LOGIN
+  SUPERUSER
+  INHERIT
+  CREATEDB
+  CREATEROLE
+  REPLICATION
+  ENCRYPTED PASSWORD 'md58066fe23ab74fc05b9304ae427997ab0';
+
+ALTER ROLE enterprisedb IN DATABASE "BDSIGUNM" SET search_path TO bdsig;
+
+-- Role: usr_bdsig
+-- DROP ROLE usr_bdsig;
+
+CREATE ROLE usr_bdsig WITH
+  LOGIN
+  SUPERUSER
+  INHERIT
+  CREATEDB
+  CREATEROLE
+  REPLICATION;
+
+COMMENT ON ROLE usr_bdsig IS 'Usuario principal para la base de datos BDSIGUNM y para el esquema bdsig';
+-- Role: usr_bdsigcafae
+-- DROP ROLE usr_bdsigcafae;
+
+CREATE ROLE usr_bdsigcafae WITH
+  LOGIN
+  SUPERUSER
+  INHERIT
+  CREATEDB
+  CREATEROLE
+  REPLICATION
+  ENCRYPTED PASSWORD 'md554c51458d1a946f1b233a78de1c8d6d5';
+
+ALTER ROLE usr_bdsigcafae SET search_path TO bdsig, bdsigcafae;
+
+ALTER ROLE usr_bdsigcafae IN DATABASE "BDSIGUNM" SET search_path TO bdsig, bdsigcafae;
+
+COMMENT ON ROLE usr_bdsigcafae IS 'Usuario para el esquema bdsigcafae de la base de datos BDSIGUNM';
+
+-- Role: usr_bdsigunm
+-- DROP ROLE usr_bdsigunm;
+
+CREATE ROLE usr_bdsigunm WITH
+  LOGIN
+  SUPERUSER
+  INHERIT
+  CREATEDB
+  CREATEROLE
+  NOREPLICATION
+  ENCRYPTED PASSWORD 'md558ffda50b2abb730ce44b8a583125f2d';
+
+ALTER ROLE usr_bdsigunm SET search_path TO bdsig, bdsigunm;
+
+ALTER ROLE usr_bdsigunm IN DATABASE "BDSIGUNM" SET search_path TO bdsig, bdsigunm;
+
+COMMENT ON ROLE usr_bdsigunm IS 'Usuario para el esquema bdsigunm de la base de datos BDSIGUNM';
+
+-- Role: usr_desarrollo
+-- DROP ROLE usr_desarrollo;
+
+CREATE ROLE usr_desarrollo WITH
+  LOGIN
+  SUPERUSER
+  INHERIT
+  CREATEDB
+  CREATEROLE
+  REPLICATION
+  ENCRYPTED PASSWORD 'md5e5eef2abbf4fb893f113467ee26d0aed';
