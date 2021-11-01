@@ -19,12 +19,14 @@ class CrearDatosTipoUsuario extends Migration
             ->insert([
                 "descripcion" => "Administrador",
                 "estado" => "A",
-            ],
-            [
+            ]);
+            DB::table('admision.tipo_usuarios')
+            ->insert([
                 "descripcion" => "Secretario",
                 "estado" => "A",
-            ],
-            [
+            ]);
+            DB::table('admision.tipo_usuarios')
+            ->insert([
                 "descripcion" => "Jurado",
                 "estado" => "A",
             ]);
