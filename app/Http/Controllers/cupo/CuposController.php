@@ -19,15 +19,21 @@ class CuposController extends Controller
 
     public function index(){
         $secciones =DB::table('bdsig.vw_sig_seccion')->get();
-        $cupos= Cupos::join('admision.adm_periodo','admision.adm_periodo.id_periodo','=','admision.adm_cupos.id_periodo');
+        $cupos= Cupos::join('admision.adm_periodo as pe','pe.id_periodo','=','admision.adm_cupos.id_periodo')
+                        ->join('bdsig.vw_sig_seccion_especialidad as se',function ($join) {
+                            $join->on('se.codi_espe_esp','admision.adm_cupos.codi_espe_esp')
+                                 ->on('se.codi_secc_sec','pe.codi_secc_sec');
+                            });
+
+
         $programas= DB::table('bdsig.vw_sig_seccion_especialidad');
         $periodos=Periodo::join('bdsig.vw_sig_seccion','bdsig.vw_sig_seccion.codi_secc_sec','=','admision.adm_periodo.codi_secc_sec');
         if(getSeccion()){
-            $cupos=$cupos->where('codi_secc_sec',getCodSeccion())->get();
+            $cupos=$cupos->where('bdsig.vw_sig_seccion_especialidad.codi_secc_sec',getCodSeccion())->get();
             $programas=$programas->where('codi_secc_sec',getCodSeccion())->get();
             $periodos=$periodos->where('admision.adm_periodo.codi_secc_sec',getCodSeccion())->get();
         }else if(getTipoUsuario()=='Administrador'){
-            $cupos= $cupos->get();
+            $cupos=$cupos->get();
             $programas=$programas->distinct()->get();
             $periodos=$periodos->get();
         }

@@ -192,16 +192,18 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($cupos as $k => $cup)
                     <tr>
                         <th scope="row">1</th>
-                        <td>Guitarra</td>
-                        <td>2019</td>
-                        <td>25</td>
+                        <td>{{ $cup->abre_espe_esp }}</td>
+                        <td>{{ $cup->anio }}@if (getTipoUsuario()=='Administrador' && getSeccion()==null) ({{ $cup->abre_secc_sec }}) @endif</td>
+                        <td>{{ $cup->cant_cupo }}</td>
                         <td>
                             <button data-toggle="modal" data-target="#modaledit" class='btn btn-primary fa fa-pencil'></button>
                             <button data-toggle="modal" data-target="#modaldelete" class='btn btn-danger fa fa-trash'></button>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
