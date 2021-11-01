@@ -196,7 +196,6 @@
                 </div>
                 <div class="modal-body">
                     <p id="mensajeCambio"></p>
-                    <p>¿Desea Activar el periodo?</p>
                     <form action="{{ route('periodo.update.estado') }}" method="post" id="formact">
                         @csrf
                         <input type="text" style="display:none" id="id_periodo_act" name="id_periodo">

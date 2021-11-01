@@ -100,9 +100,9 @@ class PeriodoController extends Controller
         $periodos= Periodo::where('codi_secc_sec',$periodo->codi_secc_sec)->get();
         foreach ($periodos as $per) {
             if($per->estado=='A'){
-                return "existe un periodo activo";
+                return "Existe un periodo activo.<br>¿Desea Activar el periodo?";
             }
         }
-        return "";
+        return "¿Desea Activar el periodo?";
     }
 }

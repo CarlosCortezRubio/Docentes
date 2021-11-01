@@ -28,9 +28,11 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/Periodos/Actualizar', 'periodo\PeriodoController@update')->name('periodo.update');
     Route::post('/Periodos/ActualizarEstado', 'periodo\PeriodoController@updateEstado')->name('periodo.update.estado');
     Route::get('/Periodos/Mensaje', 'periodo\PeriodoController@MensajeEstado')->name('periodo.mensaje');
-
     ///////////////////////////////////////
+    ///////////////CUPOS////////////////
     Route::get('/Cupos', 'cupo\CuposController@index')->name('cupo');
+    Route::post('/Cupos/Nuevo', 'cupo\CuposController@insert')->name('cupos.insert');
+    ///////////////////////////////////////
     Route::get('/Examen', 'examen\ExamenController@index')->name('examen');
     Route::get('/Evaluacion', 'evaluacion\EvaluacionController@index')->name('evaluacion');
     Route::get('/Programacion', 'examen\ExamenController@programacion')->name('programacion');

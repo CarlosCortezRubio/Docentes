@@ -40,6 +40,7 @@ class CuposController extends Controller
             DB::beginTransaction();
             $cupo->cant_cupo=$request->cant_cupo;
             $cupo->id_periodo=$request->id_periodo;
+            $cupo->codi_espe_esp=$request->codi_espe_esp;
             $cupo->estado='A';
             $cupo->user_regi=Auth::user()->id;
             $cupo->save();

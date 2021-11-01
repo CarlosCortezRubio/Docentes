@@ -18,6 +18,7 @@ class CreateCuposTable extends Migration
             $table->integer('cant_cupo');
             $table->string('observacion')->nullable();
             $table->char('estado',1);
+            $table->char('codi_espe_esp',5);
             $table->bigInteger('id_periodo');
             $table->foreign('id_periodo')->references('id_periodo')->on('admision.adm_periodo');
             $table->bigInteger('user_regi');
