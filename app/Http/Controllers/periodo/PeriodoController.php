@@ -23,14 +23,13 @@ class PeriodoController extends Controller
         $secciones =DB::table('bdsig.vw_sig_seccion')->get();
         if(getSeccion()){
             $periodos= Periodo::where('codi_secc_sec',getCodSeccion())->get();
-        }else{
+        }else if(getTipoUsuario()=='Administrador'){
             $periodos= Periodo::all();
         }
         return view('periodo.index',['periodos'=>$periodos,'secciones'=>$secciones,'anios'=>$anios]);
     }
 
     public function insert(Request $request){
-        //return $request;
         $periodo=new Periodo;
         try {
             DB::beginTransaction();

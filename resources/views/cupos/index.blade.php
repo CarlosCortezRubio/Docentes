@@ -6,26 +6,26 @@
         <div class="col-md col-sm col-xs">
             <label for="">Programa de Estudio</label>
             <select class="buscar browser-default custom-select">
-                <option >Todos</option>
-                <option selected value="">Guitarra</option>
-                <option value="">Violín</option>
-                <option value="">Violonchelo</option>
+                <option value="">Todos</option>
+                @foreach ($programas as $k => $prog)
+                    <option value="{{ $prog->codi_espe_esp }}">{{ $prog->abre_espe_esp }}</option>
+                @endforeach
             </select>
         </div>
         <div class="col-md col-sm col-xs">
             <label for="espec" >Periodo</label>
             <select class="buscar form-control" name="espec" id="espec">
                 <option value="">Todos</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
+                @foreach ($periodos as $k => $per)
+                    <option value="{{ $per->id_periodo }}">{{ $per->anio }}@if (getTipoUsuario()=='Administrador' && getSeccion()==null) ({{ $per->abre_secc_sec }}) @endif</option>
+                @endforeach
             </select>
         </div>
         @if (getTipoUsuario()=='Administrador' && getSeccion()==null)
         <div class="col-md col-sm col-xs">
             <label for="">Secciòn</label>
             <select class="buscar browser-default custom-select">
-                <option >Todos</option>
+                <option value="">Todos</option>
                 @foreach ($secciones as $k => $secc)
                 <option value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
                 @endforeach
