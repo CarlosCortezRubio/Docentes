@@ -221,7 +221,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Año</th>
-                        @if (getTipoUsuario()=='Administrador' && getSeccion()==null)
+                        @if (is_admin())
                             <th scope="col">Seccion</th>
                         @endif
                         <th scope="col">Peri. Inscripciones</th>
@@ -246,7 +246,7 @@
                         <tr>
                             <th scope="row">{{$key+1}}</th>
                             <td>{{ $per->anio }}</td>
-                            @if (getTipoUsuario()=='Administrador' && getSeccion()==null)
+                            @if (is_admin())
                                 <td>{{ $descsec }}</td>
                             @endif
                             <td>{{ $peri_insc_inic."    ||    ".$peri_insc_fin}}</td>

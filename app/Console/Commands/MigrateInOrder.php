@@ -54,7 +54,11 @@ class MigrateInOrder extends Command
             '2021_10_30_054852_crear_tabla_detalle_usuario.php',
             '2021_11_01_001441_crear_datos_tipo_usuario.php',
             '2021_11_01_002135_crear_datos_usuario.php',
-            '2021_11_01_033947_crear_datos_detalle_usuario.php'
+            '2021_11_01_033947_crear_datos_detalle_usuario.php',
+            '2021_11_09_085352_crear_tabla__tipo_examen.php',
+            '2021_11_09_084559_crear_tabla_examen.php',
+            '2021_11_09_085836_crear_tabla__examen_admision.php',
+            '2021_11_09_090612_crear_datos__tipo_examen.php'
         ];
 
         foreach($migrations as $migration)

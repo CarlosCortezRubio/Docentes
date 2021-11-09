@@ -32,6 +32,9 @@ Route::middleware(['auth'])->group(function() {
     ///////////////CUPOS////////////////
     Route::get('/Cupos', 'cupo\CuposController@index')->name('cupo');
     Route::post('/Cupos/Nuevo', 'cupo\CuposController@insert')->name('cupos.insert');
+    Route::post('/Cupos/Actualizar', 'cupo\CuposController@update')->name('cupos.update');
+    Route::post('/Cupos/Eliminar', 'cupo\CuposController@delete')->name('cupos.delete');
+    //Route::post('/Periodos/Actualizar', 'cupo\CuposController@mensaje')->name('cupos.mensaje');
     ///////////////////////////////////////
     Route::get('/Examen', 'examen\ExamenController@index')->name('examen');
     Route::get('/Evaluacion', 'evaluacion\EvaluacionController@index')->name('evaluacion');

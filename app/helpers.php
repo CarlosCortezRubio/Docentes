@@ -57,3 +57,35 @@ if (! function_exists('getImagen')) {
         }
     }
 }
+
+if (! function_exists('is_admin_secc')) {
+    function is_admin_secc() {
+        if(Auth::check()){
+            $usuario= DetalleUsuario::where('id_usuario',Auth::user()->id)->first();
+            $tipo= TipoUsuario::find($usuario->id_tipo_usuario)->descripcion;
+            if ($tipo=='Administrador' && $usuario->codi_secc_sec) {
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+}
+
+if (! function_exists('is_admin')) {
+    function is_admin() {
+        if(Auth::check()){
+            $usuario= DetalleUsuario::where('id_usuario',Auth::user()->id)->first();
+            $tipo= TipoUsuario::find($usuario->id_tipo_usuario)->descripcion;
+            if ($tipo=='Administrador' && !$usuario->codi_secc_sec) {
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+}

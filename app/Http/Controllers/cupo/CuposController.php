@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Cupos;
 use App\Model\Periodo;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,26 +19,32 @@ class CuposController extends Controller
     }
 
     public function index(){
-        $secciones =DB::table('bdsig.vw_sig_seccion')->get();
-        $cupos= Cupos::join('admision.adm_periodo as pe','pe.id_periodo','=','admision.adm_cupos.id_periodo')
-                        ->join('bdsig.vw_sig_seccion_especialidad as se',function ($join) {
-                            $join->on('se.codi_espe_esp','admision.adm_cupos.codi_espe_esp')
-                                 ->on('se.codi_secc_sec','pe.codi_secc_sec');
-                            });
+        try{
+            $cupos= Cupos::join('admision.adm_periodo as pe','pe.id_periodo','admision.adm_cupos.id_periodo')
+                        ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','pe.codi_secc_sec') 
+                        ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','admision.adm_cupos.codi_espe_esp')
+                        ->select('admision.adm_cupos.*','esp.codi_espe_esp','esp.abre_espe_esp','pe.*','sec.abre_secc_sec')
+                        ->distinct('id_cupos')
+                        ->where('admision.adm_cupos.estado','A');
 
-
-        $programas= DB::table('bdsig.vw_sig_seccion_especialidad');
-        $periodos=Periodo::join('bdsig.vw_sig_seccion','bdsig.vw_sig_seccion.codi_secc_sec','=','admision.adm_periodo.codi_secc_sec');
-        if(getSeccion()){
-            $cupos=$cupos->where('bdsig.vw_sig_seccion_especialidad.codi_secc_sec',getCodSeccion())->get();
-            $programas=$programas->where('codi_secc_sec',getCodSeccion())->get();
-            $periodos=$periodos->where('admision.adm_periodo.codi_secc_sec',getCodSeccion())->get();
-        }else if(getTipoUsuario()=='Administrador'){
-            $cupos=$cupos->get();
-            $programas=$programas->distinct()->get();
-            $periodos=$periodos->get();
+            $programas= DB::table('bdsig.vw_sig_seccion_especialidad');
+            $periodos=Periodo::join('bdsig.vw_sig_seccion','bdsig.vw_sig_seccion.codi_secc_sec','=','admision.adm_periodo.codi_secc_sec');
+            if(getSeccion()){
+                $cupos=$cupos->where('sec.codi_secc_sec',getCodSeccion())->get();
+                $programas=$programas->where('codi_secc_sec',getCodSeccion())->get();
+                $periodos=$periodos->where('admision.adm_periodo.codi_secc_sec',getCodSeccion())->get();
+            }else if(getTipoUsuario()=='Administrador'){
+                $programas=$programas->distinct('codi_espe_esp')->get();
+                $cupos=$cupos->get();
+                $periodos=$periodos->get();
+            }else{
+                $cupos=null;
+            }
+            
+            return view('cupos.index',['cupos'=>$cupos,'programas'=>$programas,'periodos'=>$periodos]);
+        }catch(QueryException $e){
+            dd($e);
         }
-        return view('cupos.index',['cupos'=>$cupos,'secciones'=>$secciones,'programas'=>$programas,'periodos'=>$periodos]);
     }
 
     public function insert(Request $request){
@@ -63,7 +70,19 @@ class CuposController extends Controller
             DB::beginTransaction();
             $cupo->cant_cupo=$request->cant_cupo;
             $cupo->id_periodo=$request->id_periodo;
-            $cupo->estado=$request->estado;
+            $cupo->user_actu=Auth::user()->id;
+            $cupo->update();
+            DB::commit();
+        } catch (Exception $e) {
+            dd($e);
+        }
+        return redirect()->back();
+    }
+    public function delete(Request $request){
+        $cupo=Cupos::find($request->id_cupos);
+        try {
+            DB::beginTransaction();
+            $cupo->estado='E';
             $cupo->user_actu=Auth::user()->id;
             $cupo->update();
             DB::commit();
