@@ -23,7 +23,7 @@
     </form>
 @stop
 @section('content')
-    /////////////////////////MODALS/////////////////////////////
+    <!_/////////////////////////MODALS/////////////////////////////->
     <div class="modal fade" id="modaladd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -216,7 +216,7 @@
             </div>
         </div>
     </div>
-    /////////////////////////////BODY////////////////////////////
+    <!-/////////////////////////////BODY////////////////////////////->
     <div class="card">
         <div class="card-header">
             <div class='col'>
