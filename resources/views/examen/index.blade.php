@@ -23,10 +23,198 @@
     </form>
 @stop
 @section('content')
-    @extends('examen.partials.agregar')
-    @extends('examen.partials.editar')
-    @extends('examen.partials.eliminar')
-    @extends('examen.partials.plus')
+    <div class="modal fade" id="modaladd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title">Registrar</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                <form action="" class='formulario'>
+                        <div class="form-group">
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="">Descripcion</label>
+                                    <input type="text" class="form-control" placeholder="Ingrese Descripción" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row ">
+                                <!--<div class="col-md-6 col-sm-6 col-xs-6">
+                                    <label for="">Periodo</label>
+                                    <select class="browser-default custom-select">
+                                        <option >---- Seleccione -----</option>
+                                        <option value="">2021(Escolar)</option>
+                                        <option value="">2020(Escolar)</option>
+                                        <option value="">2019(Escolar)</option>
+                                    </select>
+                                </div>   -->
+                                <div class="col-md col-sm col-xs"> 
+                                    <label for="">Nota de Aprobación</label>
+                                    <input type="number" class="form-control" placeholder="Ingrese Nota" />    
+                                </div>  
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-4 col-sm-4 col-xs-4"> 
+                                    <label for="">Carac. Eliminatorio</label>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4"> 
+                                    <label for="">Examen por Jurado</label>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4"> 
+                                    <label for="">Estado</label>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4"> 
+                                    
+                                </div>  
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Guardar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title">Editar</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" class='formulario'>
+                        <div class="form-group">
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="">Descripcion</label>
+                                    <input type="text" class="form-control" placeholder="Ingrese Descripción" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs"> 
+                                    <label for="">Nota de Aprobación</label>
+                                    <input type="number" class="form-control" placeholder="Ingrese Nota" />    
+                                </div>  
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-4 col-sm-4 col-xs-4"> 
+                                    <label for="">Carac. Eliminatorio</label>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4"> 
+                                    <label for="">Examen por Jurado</label>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4"> 
+                                    <label for="">Estado</label>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4"> 
+                                    
+                                </div>  
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Editar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modaldelete" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title">Eliminar</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Desea eliminar el Examen?</p>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade show" id="modalplus" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Parametros de Evaluación</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <div class='row'>
+                        <div class='col-1'></div>
+                        <div class='col'>
+                            <div class="row">
+                                <div class="col centrar-content">
+                                    <label>Descripcion</label> 
+                                </div>
+                                <div class="col-2 centrar-content">
+                                    <label>Porcentaje</label> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-1'></div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-1'></div>
+                        <div id='categoria' class='col'></div>
+                        <div class='col-1'></div>
+                    </div>
+                    <div class="row centrar-content">
+                        <button class='btn btn-succes' onclick='Agregar("#categoria");'>Agregar</button>
+                    </div>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Guardar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header">
             <div class='col'>
