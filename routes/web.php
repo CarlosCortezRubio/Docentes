@@ -36,7 +36,12 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/Cupos/Eliminar', 'cupo\CuposController@delete')->name('cupos.delete');
     //Route::post('/Periodos/Actualizar', 'cupo\CuposController@mensaje')->name('cupos.mensaje');
     ///////////////////////////////////////
+    //////////////////EXAMEN///////////////
     Route::get('/Examen', 'examen\ExamenController@index')->name('examen');
+    Route::post('/Examen/Nuevo', 'examen\ExamenController@insert')->name('examen.insert');
+    Route::post('/Examen/Actualizar', 'examen\ExamenController@update')->name('examen.update');
+    Route::post('/Examen/Eliminar', 'examen\ExamenController@delete')->name('examen.delete');
+    ///////////////////////////////////////
     Route::get('/Evaluacion', 'evaluacion\EvaluacionController@index')->name('evaluacion');
     Route::get('/Programacion', 'examen\ExamenController@programacion')->name('programacion');
     Route::get('/', function () { return view('home');});

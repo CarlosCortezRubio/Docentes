@@ -34,12 +34,19 @@
                         </button>
                 </div>
                 <div class="modal-body">
-                <form action="" class='formulario'>
+                <form action="{{ route('examen.insert') }}" method="POST" class='formularioadd'>
                         <div class="form-group">
                             <div class="row ">
                                 <div class="col-md col-sm col-xs">
+                                    <label for="">Nombre</label>
+                                    <input type="text" required class="form-control" id="nombre"  name="nombre" placeholder="Ingrese Nombre" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
                                     <label for="">Descripcion</label>
-                                    <input type="text" class="form-control" placeholder="Ingrese Descripción" />
+                                    <textarea  class="form-control" id="descripcion" name="descripcion" placeholder="Ingrese Descripción" ></textarea>
                                 </div>
                             </div>
                             <br>
@@ -55,8 +62,16 @@
                                 </div>   -->
                                 <div class="col-md col-sm col-xs"> 
                                     <label for="">Nota de Aprobación</label>
-                                    <input type="number" class="form-control" placeholder="Ingrese Nota" />    
+                                    <input type="number" required id="nota_apro" name="nota_apro" class="form-control" placeholder="Ingrese Nota" />    
                                 </div>  
+                                <div class="col-md col-sm col-xs"> 
+                                    <label for="">Nota Maxima</label>
+                                    <input type="number" required id="nota_maxi" name="nota_maxi" class="form-control" placeholder="Ingrese Nota" />    
+                                </div>
+                                <div class="col-md col-sm col-xs"> 
+                                    <label for="">Nota Minima</label>
+                                    <input type="number" required id="nota_mini" name="nota_mini" class="form-control" placeholder="Ingrese Nota" />    
+                                </div>
                             </div>
                             <br>
                             <div class='row'>
