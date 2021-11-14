@@ -62,15 +62,15 @@
                                 </div>   -->
                                 <div class="col-md col-sm col-xs"> 
                                     <label for="">Nota de Aprobación</label>
-                                    <input type="number" required id="nota_apro" name="nota_apro" class="form-control" placeholder="Ingrese Nota" />    
+                                    <input type="number" required id="nota_apro" min="1" name="nota_apro" class="form-control" placeholder="Ingrese Nota" />    
                                 </div>  
                                 <div class="col-md col-sm col-xs"> 
                                     <label for="">Nota Maxima</label>
-                                    <input type="number" required id="nota_maxi" name="nota_maxi" class="form-control" placeholder="Ingrese Nota" />    
+                                    <input type="number" required id="nota_maxi" min="1" name="nota_maxi" class="form-control" placeholder="Ingrese Nota" />    
                                 </div>
                                 <div class="col-md col-sm col-xs"> 
                                     <label for="">Nota Minima</label>
-                                    <input type="number" required id="nota_mini" name="nota_mini" class="form-control" placeholder="Ingrese Nota" />    
+                                    <input type="number" required id="nota_mini" min="1" name="nota_mini" class="form-control" placeholder="Ingrese Nota" />    
                                 </div>
                             </div>
                             <br>
