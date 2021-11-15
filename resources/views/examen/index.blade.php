@@ -291,8 +291,8 @@
     
 @stop
 @section('css')
+<link href="{{ asset('sass/slide.css') }}" rel="stylesheet">
 <style>
-    @import 'slide';
     .flex-center {
         align-items: center;
         display: flex;
