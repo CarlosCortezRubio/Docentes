@@ -103,7 +103,50 @@
             </table>
         </div>
     </div>
-    @extends('evaluacion.partials.evaluar')
+    <div class="modal fade show" id="modalplus" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Parametros de Evaluación</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Alumno</td>
+                                <td>Llego a entonar a un DO mayor</td>    
+                                <td>Llego a entonar a un DO menor</td>
+                                <td>Llego a entonar a un RE mayor</td>   
+                                <td>Llego a entonar a un RE menor</td>    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($postulantes as $k => $pos)
+                            <form action="{{ route('evaluar') }}" id="{{ $pos->codi_post_pos }}" class="evaluar" method="GET">
+                                @csrf   
+                                <tr>                 
+                                    <input type="text" name="codi_pers_per" value="{{  $pos->codi_post_pos }}" style="display: none"/>
+                                    <td>{{ $pos->nomb_pers_per." ".$pos->apel_pate_per." ".$pos->apel_mate_per }}</td>
+                                    <td><input class="form-control des{{ $pos->codi_post_pos }}" name="nota1" min="0" required type="number" ></td>
+                                    <td><input class="form-control des{{ $pos->codi_post_pos }}" name="nota2" min="0" required type="number" > </td>
+                                    <td><input class="form-control des{{ $pos->codi_post_pos }}"  name="nota3" min="0" required type="number" ></td>
+                                    <td><input class="form-control des{{ $pos->codi_post_pos }}" name="nota4" min="0" required type="number" ></td>
+                                    <td><button type="submit" class="btn btn-success des{{ $pos->codi_post_pos }}"> <i class="fas fa-check"></i> </button></td>
+                                </tr>
+                            </form>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 @section('css')
 <style>
@@ -131,6 +174,26 @@
             ],
             "pageLength": 100
          });
+    });
+    $(".evaluar").submit(function(e) {
+
+        e.preventDefault(); 
+    
+        var form = $(this);
+        var url = form.attr('action');
+        
+        $.ajax({
+               type: "GET",
+               url: url,
+               data: form.serialize(), 
+               success: function(data){
+                    //$("tbody tr td").css('background-color', 'black');
+                    $(".des"+form.attr('id')).attr('disabled', true);
+                    $(".des"+form.attr('id')).attr('disabled', true);
+               }
+             });
+    
+        
     });
 </script>
 @stop

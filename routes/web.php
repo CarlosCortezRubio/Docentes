@@ -45,6 +45,8 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/Examen/Eliminar', 'examen\ExamenController@delete')->name('examen.delete');
     ///////////////////////////////////////
     Route::get('/Evaluacion', 'evaluacion\EvaluacionController@index')->name('evaluacion');
+    Route::get('/Evaluacion/Evaluar', 'evaluacion\EvaluacionController@Evaluar')->name('evaluar');
+    /////////////////////////////////////
     Route::get('/Programacion', 'examen\ExamenController@programacion')->name('programacion');
     Route::get('/', function () { return view('home');});
 });

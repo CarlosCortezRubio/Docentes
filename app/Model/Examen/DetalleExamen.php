@@ -8,7 +8,7 @@ class DetalleExamen extends Model
 {
     protected $table='admision.adm_examen_admision';
     protected $primaryKey = 'id_examen_admision';
-    public $timestamps = true;
+    public $timestamps = false;
     protected $fillable = [
         'cara_elim',
         'flag_jura',

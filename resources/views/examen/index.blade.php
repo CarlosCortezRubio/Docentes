@@ -34,8 +34,9 @@
                         </button>
                 </div>
                 <div class="modal-body">
-                <form action="{{ route('examen.insert') }}" method="POST" class='formularioadd'>
-                        <div class="form-group">
+                <form action="{{ route('examen.insert') }}" method="POST" id='formularioadd'>
+                    @csrf   
+                    <div class="form-group">
                             <div class="row ">
                                 <div class="col-md col-sm col-xs">
                                     <label for="">Nombre</label>
@@ -50,16 +51,19 @@
                                 </div>
                             </div>
                             <br>
-                            <div class="row ">
-                                <!--<div class="col-md-6 col-sm-6 col-xs-6">
-                                    <label for="">Periodo</label>
-                                    <select class="browser-default custom-select">
-                                        <option >---- Seleccione -----</option>
-                                        <option value="">2021(Escolar)</option>
-                                        <option value="">2020(Escolar)</option>
-                                        <option value="">2019(Escolar)</option>
+                            <div class='row'  @if (getTipoUsuario()!='Administrador' || getSeccion()!=null) style="display:none " @endif>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Seccion</label>
+                                    <select class="form-control" name="codi_secc_sec" required id="codi_secc_sec">
+                                        <option value="">---- Seleccione -----</option>
+                                        @foreach ($secciones as $key => $secc)
+                                            <option  @if(getCodSeccion()==$secc->codi_secc_sec) selected @endif value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
+                                        @endforeach
                                     </select>
-                                </div>   -->
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row ">
                                 <div class="col-md col-sm col-xs"> 
                                     <label for="">Nota de Aprobación</label>
                                     <input type="number" required id="nota_apro" min="1" name="nota_apro" class="form-control" placeholder="Ingrese Nota" />    
@@ -92,7 +96,7 @@
                     </form>
                 </div>
                 <div class="modal-footer centrar-content">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Guardar</button>
+                    <button type="submit" class="btn btn-success" form="formularioadd">Guardar</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                 </div>
             </div>
@@ -317,6 +321,8 @@
             ],
             "pageLength": 100
          });
+
+         
     });
 
     numberid=0;
