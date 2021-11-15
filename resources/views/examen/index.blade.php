@@ -77,16 +77,14 @@
                             <div class='row'>
                                 <div class="col-md col-sm col-xs">
                                     <div class="inputGroup">
-                                        <input id="option1" name="option1" type="checkbox"/>
-                                        <br>
-                                        <label for="option1">Carac. Eliminatorio</label>
+                                        <input id="cara_elim" name="cara_elim" value="S" type="checkbox"/>
+                                        <label for="cara_elim">Carac. Eliminatorio</label><br>
                                     </div>
                                 </div>
                                 <div class="col-md col-sm col-xs"> 
                                     <div class="inputGroup">
-                                        <input id="option1" name="option1" type="checkbox"/>
-                                        <br>
-                                        <label for="option1">Examen por Jurado</label>
+                                        <input id="flag_jura" name="flag_jura" value="S" type="checkbox"/>
+                                        <label for="flag_jura">Examen por Jurado</label><br>
                                     </div>
                                 </div>
                             </div>
