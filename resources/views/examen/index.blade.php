@@ -75,29 +75,18 @@
                             </div>
                             <br>
                             <div class='row'>
-                                <div class="col-md-4 col-sm-4 col-xs-4">
+                                <div class="col-md col-sm col-xs">
                                     <div class="inputGroup">
                                         <input id="option1" name="option1" type="checkbox"/>
                                         <label for="option1">Carac. Eliminatorio</label>
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-sm-4 col-xs-4"> 
-                                    <label for="">Examen por Jurado</label>
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider round"></span>
-                                    </label>
+                                <div class="col-md col-sm col-xs"> 
+                                    <div class="inputGroup">
+                                        <input id="option1" name="option1" type="checkbox"/>
+                                        <label for="option1">Examen por Jurado</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-4 col-sm-4 col-xs-4"> 
-                                    <label for="">Estado</label>
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
-                                <div class="col-md-4 col-sm-4 col-xs-4"> 
-                                    
-                                </div>  
                             </div>
                         </div>
                     </form>
