@@ -292,6 +292,7 @@
 @stop
 @section('css')
 <style>
+    @import 'slide';
     .flex-center {
         align-items: center;
         display: flex;
