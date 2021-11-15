@@ -74,7 +74,7 @@
                                 </div>
                             </div>
                             <br>
-                            <div class='row'>
+                           
                                 <div class="col-md col-sm col-xs">
                                     <div class="inputGroup">
                                         <input id="cara_elim" name="cara_elim" value="S" type="checkbox"/>
@@ -87,7 +87,7 @@
                                         <label for="flag_jura">Examen por Jurado</label><br>
                                     </div>
                                 </div>
-                            </div>
+                           
                         </div>
                     </form>
                 </div>
