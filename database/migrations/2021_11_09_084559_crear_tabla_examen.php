@@ -19,7 +19,6 @@ class CrearTablaExamen extends Migration
             $table->string('descripcion')->nullable();
             $table->integer('nota_apro');
             $table->integer('nota_maxi');
-            $table->integer('nota_mini');
             $table->char('estado',1);
             $table->bigInteger('user_regi');
             $table->bigInteger('user_actu')->nullable();

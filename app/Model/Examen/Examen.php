@@ -14,7 +14,6 @@ class Examen extends Model
         'descripcion',
         'nota_apro',
         'nota_maxi',
-        'nota_mini',
         'estado',
         'user_regi',
         'user_actu',
