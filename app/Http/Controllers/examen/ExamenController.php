@@ -18,7 +18,7 @@ class ExamenController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $secciones =DB::table('bdsig.vw_sig_seccion')->get();
         $examenes= Examen::join('admision.adm_examen_admision as exd','exd.id_examen','admision.adm_examen.id_examen')
@@ -36,7 +36,11 @@ class ExamenController extends Controller
             $ids[$k]=$exa->id_examen;
         }
         $secexamen=SeccionExamen::whereIn('id_examen',$ids)->get();
-        return view('examen.index',["secciones"=>$secciones,"examenes"=>$examenes,"secexamen"=>$secexamen]);
+        if ($request) {
+            return view('examen.index',["secciones"=>$secciones,"examenes"=>$examenes,"secexamen"=>$secexamen,"id_examen"=>$request->id_examen,"cargar"=>true]);
+        }else{
+            return view('examen.index',["secciones"=>$secciones,"examenes"=>$examenes,"secexamen"=>$secexamen,"cargar"=>false]);
+        }
     }
 
     public function insert(Request $request){
@@ -172,32 +176,35 @@ class ExamenController extends Controller
         $examen= DetalleExamen::find($request->id_examen);
         $content='';
         foreach ($secciones as $k => $sec) {
-            $id='#eva'.$sec->id_seccion_examen;
+            $id='eva'.$sec->id_seccion_examen;
             $plus="";
             if($examen->flag_jura=='N'){
                 $plus="<a href='/MOCUNM/PHP/VISTA/Preguntas.php' class='save'><i class='fa fa-plus-circle'></i></a>";
             }
             
-            $content=$content.'<div  class="row">'.
-                        "<div id='$id' class='col para-eva'>".
-                            '<div class="row activado centrar-content para-eva-content">'.
-                                '<div class="col">'.
-                                    "<label>$sec->descripcion</label>".
-                                '</div>'.
-                                '<div class="col-2">'.
-                                    "<label>$sec->porcentaje%</label>".
-                                '</div>'.
-                                '<form action="'.route('examen.cargar.delete').'" method="get" id="deletesecc">'.
+            $content=$content.'<form action="'.route('examen.cargar.delete').'" method="get" id="deletesecc'.$sec->id_seccion_examen.'">'.
                                     "<input type='text' name='id_seccion_examen' value='$sec->id_seccion_examen' style='display:none'>".
                                 '</form>'.
-                                '<div class="col-1 centrar-content">'.
-                                    "<a href='#' onclick='editar(`$id`)' class='save'><i class='fa fa-circle'></i></a>".
-                                    $plus.
-                                    "<a href='#' onclick=formulario('#deletesecc') class='delete'><i class='fa fa-trash'></i></a>".
+                                '<form action="'.route('examen.cargar.update').'" method="get" id="updatesecc'.$sec->id_seccion_examen.'">'.
+                                '<div  class="row">'.
+                                    "<div id='$id' class='col para-eva'>".
+                                        '<div class="row activado centrar-content para-eva-content">'.
+                                            "<input type='text' name='id_seccion_examen' value='$sec->id_seccion_examen' style='display:none'>".
+                                            '<div class="col input1">'.
+                                                "<label>$sec->descripcion</label>".
+                                            '</div>'.
+                                            '<div class="col-2 input2">'.
+                                                "<label>$sec->porcentaje%</label>".
+                                            '</div>'.
+                                            '<div class="col-2 centrar-content">'.
+                                                "<a href='#' onclick=editar('#$id','#updatesecc".$sec->id_seccion_examen."') class='save'><i class='fa fa-pencil'></i></a>".
+                                                $plus.
+                                                "<a href='#' onclick=formulario('#deletesecc".$sec->id_seccion_examen."') class='delete'><i class='fa fa-trash'></i></a>".
+                                            '</div>'.
+                                        '</div>'.
+                                    '</div>'.
                                 '</div>'.
-                            '</div>'.
-                        '</div>'.
-                    '</div>';
+                            '</form>';
         }
         return  $content;
     }

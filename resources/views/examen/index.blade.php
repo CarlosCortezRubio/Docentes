@@ -215,6 +215,7 @@
                                 <div class="col-2 centrar-content">
                                     <label>Porcentaje</label> 
                                 </div>
+                                <div class="col-2"></div>
                             </div>
                         </div>
                         <div class='col-1'></div>
@@ -229,8 +230,7 @@
                     </div>
                 </div>
                 <div class="modal-footer centrar-content">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Guardar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Aceptar</button>
                 </div>
             </div>
         </div>
@@ -318,7 +318,7 @@
             ],
             "pageLength": 100
          });
-
+        
          
     });
     function editarexamen(id_examen,id_examen_admision,nombre,descripcion,codi_secc_sec,nota_apro,nota_maxi,cara_elim,flag_jura) {
@@ -387,16 +387,16 @@
         $(id+" div").removeClass("desactivado");
         $(id+" div").addClass("activado");
     }
-    function editar(id){
-        valor1=$(id+" div .col label").html();
-        valor2=$(id+" div .col-2 label").html();
+    function editar(id,idsec){
+        valor1=$(id+" div .input1 label").html();
+        valor2=$(id+" div .input2 label").html();
         valor2=valor2.substring(0, valor2.length - 1);
-        input1="<input required type='text' class='form-control' value='"+valor1+"'>";
-        input2="<input required type='number' class='form-control' value='"+valor2+"'>";
-        chec="<a href='#' onclick='GuardarEva("+'"'+id+'"'+")' class='save'><i class='fa fa-check'></i></a>";
+        input1="<input required name='descripcion' type='text' class='form-control' value='"+valor1+"'>";
+        input2="<input required type='number' name='porcentaje' class='form-control' value='"+valor2+"'>";
+        chec="<a href='#' onclick='formulario("+'"'+idsec+'"'+")' class='save'><i class='fa fa-check'></i></a>";
         del="<a href='#' onclick='Cancelar("+'"'+id+'"'+","+'"'+valor1+'"'+","+'"'+valor2+'"'+")' class='delete'><i class='fa fa-undo'></i></a>";
-        $(id+" div .col").html(input1);
-        $(id+" div .col-2").html(input2);
+        $(id+" div .input1").html(input1);
+        $(id+" div .input2").html(input2);
         $(id+" div .col-1 .save").remove();
         $(id+" div .col-1 .delete").remove();
         $(id+" div .col-1").append(chec+del);
