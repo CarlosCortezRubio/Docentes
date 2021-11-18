@@ -225,7 +225,7 @@
                         <div class='col-1'></div>
                     </div>
                     <div class="row centrar-content">
-                        <button class='btn btn-succes' onclick='Agregar("#categoria");'>Agregar</button>
+                        <button class='btn btn-succes' id="btnagregar">Agregar</button>
                     </div>
                 </div>
                 <div class="modal-footer centrar-content">
@@ -280,7 +280,7 @@
                                                                                             "'".$exa->nota_maxi."',".
                                                                                             "'".$exa->cara_elim."',".
                                                                                             "'".$exa->flag_jura."'" }})"></button>
-                            <button class='btn btn-success fa fa-plus-circle' data-toggle="modal" data-target="#modalplus"></button>
+                            <button class='btn btn-success fa fa-plus-circle' onclick="Cargar({{ $exa->id_examen }})"></button>
                             <button class='btn btn-danger fa fa-trash' onclick="eliminarexamen({{ $exa->id_examen }})"></button>
                         </td>
                     </tr>
@@ -341,33 +341,34 @@
         }
         $("#modaledit").modal('show');
     }
-
+    
     function eliminarexamen(id_examen){
         $("#id_examendel").val(id_examen);
         $("#modaldelete").modal('show');
 
     }
     ////////////////////////
-    numberid=0;
-    function Agregar(id) {
+    function Agregar(id,id_examen) {
         var content='<div  class="row">'+
-                        '<div id="eva'+numberid+'" class="col para-eva">'+
+                        '<div id="edicion" class="col para-eva">'+
+                            '<form action="'+"{{ route('examen.cargar.insert') }}"+'" method="get" id="insersecc">@csrf'+
                             '<div class="row desactivado centrar-content para-eva-content">'+
                                 '<div class="col">'+
-                                    '<input type="text" required class="form-control">'+
+                                    '<input type="text" name="descripcion" required class="form-control">'+
+                                    '<input type="number" name="id_examen" style="display:none" value="'+id_examen+'">'+
                                 '</div>'+
                                 '<div class="col-2">'+
-                                    '<input type="number" required class="form-control">'+
+                                    '<input type="number" name="porcentaje" required class="form-control">'+
                                 '</div>'+
                                 '<div class="col-1 centrar-content">'+
-                                    `<a href="#" onclick="GuardarEva('#eva`+numberid+`')" class='save'><i class="fa fa-check"></i></a>`+
-                                    `<a href="#" onclick="eliminar('#eva`+numberid+`')" class='delete'><i class="fa fa-undo"></i></a>`+
+                                    `<a href="#" onclick="formulario('#insersecc')" class='save'><i class="fa fa-check"></i></a>`+
+                                    `<a href="#" onclick="eliminar('#edicion')" class='delete'><i class="fa fa-undo"></i></a>`+
                                 '</div>'+
                             '</div>'+
+                            '</form>'+
                         '</div>'+
                     '</div>';
         $(id).append(content);
-        numberid++;
     }
     function eliminar(id){
         $(id).remove();
@@ -415,6 +416,37 @@
         $(id+" div .col-1").append(plus+pen+del);
         $(id+" div").removeClass("desactivado");
         $(id+" div").addClass("activado");
+    }
+
+    function Cargar(id){
+        $.ajax({
+            type: "GET",
+            url: '{{ route("examen.cargar") }}',
+            data: {'id_examen':id},
+            success: function (data) {
+                $('#categoria').html(data);
+                $("#modalplus").modal('show');
+                $("#btnagregar").attr('onclick','Agregar("#categoria",'+id+');');
+            }
+        });
+    }
+
+    function formulario(id) {
+
+    
+        var form = $(id);
+        var url = form.attr('action');
+        
+        $.ajax({
+               type: "GET",
+               url: url,
+               data: form.serialize(), 
+               success: function(data){
+                    Cargar(data);
+               }
+             });
+    
+        
     }
 </script>
 @stop
