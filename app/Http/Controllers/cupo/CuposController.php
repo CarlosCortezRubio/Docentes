@@ -43,6 +43,7 @@ class CuposController extends Controller
             
             return view('cupos.index',['cupos'=>$cupos,'programas'=>$programas,'periodos'=>$periodos]);
         }catch(QueryException $e){
+            DB::rollBack();
             dd($e);
         }
     }
@@ -59,6 +60,7 @@ class CuposController extends Controller
             $cupo->save();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return redirect()->back();
@@ -74,6 +76,7 @@ class CuposController extends Controller
             $cupo->update();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return redirect()->back();
@@ -87,6 +90,7 @@ class CuposController extends Controller
             $cupo->update();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return redirect()->back();

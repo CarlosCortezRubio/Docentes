@@ -22,7 +22,7 @@
                             <div class='row'>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label for="">Año</label>
-                                    <select class="form-control" name="anio" required id="anio_add">
+                                    <select class="buscarform-control" name="anio" required id="anio_add">
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($anios as $key => $an)
                                             <option >{{ $an }}</option>

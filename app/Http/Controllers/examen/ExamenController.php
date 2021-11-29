@@ -75,6 +75,7 @@ class ExamenController extends Controller
 
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return redirect()->back();
@@ -107,6 +108,7 @@ class ExamenController extends Controller
 
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return redirect()->back();
@@ -121,6 +123,7 @@ class ExamenController extends Controller
             $examen->update();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return redirect()->back();
@@ -134,6 +137,7 @@ class ExamenController extends Controller
             $sec->update();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return $sec->id_examen;
@@ -148,6 +152,7 @@ class ExamenController extends Controller
             $sec->update();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return $sec->id_examen;
@@ -164,6 +169,7 @@ class ExamenController extends Controller
             $sec->save();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return $sec->id_examen;

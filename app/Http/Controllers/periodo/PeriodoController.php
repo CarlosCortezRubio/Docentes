@@ -44,6 +44,7 @@ class PeriodoController extends Controller
             $periodo->save();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return redirect()->back();
@@ -63,6 +64,7 @@ class PeriodoController extends Controller
             $periodo->update();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return redirect()->back();
@@ -90,6 +92,7 @@ class PeriodoController extends Controller
             $periodo->update();
             DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             dd($e);
         }
         return redirect()->back();

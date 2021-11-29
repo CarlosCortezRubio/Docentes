@@ -116,6 +116,29 @@
                                 </div>
                             </div>
                             <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Programa de Estudio</label>
+                                    <select class="form-control" required name="id_cupos" id="id_cupos">
+                                        <option value="">---- Seleccione -----</option>
+                                        @foreach ($cupos as $k => $cu)
+                                            <option value="{{ $cu->id_cupos }}">{{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}) @endif</option></option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label class="row" for="">Jurados</label>
+                                    <select class="row buscar form-control" multiple="multiple" required name="codi_doce_per[]" id="codi_doce_per">
+                                        @foreach ($docentes as $k => $doc)
+                                            <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}</option></option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
                             <div class="control-group">
                                 <label>Modalidad</label>
                                 <div class="row">
@@ -159,83 +182,62 @@
                         <th scope="col">Tiempo</th>
                         <th scope="col">Modalidad</th>
                         <th scope="col">Aula</th>
-                        <th scope="col">Estado</th>
                         <th scope="col">Acciones</th>
 
                     </tr>
                 </thead>
                 <tbody style='font-size:15px'>
+                    @foreach ($programaciones as $k => $prog)
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Examen de Conocimiento</td>
-                        <td>Guitarra-Escolar(2021)</td>
-                        <td>Examen A</td>
-                        <td>2021-02-23 12:30:00 - 13:30:00</td>
-                        <!--<td>2021-02-24 12:30:00</td>-->
-                        <td>150 min</td>
-                        <td>Presencial</td>
-                        <td>AULA 12-A</td>
-                        <td>Activo</td>
+                        <th scope="row">{{ $k+1 }}</th>
+                        <td>{{ $prog->descripcion }}</td>
+                        <td>{{ $prog->abre_espe_esp.'('.$prog->anio.')' }}</td>
+                        <td>{{ $prog->examen }}</td>
+                        <td>{{ $prog->fecha_resol }}</td>
+                        <td>{{ $prog->minutos }} min</td>
+                        <td>@if ($prog->modalidad=='V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>
+                        <td>{{ $prog->aula }}</td>
                         <td>
                             <button class='btn btn-primary fa fa-pencil' aria-hidden="true"></button>
                             <button class='btn btn-danger fa fa-trash' aria-hidden="true"></button>
                             <button class='btn btn-success fa fa-plus-circle' aria-hidden="true"></button>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Examen de Conocimiento</td>
-                        <td>Violín-Escolar(2021)</td>
-                        <td>Examen A</td>
-                        <td>2021-02-23 12:30:00 - 13:30:00</td>
-                        <!--<td>2021-02-24 12:30:00</td>-->
-                        <td>150 min</td>
-                        <td>Presencial</td>
-                        <td>AULA 12-A</td>
-                        <td>Activo</td>
-                        <td>
-                            <button class='btn btn-primary fa fa-pencil' aria-hidden="true"></button>
-                            <button class='btn btn-danger fa fa-trash' aria-hidden="true"></button>
-                            <button class='btn btn-success fa fa-plus-circle' aria-hidden="true"></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Examen de Conocimiento</td>
-                        <td>Violonchelo-Escolar(2021)</td>
-                        <td>Examen B</td>
-                        <td>2021-02-23 12:30:00 - 13:30:00</td>
-                        <!--<td>2021-02-24 12:30:00</td>-->
-                        <td>150 min</td>
-                        <td>Presencial</td>
-                        <td>AULA 12-A</td>
-                        <td>Activo</td>
-                        <td>
-                            <button class='btn btn-primary fa fa-pencil' aria-hidden="true"></button>
-                            <button class='btn btn-danger fa fa-trash' aria-hidden="true"></button>
-                            <button class='btn btn-success fa fa-plus-circle' aria-hidden="true"></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">4</th>
-                        <td>Examen de Conocimiento</td>
-                        <td>Violonchelo-Escolar(2021)</td>
-                        <td>Examen C</td>
-                        <td>2021-02-23 12:30:00 - 13:30:00</td>
-                        <!--<td>2021-02-24 12:30:00</td>-->
-                        <td>150 min</td>
-                        <td>Presencial</td>
-                        <td>AULA 12-A</td>
-                        <td>Activo</td>
-                        <td>
-                            <button class='btn btn-primary fa fa-pencil' aria-hidden="true"></button>
-                            <button class='btn btn-danger fa fa-trash' aria-hidden="true"></button>
-                            <button class='btn btn-success fa fa-plus-circle' aria-hidden="true"></button>
-                        </td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 @stop
-
+@section('css')
+    <style>
+        .flex-center {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            padding-top: 25px
+        }
+    </style>
+@stop
+@section('js')
+    <script>
+        $(document).ready(function() {
+            $('.buscar').select2();
+            $('.tablaresponse').DataTable({
+                "language": {
+                    "url": "{{ asset('js/datatables.spanish.json') }}"
+                },
+                "order": [
+                    [1, "asc"]
+                ],
+                "info": false,
+                "stateSave": true,
+                "columnDefs": [{
+                    "orderable": false,
+                    "targets": 0
+                }],
+                "pageLength": 100
+            });
+        });
+    </script>
+@stop
