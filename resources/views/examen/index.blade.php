@@ -318,7 +318,9 @@
             ],
             "pageLength": 100
          });
-        
+         if ({{ $cargar }}==0)
+             Cargar({{ $id_examen }});
+         
          
     });
     function editarexamen(id_examen,id_examen_admision,nombre,descripcion,codi_secc_sec,nota_apro,nota_maxi,cara_elim,flag_jura) {
@@ -358,7 +360,7 @@
                                     '<input type="number" name="id_examen" style="display:none" value="'+id_examen+'">'+
                                 '</div>'+
                                 '<div class="col-2">'+
-                                    '<input type="number" name="porcentaje" required class="form-control">'+
+                                    '<input type="number" min=1 max=100 name="porcentaje" required class="form-control">'+
                                 '</div>'+
                                 '<div class="col-1 centrar-content">'+
                                     `<a href="#" onclick="formulario('#insersecc')" class='save'><i class="fa fa-check"></i></a>`+
@@ -392,14 +394,14 @@
         valor2=$(id+" div .input2 label").html();
         valor2=valor2.substring(0, valor2.length - 1);
         input1="<input required name='descripcion' type='text' class='form-control' value='"+valor1+"'>";
-        input2="<input required type='number' name='porcentaje' class='form-control' value='"+valor2+"'>";
+        input2="<input required type='number' min=1 max=100 name='porcentaje' class='form-control' value='"+valor2+"'>";
         chec="<a href='#' onclick='formulario("+'"'+idsec+'"'+")' class='save'><i class='fa fa-check'></i></a>";
         del="<a href='#' onclick='Cancelar("+'"'+id+'"'+","+'"'+valor1+'"'+","+'"'+valor2+'"'+")' class='delete'><i class='fa fa-undo'></i></a>";
         $(id+" div .input1").html(input1);
         $(id+" div .input2").html(input2);
-        $(id+" div .col-1 .save").remove();
-        $(id+" div .col-1 .delete").remove();
-        $(id+" div .col-1").append(chec+del);
+        $(id+" div .action a").remove();
+        $(id+" div .action a").remove();
+        $(id+" div .action").append(chec+del);
         $(id+" div").removeClass("activado");
         $(id+" div").addClass("desactivado");
     }
@@ -432,21 +434,18 @@
     }
 
     function formulario(id) {
-
-    
         var form = $(id);
         var url = form.attr('action');
         
         $.ajax({
-               type: "GET",
+               type: form.attr('method'),
                url: url,
                data: form.serialize(), 
                success: function(data){
                     Cargar(data);
                }
              });
-    
-        
     }
+    
 </script>
 @stop

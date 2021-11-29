@@ -23,8 +23,8 @@ class CrearTablaPeriodo extends Migration
             $table->char('estado',1);
             $table->bigInteger('user_regi');
             $table->bigInteger('user_actu')->nullable();
-            $table->foreign('user_regi')->references('id')->on('admision.adm_usuario');
-            $table->foreign('user_actu')->references('id')->on('admision.adm_usuario');
+            $table->foreign('user_regi')->references('id')->on('admision.adm_usuario')->onDelete('cascade');
+            $table->foreign('user_actu')->references('id')->on('admision.adm_usuario')->onDelete('cascade');
             $table->char('codi_secc_sec',5);
             $table->timestamps();
         });

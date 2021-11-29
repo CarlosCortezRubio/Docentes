@@ -179,12 +179,13 @@ class ExamenController extends Controller
             $id='eva'.$sec->id_seccion_examen;
             $plus="";
             if($examen->flag_jura=='N'){
-                $plus="<a href='/MOCUNM/PHP/VISTA/Preguntas.php' class='save'><i class='fa fa-plus-circle'></i></a>";
+                $plus="<a href='".route('pregunta')."?id_seccion_examen=$sec->id_seccion_examen' class='save'><i class='fa fa-plus-circle'></i></a>";
             }
             
             $content=$content.'<form action="'.route('examen.cargar.delete').'" method="get" id="deletesecc'.$sec->id_seccion_examen.'">'.
                                     "<input type='text' name='id_seccion_examen' value='$sec->id_seccion_examen' style='display:none'>".
                                 '</form>'.
+                                
                                 '<form action="'.route('examen.cargar.update').'" method="get" id="updatesecc'.$sec->id_seccion_examen.'">'.
                                 '<div  class="row">'.
                                     "<div id='$id' class='col para-eva'>".
@@ -196,7 +197,7 @@ class ExamenController extends Controller
                                             '<div class="col-2 input2">'.
                                                 "<label>$sec->porcentaje%</label>".
                                             '</div>'.
-                                            '<div class="col-2 centrar-content">'.
+                                            '<div class="col-2 action centrar-content">'.
                                                 "<a href='#' onclick=editar('#$id','#updatesecc".$sec->id_seccion_examen."') class='save'><i class='fa fa-pencil'></i></a>".
                                                 $plus.
                                                 "<a href='#' onclick=formulario('#deletesecc".$sec->id_seccion_examen."') class='delete'><i class='fa fa-trash'></i></a>".
@@ -208,10 +209,5 @@ class ExamenController extends Controller
         }
         return  $content;
     }
-
-    //////////////////////////////////////////////////
-    public function programacion()
-    {
-        return view('examen.programacion');
-    }
+    
 }

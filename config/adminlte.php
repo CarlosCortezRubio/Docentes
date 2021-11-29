@@ -1,6 +1,24 @@
 <?php
 
-return [
+$menu=[['text' => 'Inicio','route'  => 'home','icon' => 'fas fa-fw fa-home',],];
+if (getTipoUsuario()==="Administrador") {
+    array_push($menu,
+        ['text' => 'Registro de Periodo','route'  => 'periodo','icon' => 'far fa-fw fa-calendar',],
+        ['text' => 'Configuración de Cupo','route'  => 'cupo','icon' => 'fa-fw fas fa-clipboard-check',]
+    );
+}
+if (getTipoUsuario()==="Secretario" || getTipoUsuario()==="Administrador") {
+    array_push($menu,
+        ['text' => 'Registro de Examen','route'  => 'examen','icon' => 'far fa-fw fa-file-alt',],
+        ['text' => 'Programación de Examen','route' => 'programacion','icon' => 'fa-fw fas fa-chalkboard-teacher',]      
+    );
+}
+if (getTipoUsuario()==="Jurado" || getTipoUsuario()==="Administrador") {
+    array_push($menu,
+        ['text' => 'Registro de Evaluaciones','route'  => 'evaluacion','icon' => 'fas fa-fw fa-check',]
+    );
+}
+    return [
 
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +187,7 @@ return [
 
     'right_sidebar' => false,
     'right_sidebar_icon' => 'fas fa-cogs',
-    'right_sidebar_theme' => 'dark',
+    'right_sidebar_theme' => '',
     'right_sidebar_slide' => true,
     'right_sidebar_push' => true,
     'right_sidebar_scrollbar_theme' => 'os-theme-light',
@@ -224,38 +242,9 @@ return [
     |
     */
 
-    'menu' => [
+    'menu' => $menu
 
-        [
-            'text' => 'Inicio',
-            'route'  => 'home',
-            'icon'        => 'fas fa-fw fa-home',
-        ],
-        [
-            'text' => 'Registro de Periodo',
-            'route'  => 'periodo',
-            'icon'        => 'far fa-fw fa-calendar',
-        ],
-        [
-            'text' => 'Configuración de Cupo',
-            'route'  => 'cupo',
-            'icon'        => 'fa-fw fas fa-clipboard-check',
-        ],
-        [
-            'text' => 'Registro de Examen',
-            'route'  => 'examen',
-            'icon'        => 'far fa-fw fa-file-alt',
-        ],
-        [
-            'text' => 'Programación de Examen',
-            'route'  => 'programacion',
-            'icon'        => 'fa-fw fas fa-chalkboard-teacher',
-        ],
-        [
-            'text' => 'Registro de Evaluaciones',
-            'route'  => 'evaluacion',
-            'icon'        => 'fas fa-fw fa-check',
-        ],
+        
         // Navbar items:
         /*[
             'type'         => 'navbar-search',
@@ -349,7 +338,7 @@ return [
             'icon_color' => 'cyan',
             'url'        => '#',
         ],*/
-    ],
+    ,
 
     /*
     |--------------------------------------------------------------------------

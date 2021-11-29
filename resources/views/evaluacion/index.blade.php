@@ -1,6 +1,5 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 @section('title','Evaluacion')
-
 @section('content_header')
     <form class="table row ">
         <div class=" col-md col-sm col-xs">
@@ -148,52 +147,23 @@
         </div>
     </div>
 @stop
-@section('css')
-<style>
-    .flex-center {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        padding-top: 25px
-    }
-</style>
-@stop
-@section('js')
-<script>
-    $(document).ready(function() {
-        $('.buscar').select2();
-        $('.tablaresponse').DataTable({
-            "language": {
-               "url": "{{ asset('js/datatables.spanish.json') }}"
-            },
-            "order": [[ 1, "asc" ]],
-            "info": false,
-            "stateSave": true,
-            "columnDefs": [
-               { "orderable": false, "targets": 0 }
-            ],
-            "pageLength": 100
-         });
-    });
-    $(".evaluar").submit(function(e) {
 
+@section('js')
+    <script>
+    $(".evaluar").submit(function(e) {
         e.preventDefault(); 
-    
         var form = $(this);
         var url = form.attr('action');
-        
         $.ajax({
-               type: "GET",
-               url: url,
-               data: form.serialize(), 
-               success: function(data){
-                    //$("tbody tr td").css('background-color', 'black');
-                    $(".des"+form.attr('id')).attr('disabled', true);
-                    $(".des"+form.attr('id')).attr('disabled', true);
-               }
-             });
-    
-        
+        type: "GET",
+        url: url,
+        data: form.serialize(), 
+        success: function(data){
+            //$("tbody tr td").css('background-color', 'black');
+            $(".des"+form.attr('id')).attr('disabled', true);
+            $(".des"+form.attr('id')).attr('disabled', true);
+        }
+        });
     });
-</script>
+    </script>
 @stop

@@ -23,7 +23,7 @@ class CrearTablaExamen extends Migration
             $table->bigInteger('user_regi');
             $table->bigInteger('user_actu')->nullable();
             $table->bigInteger('id_tipo_examen');
-            $table->foreign('id_tipo_examen')->references('id_tipo_examen')->on('admision.adm_tipo_examen');
+            $table->foreign('id_tipo_examen')->references('id_tipo_examen')->on('admision.adm_tipo_examen')->onDelete('cascade');
             $table->timestamps();
         });
     }

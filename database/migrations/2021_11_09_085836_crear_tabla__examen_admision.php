@@ -19,7 +19,7 @@ class CrearTablaExamenAdmision extends Migration
             $table->char('flag_jura',1);
             $table->char('codi_secc_sec',5);
             $table->bigInteger('id_examen');
-            $table->foreign('id_examen')->references('id_examen')->on('admision.adm_examen');
+            $table->foreign('id_examen')->references('id_examen')->on('admision.adm_examen')->onDelete('cascade');
         });
     }
 

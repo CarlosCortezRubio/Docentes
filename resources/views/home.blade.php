@@ -1,5 +1,4 @@
-@extends('adminlte::page')
-
+@extends('layouts.app')
 @section('title','Principal')
 
 @section('content')
@@ -14,28 +13,4 @@
         </div>
     </div>
 @stop
-@section('css')
-<style>
-    .full-height {
-        height: 100vh;
-    }
 
-    .flex-center {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-    }
-
- 
-
-    .content {
-        text-align: center;
-    }
-    .title {
-        font-size: 84px;
-    }
-    .m-b-md {
-        margin-bottom: 30px;
-    }
-</style>
-@stop

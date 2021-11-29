@@ -1,0 +1,64 @@
+.form-check{
+    display: block;
+    padding: 6px;
+    padding-left: 30px;
+    border-radius: 6px;
+    border: solid #dde7e8;
+}
+.pregunta{
+    background-color: rgb(114, 166, 245);
+    border-radius: 6px;
+    padding-left: 10px;
+}
+.form-check:hover{
+    background-color: rgb(241, 239, 250);
+    border: solid rgb(114, 166, 245);
+}
+.titlecenter{
+    text-align: center;
+    font-weight: 700;
+}
+#title{
+    text-align: center;
+}
+.text{
+    padding: 50px;
+}
+
+.cuadro{
+    height: 33%; 
+}
+.pegado{
+    height: 100%; 
+}
+.dropped {
+    position: static !important;
+    height: 100%; 
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
+.cont{
+    border-left: black 5px solid;
+    border-right: black 5px solid;
+}
+label{
+    width: 100%;
+}

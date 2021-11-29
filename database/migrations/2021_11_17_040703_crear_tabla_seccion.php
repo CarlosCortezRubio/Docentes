@@ -19,7 +19,7 @@ class CrearTablaSeccion extends Migration
             $table->integer('porcentaje');
             $table->char('estado',1);
             $table->bigInteger('id_examen');
-            $table->foreign('id_examen')->references('id_examen')->on('admision.adm_examen');
+            $table->foreign('id_examen')->references('id_examen')->on('admision.adm_examen')->onDelete('cascade');
         });
     }
 

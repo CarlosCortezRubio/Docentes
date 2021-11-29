@@ -47,9 +47,13 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/Examen/Cargar/Actualizar', 'examen\ExamenController@EditarSeccion')->name('examen.cargar.update');
     Route::get('/Examen/Cargar/Nuevo', 'examen\ExamenController@InsertarSeccion')->name('examen.cargar.insert');
     ///////////////////////////////////////
+    Route::get('/Preguntas', 'examen\PreguntaController@index')->name('pregunta');
+    ///////////////////////////////////////
     Route::get('/Evaluacion', 'evaluacion\EvaluacionController@index')->name('evaluacion');
     Route::get('/Evaluacion/Evaluar', 'evaluacion\EvaluacionController@Evaluar')->name('evaluar');
     /////////////////////////////////////
-    Route::get('/Programacion', 'examen\ExamenController@programacion')->name('programacion');
+    Route::get('/Programacion', 'examen\ProgramacionController@index')->name('programacion');
+    Route::post('/Programacion/Nuevo', 'examen\ProgramacionController@insert')->name('programacion.insert');
+    Route::post('/Programacion/Actualizar', 'examen\ProgramacionController@update')->name('programacion.update');
     Route::get('/', function () { return view('home');});
 });

@@ -16,11 +16,46 @@ class CrearDatosUsuario extends Migration
     public function up()
     {
         Schema::table('admision.adm_usuario', function (Blueprint $table) {
-            DB::table('admision.adm_usuario')
-            ->insert([
-                "name" => "Eduardo Cahuana Juarez",
+            DB::table('admision.adm_usuario')->insert([
+                "name" => "Malak Jorge",
                 "ndocumento" => "12345678",
-                "email" => "educj.3@gmail.com",
+                "email" => "admin@hotmail.com",
+                "password" => Hash::make('12345678'),
+            ]);
+            DB::table('admision.adm_usuario')->insert([
+                "name" => "Ester Palma",
+                "ndocumento" => "87654321",
+                "email" => "docentesuperior@hotmail.com",
+                "password" => Hash::make('12345678'),
+            ]);
+            DB::table('admision.adm_usuario')->insert([
+                "name" => "Almudena Amores",
+                "ndocumento" => "96874218",
+                "email" => "adminsuperior@hotmail.com",
+                "password" => Hash::make('12345678'),
+            ]);
+            DB::table('admision.adm_usuario')->insert([
+                "name" => "Mirian Antunez",
+                "ndocumento" => "12345879",
+                "email" => "docenteposescolar@hotmail.com",
+                "password" => Hash::make('12345678'),
+            ]);
+            DB::table('admision.adm_usuario')->insert([
+                "name" => "Ali Palomo",
+                "ndocumento" => "14523687",
+                "email" => "adminposescolar@hotmail.com",
+                "password" => Hash::make('12345678'),
+            ]);
+            DB::table('admision.adm_usuario')->insert([
+                "name" => "Javi Saez",
+                "ndocumento" => "78546328",
+                "email" => "docentescolar@hotmail.com",
+                "password" => Hash::make('12345678'),
+            ]);
+            DB::table('admision.adm_usuario')->insert([
+                "name" => "Jose-Luis Pacheco",
+                "ndocumento" => "78854632",
+                "email" => "adminescolar@hotmail.com",
                 "password" => Hash::make('12345678'),
             ]);
         });

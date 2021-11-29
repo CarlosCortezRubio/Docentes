@@ -190,7 +190,7 @@
                 <tbody>
                     @foreach ($cupos as $k => $cup)
                     <tr>
-                        <th scope="row">{{ $k }}</th>
+                        <th scope="row">{{ $k+1 }}</th>
                         <td>{{ $cup->abre_espe_esp }}</td>
                         <td>{{ $cup->anio }}@if (is_admin()) ({{ $cup->abre_secc_sec }}) @endif</td>
                         <td>{{ $cup->cant_cupo }}</td>
