@@ -62,7 +62,8 @@ class MigrateInOrder extends Command
             '2021_11_17_040703_crear_tabla_seccion.php',
             '2021_11_26_080740_crear_aulas.php',
             '2021_11_26_074329_crear_programacion_examen.php',
-            '2021_11_29_054320_crear_jurado.php'
+            '2021_11_29_054320_crear_jurado.php',
+            '2021_11_29_221312_crear_programacion_solicitud.php'
         ];
 
         foreach($migrations as $migration)
