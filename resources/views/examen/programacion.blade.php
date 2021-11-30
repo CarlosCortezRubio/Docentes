@@ -121,7 +121,7 @@
                             <div class='row'>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label class="row" for="">Jurados</label>
-                                    <select class="row buscar form-control" multiple="multiple" required
+                                    <select class="row buscar form-control" multiple="multiple" 
                                         name="codi_doce_per[]" id="codi_doce_per">
                                         @foreach ($docentes as $k => $doc)
                                             <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}</option>
