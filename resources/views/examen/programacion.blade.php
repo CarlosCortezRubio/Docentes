@@ -295,8 +295,8 @@
                                     <label class="row" for="">Postulantes</label>
                                     <select class="row buscar form-control" multiple="multiple" required
                                         name="nume_docu_sol[]" id="nume_docu_sol">
-                                        @foreach ($alumnos as $k => $alm)
-                                            <option value="{{ $alm->nume_docu_sol }}">{{ $alm->apel_nomb_apd }}
+                                        @foreach ($cargaalumno as $k => $alm)
+                                            <option value="{{ $alm->nume_docu_per }}">{{ $alm->nomb_pers_per." ".$alm->apel_pate_per." ".$alm->apel_mate_per }}
                                             </option>
                                             </option>
                                         @endforeach

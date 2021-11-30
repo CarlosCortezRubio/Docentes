@@ -97,9 +97,12 @@ class ProgramacionController extends Controller
                 $alumnos[$pro->id_programacion_examen]=$alumnos[$pro->id_programacion_examen]."{documento:'$v->nume_docu_per',nombre:'$v->nomb_pers_per $v->apel_pate_per $v->apel_mate_per'},";
             }
             $alumnos[$pro->id_programacion_examen]=$alumnos[$pro->id_programacion_examen]."]";
-            return $alumnos[$pro->id_programacion_examen];
+            //return $alumnos[$pro->id_programacion_examen];
         }
-        return view('examen.programacion',['arrayalumnos'=>$arrayalumnos,'arraydoc'=>$arraydoc,'secciones'=>$secciones,"examenes"=>$examenes,"aulas"=>$aulas,"cupos"=>$cupos,'docentes'=>$docentes,'programaciones'=>$programaciones]);
+        ///////////////////////////////////
+        $cargaalumno=DB::table('bdsigunm.ad_postulacion')->where('esta_post_pos','V')->select('nomb_pers_per','apel_pate_per','apel_mate_per','nume_docu_per')->get();
+        ///////////////////////////////////
+        return view('examen.programacion',['cargaalumno'=>$cargaalumno,'arrayalumnos'=>$arrayalumnos,'arraydoc'=>$arraydoc,'secciones'=>$secciones,"examenes"=>$examenes,"aulas"=>$aulas,"cupos"=>$cupos,'docentes'=>$docentes,'programaciones'=>$programaciones]);
     }
 
     public function insert(Request $request){
@@ -182,7 +185,7 @@ class ProgramacionController extends Controller
             foreach ($request->nume_docu_sol as $key => $nume) {
                 $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
                                     ->where('nume_docu_sol',$nume)
-                                    ->first();
+                                    ;
                 if ($postulante->count()==0) {
                     $postulante=new Postulante();
                     $postulante->id_programacion_examen=$request->id_programacion_examen;
@@ -193,7 +196,10 @@ class ProgramacionController extends Controller
                     $postulante->estado='A';
                     $postulante->update();
                 }
+                
+
             }
+            DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);

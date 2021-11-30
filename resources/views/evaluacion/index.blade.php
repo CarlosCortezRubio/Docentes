@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 @section('title','Evaluacion')
 @section('content_header')
     <form class="table row ">
@@ -54,50 +54,19 @@
                     </tr>
                 </thead>
                 <tbody style='font-size:15px'>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Guitarra-Escolar(2021)</td>
-                        <td>2021-02-23 12:30:00 - 13:30:00</td>
-                        <td>150 min</td>
-                        <td>Presencial</td>
-                        <td>AULA 12-A</td>
-                        <td>
-                            <button class='btn btn-primary'data-toggle="modal" data-target="#modalplus"><i class="fa fa-pencil" aria-hidden="true"></i> Evaluar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Violín-Escolar(2021)</td>
-                        <td>2021-02-23 12:30:00 - 13:30:00</td>
-                        <td>150 min</td>
-                        <td>Presencial</td>
-                        <td>AULA 12-A</td>
-                        <td>
-                            <button class='btn btn-primary'data-toggle="modal" data-target="#modalplus"><i class="fa fa-pencil" aria-hidden="true"></i> Evaluar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Violonchelo-Escolar(2021)</td>
-                        <td>2021-02-23 12:30:00 - 13:30:00</td>
-                        <td>150 min</td>
-                        <td>Presencial</td>
-                        <td>AULA 12-A</td>
-                        <td>
-                            <button class='btn btn-primary'data-toggle="modal" data-target="#modalplus"><i class="fa fa-pencil" aria-hidden="true"></i> Evaluar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">4</th>
-                        <td>Violonchelo-Escolar(2021)</td>
-                        <td>2021-02-23 12:30:00 - 13:30:00</td>
-                        <td>150 min</td>
-                        <td>Presencial</td>
-                        <td>AULA 12-A</td>
-                        <td>
-                            <button class='btn btn-primary'data-toggle="modal" data-target="#modalplus"><i class="fa fa-pencil" aria-hidden="true"></i> Evaluar</button>
-                        </td>
-                    </tr>
+                    @foreach ($programaciones as $k => $prog)
+                        <tr>
+                            <th scope="row">{{ $k+1 }}</th>
+                            <td>{{ $prog->abre_espe_esp . '(' . $prog->anio . ')' }}</td>
+                            <td>{{ $prog->fecha_resol }}</td>
+                            <td>{{ $prog->minutos }} min</td>
+                            <td>@if ($prog->modalidad == 'V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>
+                            <td>{{ $prog->aula }}</td>
+                            <td>
+                                <button class='btn btn-primary'data-toggle="modal" data-target="#modalplus"><i class="fa fa-pencil" aria-hidden="true"></i> Evaluar</button>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -124,16 +93,16 @@
                         </thead>
                         <tbody>
                             @foreach ($postulantes as $k => $pos)
-                            <form action="{{ route('evaluar') }}" id="{{ $pos->codi_post_pos }}" class="evaluar" method="GET">
+                            <form action="{{ route('evaluar') }}" id="{{ $pos->nume_docu_per }}" class="evaluar" method="GET">
                                 @csrf   
                                 <tr>                 
-                                    <input type="text" name="codi_pers_per" value="{{  $pos->codi_post_pos }}" style="display: none"/>
+                                    <input type="text" name="codi_pers_per" value="{{  $pos->nume_docu_per }}" style="display: none"/>
                                     <td>{{ $pos->nomb_pers_per." ".$pos->apel_pate_per." ".$pos->apel_mate_per }}</td>
-                                    <td><input class="form-control des{{ $pos->codi_post_pos }}" name="nota1" min="0" required type="number" ></td>
-                                    <td><input class="form-control des{{ $pos->codi_post_pos }}" name="nota2" min="0" required type="number" > </td>
-                                    <td><input class="form-control des{{ $pos->codi_post_pos }}"  name="nota3" min="0" required type="number" ></td>
-                                    <td><input class="form-control des{{ $pos->codi_post_pos }}" name="nota4" min="0" required type="number" ></td>
-                                    <td><button type="submit" class="btn btn-success des{{ $pos->codi_post_pos }}"> <i class="fas fa-check"></i> </button></td>
+                                    <td><input class="form-control des{{ $pos->nume_docu_per }}" name="nota1" min="0" required type="number" ></td>
+                                    <td><input class="form-control des{{ $pos->nume_docu_per }}" name="nota2" min="0" required type="number" > </td>
+                                    <td><input class="form-control des{{ $pos->nume_docu_per }}"  name="nota3" min="0" required type="number" ></td>
+                                    <td><input class="form-control des{{ $pos->nume_docu_per }}" name="nota4" min="0" required type="number" ></td>
+                                    <td><button type="submit" class="btn btn-success des{{ $pos->nume_docu_per }}"> <i class="fas fa-check"></i> </button></td>
                                 </tr>
                             </form>
                             @endforeach
