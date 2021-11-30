@@ -42,17 +42,8 @@
         </form>
 @stop
 @section('css')
-    <link href="{{ asset('css/slide.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/Examen.css') }}">
     <link rel="stylesheet" href="{{ asset('css/preguntas.css') }}">
-    <style>
-        .flex-center {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            padding-top: 25px
-        }
-    </style>
 @stop
 @section('js')
     <script src="{{ asset('js/Pregunta.js') }}"></script>

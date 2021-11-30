@@ -291,37 +291,11 @@
     </div>
     
 @stop
-@section('css')
-<link href="{{ asset('css/slide.css') }}" rel="stylesheet">
-<style>
-    .flex-center {
-        align-items: center;
-        display: flex;  
-        justify-content: center;
-        padding-top: 25px
-    }
-</style>
-@stop
 @section('js')
 <script>
     $(document).ready(function() {
-        $('.buscar').select2();
-        $('.tablaresponse').DataTable({
-            "language": {
-               "url": "{{ asset('js/datatables.spanish.json') }}"
-            },
-            "order": [[ 1, "asc" ]],
-            "info": false,
-            "stateSave": true,
-            "columnDefs": [
-               { "orderable": false, "targets": 0 }
-            ],
-            "pageLength": 100
-         });
          if ({{ $cargar }}==0)
              Cargar({{ $id_examen }});
-         
-         
     });
     function editarexamen(id_examen,id_examen_admision,nombre,descripcion,codi_secc_sec,nota_apro,nota_maxi,cara_elim,flag_jura) {
         $("#id_examen").val(id_examen);

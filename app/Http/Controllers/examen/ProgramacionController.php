@@ -10,6 +10,7 @@ use App\Model\Examen\Examen;
 use App\Model\Examen\ProgramacionExamen;
 use App\Model\Jurado;
 use App\Model\Persona;
+use App\Model\Postulante;
 use App\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -52,9 +53,14 @@ class ProgramacionController extends Controller
                                           ->join('admision.adm_periodo as p','p.id_periodo','cu.id_periodo')
                                           ->where('admision.adm_programacion_examen.estado','A')
                                           ->select('admision.adm_programacion_examen.descripcion',
+                                                   'id_programacion_examen',
                                                    'fecha_resol',
                                                    'minutos',
                                                    'modalidad',
+                                                   'ex.id_examen',
+                                                   'cu.id_cupos',
+                                                   'au.id_aula',
+                                                   'esp.codi_espe_esp',
                                                    'esp.abre_espe_esp',
                                                    'p.anio',
                                                    'ex.nombre as examen',
@@ -69,7 +75,31 @@ class ProgramacionController extends Controller
             $cupos= $cupos->get();
             $programaciones=$programaciones->get();
         }
-        return view('examen.programacion',['secciones'=>$secciones,"examenes"=>$examenes,"aulas"=>$aulas,"cupos"=>$cupos,'docentes'=>$docentes,'programaciones'=>$programaciones]);
+        $alumnos[]=[];
+        $arrayalumnos[]=[];
+        $arraydoc[]=[];
+        foreach ($programaciones as $key => $pro) {
+            $doc=DB::table('admision.adm_jurado')->where('id_programacion_examen',$pro->id_programacion_examen)->where('estado','A')->get();
+            $arraydoc[$pro->id_programacion_examen]=[];
+            foreach ($doc as $key => $v) {
+                $arraydoc[$pro->id_programacion_examen][]=$v->codi_doce_per;
+            }
+            $alm=DB::table('admision.adm_postulante')->where('id_programacion_examen',$pro->id_programacion_examen)->where('estado','A')->get();
+            $arrayalumnos[$pro->id_programacion_examen]=[];
+            foreach ($alm as $key => $v) {
+                $arrayalumnos[$pro->id_programacion_examen][]=$v->nume_docu_sol;
+            }
+            $cargaalumno=DB::table('bdsigunm.ad_postulacion')->where('codi_espe_esp',$pro->codi_espe_esp)
+                                                     ->where('esta_post_pos','V')
+                                                     ->whereYear('fech_regi_aud',$pro->anio)->get();
+            $alumnos[$pro->id_programacion_examen]="[";
+            foreach ($cargaalumno as $key => $v) {
+                $alumnos[$pro->id_programacion_examen]=$alumnos[$pro->id_programacion_examen]."{documento:'$v->nume_docu_per',nombre:'$v->nomb_pers_per $v->apel_pate_per $v->apel_mate_per'},";
+            }
+            $alumnos[$pro->id_programacion_examen]=$alumnos[$pro->id_programacion_examen]."]";
+            return $alumnos[$pro->id_programacion_examen];
+        }
+        return view('examen.programacion',['arrayalumnos'=>$arrayalumnos,'arraydoc'=>$arraydoc,'secciones'=>$secciones,"examenes"=>$examenes,"aulas"=>$aulas,"cupos"=>$cupos,'docentes'=>$docentes,'programaciones'=>$programaciones]);
     }
 
     public function insert(Request $request){
@@ -87,7 +117,7 @@ class ProgramacionController extends Controller
             $program->id_cupos=$request->id_cupos;
             $program->save();
             foreach ($request->codi_doce_per as $key => $doc) {
-                $contrasena = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
+                $contrasena = '12345678';//substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
                 $persona=Persona::find($doc);
                 $usuario=User::where('ndocumento',$persona->nume_docu_per);
                 if ($usuario->count()==0) {
@@ -134,6 +164,36 @@ class ProgramacionController extends Controller
             $program->codi_doce_per=$request->codi_doce_per;
             $program->update();
             DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+        return redirect()->back();
+    }
+
+    public function addAlumno(Request $request){
+        try {
+            DB::beginTransaction();
+            $postulantes=Postulante::where('id_programacion_examen',$request->id_programacion_examen)->get();
+            foreach ($postulantes as $key => $pos) {
+                $pos->estado='I';
+                $pos->update();
+            }
+            foreach ($request->nume_docu_sol as $key => $nume) {
+                $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
+                                    ->where('nume_docu_sol',$nume)
+                                    ->first();
+                if ($postulante->count()==0) {
+                    $postulante=new Postulante();
+                    $postulante->id_programacion_examen=$request->id_programacion_examen;
+                    $postulante->nume_docu_sol=$nume;
+                    $postulante->estado='A';
+                    $postulante->save();
+                }else{
+                    $postulante->estado='A';
+                    $postulante->update();
+                }
+            }
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);

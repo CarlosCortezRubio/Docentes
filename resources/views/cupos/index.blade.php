@@ -206,33 +206,9 @@
     </div>
     <!--------------------------------------------------------------------->
 @stop
-@section('css')
-<style>
-    .flex-center {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        padding-top: 25px
-    }
-</style>
-@stop
 @section('js')
 <script>
-    $(document).ready(function() {
-        $('.buscar').select2();
-        $('.tablaresponse').DataTable({
-            "language": {
-               "url": "{{ asset('js/datatables.spanish.json') }}"
-            },
-            "order": [[ 1, "asc" ]],
-            "info": false,
-            "stateSave": true,
-            "columnDefs": [
-               { "orderable": false, "targets": 0 }
-            ],
-            "pageLength": 100
-         });
-    });
+    
     function editar(id_cupos,codi_espe_esp,id_periodo,cant_cupo) {
         $("#id_cupos").val(id_cupos);
         $("#codi_espe_esp_edit").val(codi_espe_esp);

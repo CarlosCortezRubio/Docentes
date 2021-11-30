@@ -56,18 +56,6 @@
                     <form action="{{ route('programacion.insert') }}" method="POST" id='formularioadd'>
                         @csrf
                         <div class="form-group">
-                            <div class='row'  @if (getTipoUsuario()!='Administrador' || getSeccion()!=null) style="display:none " @endif>
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label for="">Seccion</label>
-                                    <select class="form-control" name="codi_secc_sec" required id="codi_secc_sec">
-                                        <option value="">---- Seleccione -----</option>
-                                        @foreach ($secciones as $key => $secc)
-                                            <option  @if(getCodSeccion()==$secc->codi_secc_sec) selected @endif value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <br>
                             <div class="row ">
                                 <div class="col-md col-sm col-xs">
                                     <label for="descripcion">Descripcion</label>
@@ -122,7 +110,9 @@
                                     <select class="form-control" required name="id_cupos" id="id_cupos">
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($cupos as $k => $cu)
-                                            <option value="{{ $cu->id_cupos }}">{{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}) @endif</option></option>
+                                            <option value="{{ $cu->id_cupos }}">
+                                                {{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}) @endif</option>
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -131,9 +121,11 @@
                             <div class='row'>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label class="row" for="">Jurados</label>
-                                    <select class="row buscar form-control" multiple="multiple" required name="codi_doce_per[]" id="codi_doce_per">
+                                    <select class="row buscar form-control" multiple="multiple" required
+                                        name="codi_doce_per[]" id="codi_doce_per">
                                         @foreach ($docentes as $k => $doc)
-                                            <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}</option></option>
+                                            <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}</option>
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -144,11 +136,13 @@
                                 <div class="row">
                                     <div class="col-1"></div>
                                     <div class="col">
-                                        <input class="col-1" type="radio" id="modalidadV" value="V" name="modalidad"/>
+                                        <input class="col-1" type="radio" id="modalidadV" value="V"
+                                            name="modalidad" />
                                         <label class="col-3 control control--radio" for="modalidadV">Virtual</label>
                                     </div>
                                     <div class="col">
-                                        <input class="col-1" type="radio" id="modalidadP" value="P" name="modalidad"/>
+                                        <input class="col-1" type="radio" id="modalidadP" value="P"
+                                            name="modalidad" />
                                         <label class="col-3 control control--radio" for="modalidadP">Presencial</label>
                                     </div>
                                 </div>
@@ -163,6 +157,163 @@
             </div>
         </div>
     </div>
+    <!---------------------------------------------------------------------------------------------------->
+    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title">Editar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('programacion.update') }}" method="POST" id='formularioupd'>
+                        @csrf
+                        <input type="text" id="id_programacion_examen" name="id_programacion_examen" style="display: none">
+                        <div class="form-group">
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="descripcion">Descripcion</label>
+                                    <input type="text" required class="form-control" id="descripcionupd" name="descripcion"
+                                        placeholder="Ingrese descripcion" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="fecha_resol">Fecha de Resoluciòn</label>
+                                    <input type="datetime-local" required class="form-control" id="fecha_resolupd"
+                                        name="fecha_resol" placeholder="Ingrese Fecha" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="minutos">Minutos</label>
+                                    <input type="number" required class="form-control" id="minutosupd" name="minutos"
+                                        placeholder="Ingrese Minutos de Resoluciòn" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Examen</label>
+                                    <select class="form-control" required name="id_examen" id="id_examenupd">
+                                        <option value="">---- Seleccione -----</option>
+                                        @foreach ($examenes as $k => $exa)
+                                            <option value="{{ $exa->id_examen }}">{{ $exa->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Aula</label>
+                                    <select class="form-control" required name="id_aula" id="id_aulaupd">
+                                        <option value="">---- Seleccione -----</option>
+                                        @foreach ($aulas as $k => $aul)
+                                            <option value="{{ $aul->id_aula }}">{{ $aul->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Programa de Estudio</label>
+                                    <select class="form-control" required name="id_cupos" id="id_cuposupd">
+                                        <option value="">---- Seleccione -----</option>
+                                        @foreach ($cupos as $k => $cu)
+                                            <option value="{{ $cu->id_cupos }}">
+                                                {{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}) @endif</option>
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label class="row" for="">Jurados</label>
+                                    <select class="row buscar form-control" multiple="multiple" required
+                                        name="codi_doce_per[]" id="codi_doce_perupd">
+                                        @foreach ($docentes as $k => $doc)
+                                            <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}
+                                            </option>
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="control-group">
+                                <label>Modalidad</label>
+                                <div class="row">
+                                    <div class="col-1"></div>
+                                    <div class="col">
+                                        <input class="col-1" type="radio" id="modalidadVupd" value="V"
+                                            name="modalidad" />
+                                        <label class="col-3 control control--radio" for="modalidadV">Virtual</label>
+                                    </div>
+                                    <div class="col">
+                                        <input class="col-1" type="radio" id="modalidadPupd" value="P"
+                                            name="modalidad" />
+                                        <label class="col-3 control control--radio" for="modalidadP">Presencial</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="submit" class="btn btn-success" form="formularioupd">Editar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------------------------------------------------------------------------------------------------->
+    <div class="modal fade show" id="modalplus" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Parametros de Evaluación</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('programacion.alumnos') }}" method="POST" id='formularioalumnos'>
+                        @csrf
+                        <input type="text" id="id_programacion_examenA" name="id_programacion_examen" style="display: none">
+                        <div class="form-group">
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label class="row" for="">Postulantes</label>
+                                    <select class="row buscar form-control" multiple="multiple" required
+                                        name="nume_docu_sol[]" id="nume_docu_sol">
+                                        @foreach ($alumnos as $k => $alm)
+                                            <option value="{{ $alm->nume_docu_sol }}">{{ $alm->apel_nomb_apd }}
+                                            </option>
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="submit" class="btn btn-success"  form="formularioalumnos">Aceptar</button>
+                    <button type="button" class="btn btn-danger"  data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------------------------------------------------------------------------------------------------->
     <div class="card">
         <div class="card-header">
             <div class='col'>
@@ -188,56 +339,65 @@
                 </thead>
                 <tbody style='font-size:15px'>
                     @foreach ($programaciones as $k => $prog)
-                    <tr>
-                        <th scope="row">{{ $k+1 }}</th>
-                        <td>{{ $prog->descripcion }}</td>
-                        <td>{{ $prog->abre_espe_esp.'('.$prog->anio.')' }}</td>
-                        <td>{{ $prog->examen }}</td>
-                        <td>{{ $prog->fecha_resol }}</td>
-                        <td>{{ $prog->minutos }} min</td>
-                        <td>@if ($prog->modalidad=='V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>
-                        <td>{{ $prog->aula }}</td>
-                        <td>
-                            <button class='btn btn-primary fa fa-pencil' aria-hidden="true"></button>
-                            <button class='btn btn-danger fa fa-trash' aria-hidden="true"></button>
-                            <button class='btn btn-success fa fa-plus-circle' aria-hidden="true"></button>
-                        </td>
-                    </tr>
+                        @php
+                            $fecha=str_replace(" ","T",$prog->fecha_resol)
+                        @endphp
+                        <tr>
+                            <th scope="row">{{ $k + 1 }}</th>
+                            <td>{{ $prog->descripcion }}</td>
+                            <td>{{ $prog->abre_espe_esp . '(' . $prog->anio . ')' }}</td>
+                            <td>{{ $prog->examen }}</td>
+                            <td>{{ $prog->fecha_resol }}</td>
+                            <td>{{ $prog->minutos }} min</td>
+                            <td>@if ($prog->modalidad == 'V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>
+                            <td>{{ $prog->aula }}</td>
+                            <td>
+                                <button class='btn btn-primary fa fa-pencil' onclick="editar({{ "'".$prog->id_programacion_examen."',".
+                                                                                                "'".$prog->descripcion."',".
+                                                                                                "'".$fecha."',".
+                                                                                                "'".$prog->minutos."',".
+                                                                                                "'".$prog->modalidad."',".
+                                                                                                "'".$prog->id_examen."',".
+                                                                                                "'".$prog->id_cupos."',".
+                                                                                                "'".$prog->id_aula."',".
+                                                                                                "['".implode("','",$arraydoc[$prog->id_programacion_examen])."']" }});" aria-hidden="true"></button>
+                                <button class='btn btn-danger fa fa-trash' aria-hidden="true"></button>
+                                <button class='btn btn-success fa fa-plus-circle' onclick="AgregarAlumnos({{ "'".$prog->id_programacion_examen."',".
+                                                                                                            "['".implode("','",$arrayalumnos[$prog->id_programacion_examen])."']" }});" aria-hidden="true"></button>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 @stop
-@section('css')
-    <style>
-        .flex-center {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            padding-top: 25px
-        }
-    </style>
-@stop
 @section('js')
     <script>
-        $(document).ready(function() {
-            $('.buscar').select2();
-            $('.tablaresponse').DataTable({
-                "language": {
-                    "url": "{{ asset('js/datatables.spanish.json') }}"
-                },
-                "order": [
-                    [1, "asc"]
-                ],
-                "info": false,
-                "stateSave": true,
-                "columnDefs": [{
-                    "orderable": false,
-                    "targets": 0
-                }],
-                "pageLength": 100
-            });
-        });
+        function editar(id,descripcion,fecha_resol,minutos,modalidad,id_examen,id_cupos,id_aula,docentes) {
+            $("#id_programacion_examen").val(id);
+            $("#descripcionupd").val(descripcion);
+            $("#fecha_resolupd").val(fecha_resol);
+            $("#minutosupd").val(minutos);
+            $("#id_examenupd").val(id_examen);
+            $("#id_cuposupd").val(id_cupos);
+            $("#id_aulaupd").val(id_aula);
+            $("#codi_doce_perupd").val(docentes).trigger('change');
+            if(modalidad=='V'){
+                $("#modalidadVupd").attr('checked',true);
+                $("#modalidadPupd").attr('checked',false);
+
+            }else if(modalidad=='P'){
+                $("#modalidadPupd").attr('checked',true);
+                $("#modalidadVupd").attr('checked',false);
+            }
+            $("#modaledit").modal('show');
+        }
+
+        function AgregarAlumnos(id,data){
+            $("#id_programacion_examenA").val(id);
+            $("#nume_docu_sol").val(data).trigger('change');
+            $("#modalplus").modal('show');
+        }
     </script>
 @stop

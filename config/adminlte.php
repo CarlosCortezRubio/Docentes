@@ -64,7 +64,7 @@ if (getTipoUsuario()==="Jurado" || getTipoUsuario()==="Administrador") {
     */
 
     'logo' => '<b>Admisión</b>',
-    'logo_img' => 'img/logo_black.png',
+    'logo_img' => 'img/logo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -140,14 +140,14 @@ if (getTipoUsuario()==="Jurado" || getTipoUsuario()==="Administrador") {
     */
 
     'classes_body' => '',
-    'classes_brand' => 'bg-white',
+    'classes_brand' => 'bg-black',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-success elevation-4',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_topnav' => 'navbar-primary navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
