@@ -85,10 +85,10 @@
                         <thead>
                             <tr>
                                 <td>Alumno</td>
-                                <td>Llego a entonar a un DO mayor</td>    
-                                <td>Llego a entonar a un DO menor</td>
-                                <td>Llego a entonar a un RE mayor</td>   
-                                <td>Llego a entonar a un RE menor</td>    
+                                <td>Sonido: Proyección.</td>    
+                                <td>Articulación: Claridad y Flexibilidad.</td>
+                                <td>Ritmo: Precisión y Estabilidad.</td>   
+                                <td>Interpretación: Fraseo y Expresión.</td>    
                             </tr>
                         </thead>
                         <tbody>
