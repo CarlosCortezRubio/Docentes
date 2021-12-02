@@ -321,7 +321,6 @@
     function eliminarexamen(id_examen){
         $("#id_examendel").val(id_examen);
         $("#modaldelete").modal('show');
-
     }
     ////////////////////////
     function Agregar(id,id_examen) {
@@ -417,6 +416,7 @@
                data: form.serialize(), 
                success: function(data){
                     Cargar(data);
+                    $('.multi').multiselect();
                }
              });
     }

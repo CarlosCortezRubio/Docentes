@@ -480,6 +480,21 @@ if (getTipoUsuario()==="Jurado" || getTipoUsuario()==="Administrador") {
                 ],
             ],
         ],
+        'MultiSelect' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js',
+                ],
+            ],
+        ],
     ],
 
     /*

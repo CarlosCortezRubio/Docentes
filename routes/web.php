@@ -56,5 +56,7 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/Programacion/Nuevo', 'examen\ProgramacionController@insert')->name('programacion.insert');
     Route::post('/Programacion/Actualizar', 'examen\ProgramacionController@update')->name('programacion.update');
     Route::post('/Programacion/AgregarAlumnos', 'examen\ProgramacionController@addAlumno')->name('programacion.alumnos');
+    Route::get('/Programacion/CargarAlumnos', 'examen\ProgramacionController@CargarAlumnos')->name('programacion.alumnos.cargar');
+    Route::post('/Programacion/Eliminar', 'examen\ProgramacionController@delete')->name('programacion.delete');
     Route::get('/', function () { return view('home');});
 });

@@ -20,8 +20,7 @@ use Illuminate\Support\Facades\Hash;
 
 class ProgramacionController extends Controller
 {
-    public function index()
-    {
+    public function index(){
         $secciones =DB::table('bdsig.vw_sig_seccion')->get();
         $aulas= Aula::where("estado","A")->get();
         $examenes= Examen::join('admision.adm_examen_admision as exd','exd.id_examen','admision.adm_examen.id_examen')
@@ -104,7 +103,6 @@ class ProgramacionController extends Controller
         ///////////////////////////////////
         return view('examen.programacion',['cargaalumno'=>$cargaalumno,'arrayalumnos'=>$arrayalumnos,'arraydoc'=>$arraydoc,'secciones'=>$secciones,"examenes"=>$examenes,"aulas"=>$aulas,"cupos"=>$cupos,'docentes'=>$docentes,'programaciones'=>$programaciones]);
     }
-
     public function insert(Request $request){
         $program=new ProgramacionExamen();
         try {
@@ -152,9 +150,9 @@ class ProgramacionController extends Controller
         }
         return redirect()->back();
     }
-
     public function update(Request $request){
         $program= ProgramacionExamen::find($request->id_programacion_examen);
+       // return $program;
         try {
             DB::beginTransaction();
             $program->descripcion=$request->descripcion;
@@ -164,7 +162,50 @@ class ProgramacionController extends Controller
             $program->user_actu=Auth::user()->id;
             $program->id_examen=$request->id_examen;
             $program->id_aula=$request->id_aula;
-            $program->codi_doce_per=$request->codi_doce_per;
+            $program->id_cupos=$request->id_cupos;
+            $docentes=Jurado::where('id_programacion_examen',$program->id_programacion_examen);
+            if(!$docentes->count()==0){
+                $docentes=$docentes->get();
+                foreach ($docentes as $key => $docente) {
+                    $docente->estado='I';
+                    $docente->update();
+                }
+                foreach ($request->codi_doce_per as $key => $doc) {
+                    $docente=Jurado::where('codi_doce_per',$doc)->where('id_programacion_examen',$program->id_programacion_examen);
+                    if ($docente->count()==0) {
+                        $contrasena = '12345678';//substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
+                        $persona=Persona::find($doc);
+                        $usuario=User::where('ndocumento',$persona->nume_docu_per);
+                        if ($usuario->count()==0) {
+                            $usuario=new User();
+                            $usuario->name=$persona->nomb_comp_per;
+                            $usuario->ndocumento=$persona->nume_docu_per;
+                            $usuario->email=$persona->mail_pers_per;
+                            $usuario->password=Hash::make($contrasena);
+                            $usuario->save();
+                            ///////////////////////
+                            $usuariodet=new DetalleUsuario();
+                            $usuariodet->estado='A';
+                            $usuariodet->id_usuario=$usuario->id;
+                            $usuariodet->id_tipo_usuario=3;
+                            $usuariodet->imagen=$persona->foto_pers_per;
+                            $usuariodet->save();
+                        }
+                        ///////////////////////
+                        $docente= new Jurado();
+                        $docente->id_programacion_examen=$program->id_programacion_examen;
+                        $docente->codi_doce_per=$doc;
+                        $docente->estado='A';
+                        $docente->save();
+                    }else{
+                        $docente=$docente->first();
+                        $docente->estado='A';
+                        $docente->update();
+                        
+                    }
+                    
+                }
+            }
             $program->update();
             DB::commit();
         } catch (Exception $e) {
@@ -173,32 +214,111 @@ class ProgramacionController extends Controller
         }
         return redirect()->back();
     }
-
     public function addAlumno(Request $request){
+        
+            try {
+                DB::beginTransaction();
+                if($request->nume_docu_sol){
+                    foreach ($request->nume_docu_sol as $key => $nume) {
+                        $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
+                                            ->where('nume_docu_sol',$nume);
+                        if ($postulante->count()==0) {
+                            $postulante=new Postulante();
+                            $postulante->id_programacion_examen=$request->id_programacion_examen;
+                            $postulante->nume_docu_sol=$nume;
+                            $postulante->estado='A';
+                            $postulante->save();
+                        }else{
+                            $postulante=$postulante->first();
+                            $postulante->estado='A';
+                            $postulante->update();
+                        }
+                    }
+                }
+                if($request->alumnodelete){
+                    foreach ($request->alumnodelete as $key => $nume) {
+                        $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
+                                            ->where('nume_docu_sol',$nume);
+                        if ($postulante->count()!=0) {
+                            $postulante=$postulante->first();
+                            $postulante->estado='I';
+                            $postulante->update();
+                        }
+                    }
+                }
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+                dd($e);
+            }
+        return redirect()->back();
+    }
+    public function CargarAlumnos(Request $request){
+        $program=ProgramacionExamen::join('admision.adm_examen as ex','ex.id_examen','admision.adm_programacion_examen.id_examen')
+                                          ->join('admision.adm_cupos as cu','cu.id_cupos','admision.adm_programacion_examen.id_cupos')
+                                          ->join('admision.adm_aula as au','au.id_aula','admision.adm_programacion_examen.id_aula')
+                                          ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','cu.codi_espe_esp')
+                                          ->join('admision.adm_periodo as p','p.id_periodo','cu.id_periodo')
+                                          ->where('admision.adm_programacion_examen.estado','A')
+                                          ->where('admision.adm_programacion_examen.id_programacion_examen',$request->id_programacion_examen)
+                                          ->select('admision.adm_programacion_examen.descripcion',
+                                                   'id_programacion_examen',
+                                                   'fecha_resol',
+                                                   'minutos',
+                                                   'modalidad',
+                                                   'ex.id_examen',
+                                                   'cu.id_cupos',
+                                                   'au.id_aula',
+                                                   'esp.codi_espe_esp',
+                                                   'esp.abre_espe_esp',
+                                                   'p.anio',
+                                                   'ex.nombre as examen',
+                                                   'au.nombre as aula',
+                                                   'p.codi_secc_sec')->distinct()->first();
+        $alumnosdelete=DB::table('bdsigunm.ad_postulacion as pos')
+                                                   ->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
+                                                   ->where('codi_espe_esp',$program->codi_espe_esp)
+                                                   ->where('codi_secc_sec',$program->codi_secc_sec)
+                                                   ->where('id_programacion_examen',$program->id_programacion_examen)
+                                                   ->where('esta_post_pos','V')
+                                                   ->where('estado','A')
+                                                   ->select('pos.*')->distinct()
+                                                   //->whereYear('fech_regi_aud',$program->anio)
+                                                   ->get();
+        $alumnosadd=DB::table('bdsigunm.ad_postulacion as pos')
+                                                    ->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
+                                                    ->where('codi_espe_esp',$program->codi_espe_esp)
+                                                    ->where('codi_secc_sec',$program->codi_secc_sec)
+                                                    ->where('esta_post_pos','V')
+                                                    ->whereNotIn('nume_docu_per',$alumnosdelete->pluck("nume_docu_per")->all())
+                                                    //->whereYear('fech_regi_aud',$program->anio)
+                                                   ->select('pos.*')->distinct()
+                                                   ->get();
+        $texto="";
+        $texto=$texto."<input type='text' value='$request->id_programacion_examen' id='id_programacion_examenA' name='id_programacion_examen' style='display: none'>";
+        $texto=$texto.'<div class="col-5">'.'<select class="multi form-control"  multiple="multiple" size="10"  name="nume_docu_sol[]" id="nume_docu_sol">';
+        foreach ($alumnosadd as $key => $alm) {
+            $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";
+        }
+        $texto=$texto."</select>"."</div>"
+                    ."<div class='col' style='font-size: 50px;'><div class='row flex-center' style='color:green;'><i class='fas fa-arrow-circle-right'></i></div><div style='color:red;' class='row flex-center'><i class='fas fa-arrow-circle-left'></i></div></div>"
+                    .'<div class="col-5">'.'<select class="multi form-control"  multiple="multiple" size="10"  name="alumnodelete[]" id="alumnodelete">';
+        foreach ($alumnosdelete as $key => $alm) {
+            $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";
+        }
+        $texto=$texto."</select>"."</div>";
+        //return "hola";
+
+
+       return $texto;
+    }
+    public function delete(Request $request){
+        $program=ProgramacionExamen::find($request->id_programacion_examen);
         try {
             DB::beginTransaction();
-            $postulantes=Postulante::where('id_programacion_examen',$request->id_programacion_examen)->get();
-            foreach ($postulantes as $key => $pos) {
-                $pos->estado='I';
-                $pos->update();
-            }
-            foreach ($request->nume_docu_sol as $key => $nume) {
-                $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
-                                    ->where('nume_docu_sol',$nume)
-                                    ;
-                if ($postulante->count()==0) {
-                    $postulante=new Postulante();
-                    $postulante->id_programacion_examen=$request->id_programacion_examen;
-                    $postulante->nume_docu_sol=$nume;
-                    $postulante->estado='A';
-                    $postulante->save();
-                }else{
-                    $postulante->estado='A';
-                    $postulante->update();
-                }
-                
-
-            }
+            $program->estado='E';
+            $program->user_actu=Auth::user()->id;
+            $program->update();
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
