@@ -17,10 +17,7 @@ class EvaluacionController extends Controller
 
     public function index()
     {
-        $postulantes=DB::table('bdsigunm.ad_postulacion as ad')
-                        ->join('admision.adm_postulante as adm','adm.nume_docu_sol','ad.nume_docu_per')
-                        ->where('esta_post_pos','V')
-                        ->select('adm.id_programacion_examen','ad.nume_docu_per','ad.nomb_pers_per','ad.apel_pate_per','ad.apel_mate_per');
+        
         
         $programaciones=ProgramacionExamen::join('admision.adm_examen as ex','ex.id_examen','admision.adm_programacion_examen.id_examen')
                         ->join('admision.adm_cupos as cu','cu.id_cupos','admision.adm_programacion_examen.id_cupos')
@@ -28,6 +25,7 @@ class EvaluacionController extends Controller
                         ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','cu.codi_espe_esp')
                         ->join('admision.adm_periodo as p','p.id_periodo','cu.id_periodo')
                         ->where('admision.adm_programacion_examen.estado','A')
+                        ->where('ex.','A')
                         ->select('admision.adm_programacion_examen.descripcion',
                                  'admision.adm_programacion_examen.id_programacion_examen',
                                  'fecha_resol',
@@ -52,17 +50,25 @@ class EvaluacionController extends Controller
                                            ->where('pe.nume_docu_per',Auth::user()->ndocumento)->get();
                                           // return "entro aqui";
         }
-        
-        $arrayalumnos[]=[];
-        foreach ($programaciones as $key => $pro) {
-            $arrayalumnos[$pro->id_programacion_examen]=$postulantes->where('adm.id_programacion_examen',$pro->id_programacion_examen)->where('adm.estado','A')->distinct()->get();
-        }
-        $postulantes=$postulantes->get();
-        //return $postulantes;
-        return view('evaluacion.index',['postulantes'=>$postulantes,'programaciones'=>$programaciones]);
+        return view('evaluacion.index',['programaciones'=>$programaciones]);
     }
 
     public function Evaluar(Request $request){
+        $postulantes=DB::table('bdsigunm.ad_postulacion as ad')
+                        ->join('admision.adm_postulante as adm','adm.nume_docu_sol','ad.nume_docu_per')
+                        ->where('esta_post_pos','V')
+                        ->select('adm.id_programacion_examen',
+                                 'ad.nume_docu_per',
+                                 'ad.nomb_pers_per',
+                                 'ad.apel_pate_per',
+                                 'ad.apel_mate_per');
+        $parametros=DB::table('bdsigunm.adm_seccion_examen')
+                        ->where('estado','A')
+                        ->select('adm.id_programacion_examen',
+                                'ad.nume_docu_per',
+                                'ad.nomb_pers_per',
+                                'ad.apel_pate_per',
+                                'ad.apel_mate_per');
         return $request;
     }
 }
