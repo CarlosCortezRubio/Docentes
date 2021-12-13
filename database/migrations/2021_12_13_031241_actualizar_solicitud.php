@@ -19,7 +19,7 @@ class ActualizarSolicitud extends Migration
             $table->char('nive_estu_adm',1)->nullable()->dropIfExists();
             $table->char('grad_estu_adm',1)->nullable()->dropIfExists();
             $table->char('flag_disc_adm',1)->nullable()->dropIfExists();
-            $table->char('disc_soli_adm',1)->nullable()->dropIfExists();
+            $table->string('disc_soli_adm')->nullable()->dropIfExists();
         });
     }
 
