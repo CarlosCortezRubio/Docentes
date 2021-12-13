@@ -13,7 +13,7 @@ class ActualizarSolicitud extends Migration
      */
     public function up()
     {
-        Schema::table('bdsigunm.ad_solicitud', function (Blueprint $table) {
+        Schema::table('bdsigunm.ad_postulacion', function (Blueprint $table) {
             $table->char('codi_doce_adm',8)->nullable()->dropIfExists();
             $table->char('codi_espe_adm',5)->nullable()->dropIfExists();
             $table->char('nive_estu_adm',1)->nullable()->dropIfExists();
