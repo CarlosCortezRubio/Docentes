@@ -63,7 +63,8 @@
                             <td>@if ($prog->modalidad == 'V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>
                             <td>{{ $prog->aula }}</td>
                             <td>
-                                <button class='btn btn-primary'data-toggle="modal" data-target="#modalplus"><i class="fa fa-pencil" aria-hidden="true"></i> Evaluar</button>
+                                <form action="{{ route('evaluacion.cargar', ['id_programacion_examen'=>$prog->id_programacion_examen,'id_examen'=>$prog->id_examen]) }}" id="form{{ $prog->id_programacion_examen }}" method="get"></form>
+                                <button class='btn btn-primary' onclick="formulario('#form{{ $prog->id_programacion_examen }}')"><i class="fa fa-pencil" aria-hidden="true"></i> Evaluar</button>
                             </td>
                         </tr>
                     @endforeach
@@ -80,34 +81,8 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                 </div>
-                <div class="modal-body">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Alumno</td>
-                                <td>Sonido: Proyección.</td>    
-                                <td>Articulación: Claridad y Flexibilidad.</td>
-                                <td>Ritmo: Precisión y Estabilidad.</td>   
-                                <td>Interpretación: Fraseo y Expresión.</td>    
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($postulantes as $k => $pos)
-                            <form action="{{ route('evaluar') }}" id="{{ $pos->nume_docu_per }}" class="evaluar" method="GET">
-                                @csrf   
-                                <tr>                 
-                                    <input type="text" name="codi_pers_per" value="{{  $pos->nume_docu_per }}" style="display: none"/>
-                                    <td>{{ $pos->nomb_pers_per." ".$pos->apel_pate_per." ".$pos->apel_mate_per }}</td>
-                                    <td><input class="form-control des{{ $pos->nume_docu_per }}" name="nota1" min="0" required type="number" ></td>
-                                    <td><input class="form-control des{{ $pos->nume_docu_per }}" name="nota2" min="0" required type="number" > </td>
-                                    <td><input class="form-control des{{ $pos->nume_docu_per }}"  name="nota3" min="0" required type="number" ></td>
-                                    <td><input class="form-control des{{ $pos->nume_docu_per }}" name="nota4" min="0" required type="number" ></td>
-                                    <td><button type="submit" class="btn btn-success des{{ $pos->nume_docu_per }}"> <i class="fas fa-check"></i> </button></td>
-                                </tr>
-                            </form>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div id="cargar" class="modal-body">
+                    
                 </div>
                 <div class="modal-footer centrar-content">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
@@ -134,5 +109,20 @@
         }
         });
     });
+    function formulario(id) {
+        var form = $(id);
+        var url = form.attr('action');
+        
+        $.ajax({
+               type: form.attr('method'),
+               url: url,
+               data: form.serialize(), 
+               success: function(data){
+                   //alert(data);
+                    $('#cargar').html(data);
+                    $("#modalplus").modal('show');
+                }
+             });
+    }
     </script>
 @stop

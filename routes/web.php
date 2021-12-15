@@ -50,7 +50,8 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/Preguntas', 'examen\PreguntaController@index')->name('pregunta');
     ///////////////////////////////////////
     Route::get('/Evaluacion', 'evaluacion\EvaluacionController@index')->name('evaluacion');
-    Route::get('/Evaluacion/Evaluar', 'evaluacion\EvaluacionController@Evaluar')->name('evaluar');
+    Route::get('/Evaluacion/Evaluar', 'evaluacion\EvaluacionController@Evaluar')->name('evaluacion.evaluar');
+    Route::get('/Evaluacion/Cargar', 'evaluacion\EvaluacionController@Cargar')->name('evaluacion.cargar');
     /////////////////////////////////////
     Route::get('/Programacion', 'examen\ProgramacionController@index')->name('programacion');
     Route::post('/Programacion/Nuevo', 'examen\ProgramacionController@insert')->name('programacion.insert');

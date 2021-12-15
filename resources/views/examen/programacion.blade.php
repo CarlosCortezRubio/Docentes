@@ -459,7 +459,7 @@
             $("#id_programacion_examendel").val(id_programacion_examen);
             $("#modaldelete").modal('show');
         }
-
+ 
         function formulario(id) {
             var form = $(id);
             var url = form.attr('action');
