@@ -61,7 +61,7 @@ class EvaluacionController extends Controller
         return $programaciones;
     }
     public function Evaluar(Request $request){
-
+        return $request;
     }
     public function Cargar(Request $request){
         $postulantes=DB::table('bdsigunm.ad_postulacion as ad')
@@ -101,7 +101,7 @@ class EvaluacionController extends Controller
             $contenido=$contenido."<div class='col'><textarea></textarea></div>
                                    <div class='col'>
                                    <div class='row'>
-                                   <button type='submit' class='col btn btn-success des$pos->nume_docu_per'><i class='fas fa-check'></i></button>
+                                   <button onclick='formeval()' class='col btn btn-success des$pos->nume_docu_per'><i class='fas fa-check'></i></button>
                                    <button class='col btn btn-primary des$pos->nume_docu_per'><i class='fas fa-forward'></i> </button>
                                    </div>
                                    </div>
