@@ -226,11 +226,11 @@ class ProgramacionController extends Controller
                             $postulante=new Postulante();
                             $postulante->id_programacion_examen=$request->id_programacion_examen;
                             $postulante->nume_docu_sol=$nume;
-                            $postulante->estado='A';
+                            $postulante->estado='P';
                             $postulante->save();
                         }else{
                             $postulante=$postulante->first();
-                            $postulante->estado='A';
+                            $postulante->estado='P';
                             $postulante->update();
                         }
                     } 
