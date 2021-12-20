@@ -1,23 +1,7 @@
 <?php
 
-$menu=[['text' => 'Inicio','route'  => 'home','icon' => 'fas fa-fw fa-home',],];
-if (getTipoUsuario()=="Administrador") {
-    array_push($menu,
-        ['text' => 'Registro de Periodo','route'  => 'periodo','icon' => 'far fa-fw fa-calendar',],
-        ['text' => 'Configuración de Cupo','route'  => 'cupo','icon' => 'fa-fw fas fa-clipboard-check',]
-    );
-}
-if (getTipoUsuario()=="Secretario" || getTipoUsuario()=="Administrador") {
-    array_push($menu,
-        ['text' => 'Registro de Examen','route'  => 'examen','icon' => 'far fa-fw fa-file-alt',],
-        ['text' => 'Programación de Examen','route' => 'programacion','icon' => 'fa-fw fas fa-chalkboard-teacher',]      
-    );
-}
-if (getTipoUsuario()=="Jurado" || getTipoUsuario()=="Administrador") {
-    array_push($menu,
-        ['text' => 'Registro de Evaluaciones','route'  => 'evaluacion','icon' => 'fas fa-fw fa-check',]
-    );
-}
+        
+ 
     return [
 
     /*
@@ -242,9 +226,45 @@ if (getTipoUsuario()=="Jurado" || getTipoUsuario()=="Administrador") {
     |
     */
 
-    'menu' => $menu
+    'menu' => [
 
-        
+        [
+            'text' => 'Inicio',
+            'route'  => 'home',
+            'icon' => 'fas fa-fw fa-home',
+        ],
+        [
+            'text' => 'Registro de Periodo',
+            'route'  => 'periodo',
+            'icon' => 'far fa-fw fa-calendar',
+            'can' => 'Administrador'
+        ],
+        [
+            'text' => 'Configuración de Cupo',
+            'route'  => 'cupo',
+            'icon' => 'fa-fw fas fa-clipboard-check',
+            'can' => 'Administrador'
+        ],
+        [
+            'text' => 'Registro de Examen',
+            'route'  => 'examen',
+            'icon' => 'far fa-fw fa-file-alt',
+            'can' => 'Administrador'
+        ],
+        [
+            'text' => 'Programación de Examen',
+            'route' => 'programacion',
+            'icon' => 'fa-fw fas fa-chalkboard-teacher',
+            'can' => 'Administrador'
+        ],    
+        [
+            'text' => 'Registro de Evaluaciones',
+            'route'  => 'evaluacion',
+            'icon' => 'fas fa-fw fa-check',
+            'can' => 'Jurado'
+        ]
+    ]
+
         // Navbar items:
         /*[
             'type'         => 'navbar-search',
