@@ -214,6 +214,52 @@ class ProgramacionController extends Controller
         }
         return redirect()->back();
     }
+    public function Agregar(Request $request){
+        try {
+            DB::beginTransaction();
+            if($request->nume_docu_sol){
+                foreach ($request->nume_docu_sol as $key => $nume) {
+                    $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
+                                        ->where('nume_docu_sol',$nume);
+                    if ($postulante->count()==0) {
+                        $postulante=new Postulante();
+                        $postulante->id_programacion_examen=$request->id_programacion_examen;
+                        $postulante->nume_docu_sol=$nume;
+                        $postulante->estado='P';
+                        $postulante->save();
+                    }else{
+                        $postulante=$postulante->first();
+                        $postulante->estado='P';
+                        $postulante->update();
+                    }
+                } 
+            }
+            DB::commit();
+        } catch (Exception $e) {
+                DB::rollBack();
+                dd($e);
+        }
+    }
+    public function Eliminar(Request $request){
+        try {
+            DB::beginTransaction();
+            if($request->alumnodelete){
+                foreach ($request->alumnodelete as $key => $nume) {
+                    $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
+                                        ->where('nume_docu_sol',$nume);
+                    if ($postulante->count()!=0) {
+                        $postulante=$postulante->first();
+                        $postulante->estado='I';
+                        $postulante->update();
+                    }
+                }
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
     public function addAlumno(Request $request){
         
             try {
@@ -281,7 +327,7 @@ class ProgramacionController extends Controller
                                                    ->where('codi_secc_sec',$program->codi_secc_sec)
                                                    ->where('id_programacion_examen',$program->id_programacion_examen)
                                                    ->where('esta_post_pos','V')
-                                                   ->where('estado','A')
+                                                   ->where('estado','P')
                                                    ->select('pos.*')->distinct()
                                                    //->whereYear('fech_regi_aud',$program->anio)
                                                    ->get();
@@ -310,7 +356,7 @@ class ProgramacionController extends Controller
                     <div class='row flex-center'><button style='background-color:green;border-radius: 35px;' onclick='formulario(`#agregarform$program->id_programacion_examen`);' aria-hidden='true'><i class='fas fa-arrow-circle-right'></i></button></div>
                     <div class='row flex-center'><button style='background-color:red;border-radius: 35px;' onclick='formulario(`#eliminarform$program->id_programacion_examen`);' aria-hidden='true'><i class='fas fa-arrow-circle-left'></i></button></div></div>
                     <div class='col-5'>
-                    <form action=".route('programacion.alumnos.agregar',['id_programacion_examen'=>$program->id_programacion_examen])." id='eliminarform$program->id_programacion_examen' method='get'>
+                    <form action=".route('programacion.alumnos.eliminar',['id_programacion_examen'=>$program->id_programacion_examen])." id='eliminarform$program->id_programacion_examen' method='get'>
                     <select class='multi form-control'  multiple='multiple' size='10'  name='alumnodelete[]' id='alumnodelete'>";
         foreach ($alumnosdelete as $key => $alm) {
             $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";

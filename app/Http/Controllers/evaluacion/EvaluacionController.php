@@ -68,7 +68,7 @@ class EvaluacionController extends Controller
                         ->join('admision.adm_postulante as adm','adm.nume_docu_sol','ad.nume_docu_per')
                         ->where('esta_post_pos','V')
                         ->where('adm.id_programacion_examen',$request->id_programacion_examen)
-                        ->where('adm.estado','A')
+                        ->where('adm.estado','P')
                         ->select('adm.id_programacion_examen',
                                  'adm.id_postulante',
                                  'ad.nume_docu_per',

@@ -58,6 +58,8 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/Programacion/Actualizar', 'examen\ProgramacionController@update')->name('programacion.update');
     Route::post('/Programacion/AgregarAlumnos', 'examen\ProgramacionController@addAlumno')->name('programacion.alumnos');
     Route::get('/Programacion/CargarAlumnos', 'examen\ProgramacionController@CargarAlumnos')->name('programacion.alumnos.cargar');
+    Route::get('/Programacion/Agregar', 'examen\ProgramacionController@Agregar')->name('programacion.alumnos.agregar');
+    Route::get('/Programacion/AlumnoEliminar', 'examen\ProgramacionController@Eliminar')->name('programacion.alumnos.eliminar');
     Route::post('/Programacion/Eliminar', 'examen\ProgramacionController@delete')->name('programacion.delete');
     Route::get('/', function () { return view('home');});
 });
