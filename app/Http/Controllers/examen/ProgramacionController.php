@@ -303,8 +303,8 @@ class ProgramacionController extends Controller
         }
         $texto=$texto."</select>"."</div>
                     <div class='col' style='font-size: 50px;'>
-                    <div class='row flex-center'><button style='background-color:green;border-radius: 50%;'><i class='fas fa-arrow-circle-right'></i></button></div>
-                    <div class='row flex-center'><button style='background-color:red;border-radius: 50%;' class='button'><i class='fas fa-arrow-circle-left'></i></button></div></div>
+                    <div class='row flex-center'><button style='background-color:green;border-radius: 100%;'><i class='fas fa-arrow-circle-right'></i></button></div>
+                    <div class='row flex-center'><button style='background-color:red;border-radius: 100%;' class='button'><i class='fas fa-arrow-circle-left'></i></button></div></div>
                     <div class='col-5'><select class='multi form-control'  multiple='multiple' size='10'  name='alumnodelete[]' id='alumnodelete'>";
         foreach ($alumnosdelete as $key => $alm) {
             $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";
