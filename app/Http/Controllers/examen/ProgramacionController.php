@@ -294,7 +294,7 @@ class ProgramacionController extends Controller
                                                     //->whereYear('fech_regi_aud',$program->anio)
                                                    ->select('pos.*')->distinct()
                                                    ->get();
-        return $alumnosdelete;
+        //return $alumnosdelete;
         $texto="";
         $texto=$texto."<input type='text' value='$request->id_programacion_examen' id='id_programacion_examenA' name='id_programacion_examen' style='display: none'>";
         $texto=$texto.'<div class="col-5">'.'<select class="multi form-control"  multiple="multiple" size="10"  name="nume_docu_sol[]" id="nume_docu_sol">';
@@ -308,7 +308,7 @@ class ProgramacionController extends Controller
             $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";
         }
         $texto=$texto."</select>"."</div>";
-        //return "hola";
+        return "hola";
 
 
        return $texto;
