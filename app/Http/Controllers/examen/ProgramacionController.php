@@ -308,7 +308,7 @@ class ProgramacionController extends Controller
             $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";
         }
         $texto=$texto."</select>"."</div>";
-        return "hola";
+        //return "hola";
 
 
        return $texto;
