@@ -286,7 +286,7 @@ class ProgramacionController extends Controller
                                                    //->whereYear('fech_regi_aud',$program->anio)
                                                    ->get();
         $alumnosadd=DB::table('bdsigunm.ad_postulacion as pos')
-                                                    //->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
+                                                    ->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
                                                     ->where('codi_espe_esp',$program->codi_espe_esp)
                                                     ->where('codi_secc_sec',$program->codi_secc_sec)
                                                     ->where('esta_post_pos','V')
