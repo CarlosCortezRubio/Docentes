@@ -70,10 +70,17 @@ class EvaluacionController extends Controller
                         ->where('adm.id_programacion_examen',$request->id_programacion_examen)
                         ->where('adm.estado','A')
                         ->select('adm.id_programacion_examen',
+                                 'adm.id_postulante',
                                  'ad.nume_docu_per',
                                  'ad.nomb_pers_per',
                                  'ad.apel_pate_per',
                                  'ad.apel_mate_per')->distinct()->get();
+        $jurado = DB::table('admision.adm_jurado as jr')
+                    ->join('bdsig.persona as pe','pe.codi_pers_per','jr.codi_doce_per')
+                    ->where('pe.nume_docu_per',Auth::user()->ndocumento)
+                    ->where('jr.estado','A')
+                    ->select('jr.id_jurado')
+                    ->first();
         $parametros=DB::table('admision.adm_seccion_examen')
                         ->where('estado','A')
                         ->where('id_examen',$request->id_examen)
@@ -92,11 +99,12 @@ class EvaluacionController extends Controller
                                ";
         foreach ($postulantes as $key => $pos) {
             $contenido=$contenido."<form action='".route('evaluacion.evaluar')."' id='$pos->nume_docu_per' 
-            class='evaluar' method='GET'><div class='row'><input type='text' name='codi_pers_per' 
-                                    value='$pos->nume_docu_per' style='display: none'/>
+            class='evaluar' method='GET'><div class='row'>
+            <input type='text' name='id_jurado' value='$jurado->id_jurado' style='display: none'/>
+            <input type='text' name='id_postulante' value='$pos->id_postulante' style='display: none'/>
                                     <div class='col'>$pos->nomb_pers_per $pos->apel_pate_per $pos->apel_mate_per</div>";
             foreach ($parametros as $key => $par) {
-                $contenido=$contenido."<div class='col'><input class='form-control des$pos->nume_docu_per' name='$par->id_seccion_examen' min='0' max='$examen->nota_maxi' required type='number'></div>";
+                $contenido=$contenido."<div class='col'><input class='form-control des$pos->nume_docu_per' name='sec$par->id_seccion_examen' min='0' max='$examen->nota_maxi' required type='number'></div>";
             }
             $contenido=$contenido."<div class='col'><textarea></textarea></div>
                                    <div class='col'>
@@ -108,7 +116,7 @@ class EvaluacionController extends Controller
                                    
                                    </div></form>";
         }
-        $contenido=$contenido."";
+        //$contenido=$contenido."";
         return $contenido;
     }
 }
