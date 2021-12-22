@@ -286,8 +286,7 @@
                         </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('programacion.alumnos') }}" method="POST" id='formularioalumnos'>
-                        @csrf
+                    
                     <div class="row">
                         <div class="col-5 flex-center">
                             <h5>Postulantes Por Programar</h5>
@@ -300,36 +299,6 @@
                         </div>
                     </div>    
                     <div id="cargar" class="row"></div>
-                    </form>
-                   {{-- <formaction="route('programacion.alumnos') }}" method="POST" id='formularioalumnos'>
-                        @csrf
-                        <input type="text" id="id_programacion_examenA" name="id_programacion_examen" style="display: none">
-                        <div class="form-group">
-                                <div class="row">
-                                    <label class="col-12" for="">Postulantes</label><br>
-                                    <div class="col">
-                                        <select class="multi form-control"  multiple="multiple" required
-                                        name="nume_docu_sol[]" id="nume_docu_sol">
-                                        @foreach ($cargaalumno as $k => $alm)
-                                            <option value="{{ $alm->nume_docu_per }}">{{ $alm->nomb_pers_per." ".$alm->apel_pate_per." ".$alm->apel_mate_per }}
-                                            </option>
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    </div>
-                                    <div class="col">
-                                        <select class="multi form-control"  multiple="multiple" required
-                                        name="quitaralumno" id="quitaralumno">
-                                        @foreach ($cargaalumno as $k => $alm)
-                                            <option value="{{ $alm->nume_docu_per }}">{{ $alm->nomb_pers_per." ".$alm->apel_pate_per." ".$alm->apel_mate_per }}
-                                            </option>
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    </div>
-                                </div>
-                        </div>
-                    </form>--}}
                 </div>
                 <div class="modal-footer centrar-content">
                     <button type="submit" class="btn btn-success"  form="formularioalumnos">Aceptar</button>

@@ -296,20 +296,28 @@ class ProgramacionController extends Controller
                                                    ->get();
         //return $alumnosdelete;
         $texto="";
-        $texto=$texto."<input type='text' value='$request->id_programacion_examen' id='id_programacion_examenA' name='id_programacion_examen' style='display: none'>";
-        $texto=$texto.'<div class="col-5">'.'<select class="multi form-control"  multiple="multiple" size="10"  name="nume_docu_sol[]" id="nume_docu_sol">';
+        $texto=$texto."<input type='text' value='$request->id_programacion_examen' id='id_programacion_examenA' name='id_programacion_examen' style='display: none'>
+                    <div class='col-5'>
+                    <form action=".route('programacion.alumnos.agregar',['id_programacion_examen'=>$program->id_programacion_examen])." id='agregarform$program->id_programacion_examen' method='get'>
+                    <select class='multi form-control'  multiple='multiple' size='10'  name='nume_docu_sol[]' id='nume_docu_sol'>";
         foreach ($alumnosadd as $key => $alm) {
             $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";
         }
-        $texto=$texto."</select>"."</div>
+        $texto=$texto."</select>
+                    </form>
+                    </div>
                     <div class='col' style='font-size: 50px;'>
-                    <div class='row flex-center'><button style='background-color:green;border-radius: 35px;'><i class='fas fa-arrow-circle-right'></i></button></div>
-                    <div class='row flex-center'><button style='background-color:red;border-radius: 35px;' class='button'><i class='fas fa-arrow-circle-left'></i></button></div></div>
-                    <div class='col-5'><select class='multi form-control'  multiple='multiple' size='10'  name='alumnodelete[]' id='alumnodelete'>";
+                    <div class='row flex-center'><button style='background-color:green;border-radius: 35px;' onclick='formulario(`#agregarform$program->id_programacion_examen`);' aria-hidden='true'><i class='fas fa-arrow-circle-right'></i></button></div>
+                    <div class='row flex-center'><button style='background-color:red;border-radius: 35px;' onclick='formulario(`#eliminarform$program->id_programacion_examen`);' aria-hidden='true'><i class='fas fa-arrow-circle-left'></i></button></div></div>
+                    <div class='col-5'>
+                    <form action=".route('programacion.alumnos.agregar',['id_programacion_examen'=>$program->id_programacion_examen])." id='eliminarform$program->id_programacion_examen' method='get'>
+                    <select class='multi form-control'  multiple='multiple' size='10'  name='alumnodelete[]' id='alumnodelete'>";
         foreach ($alumnosdelete as $key => $alm) {
             $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";
         }
-        $texto=$texto."</select>"."</div>";
+        $texto=$texto."</select>
+                        </form>
+                        </div>";
         //return "hola";
 
 
