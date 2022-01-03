@@ -124,32 +124,34 @@ class ProgramacionController extends Controller
             $program->id_aula=$request->id_aula;
             $program->id_cupos=$request->id_cupos;
             $program->save();
-            foreach ($request->codi_doce_per as $key => $doc) {
-                $contrasena = '12345678';//substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
-                $persona=Persona::find($doc);
-                $usuario=User::where('ndocumento',$persona->nume_docu_per);
-                if ($usuario->count()==0) {
-                    $usuario=new User();
-                    $usuario->name=$persona->nomb_comp_per;
-                    $usuario->ndocumento=$persona->nume_docu_per;
-                    $usuario->email=$persona->mail_pers_per;
-                    $usuario->password=Hash::make($contrasena);
-                    $usuario->save();
+            if ($request->codi_doce_per!=null) {
+                foreach ($request->codi_doce_per as $key => $doc) {
+                    $contrasena = '12345678';//substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
+                    $persona=Persona::find($doc);
+                    $usuario=User::where('ndocumento',$persona->nume_docu_per);
+                    if ($usuario->count()==0) {
+                        $usuario=new User();
+                        $usuario->name=$persona->nomb_comp_per;
+                        $usuario->ndocumento=$persona->nume_docu_per;
+                        $usuario->email=$persona->mail_pers_per;
+                        $usuario->password=Hash::make($contrasena);
+                        $usuario->save();
+                        ///////////////////////
+                        $usuariodet=new DetalleUsuario();
+                        $usuariodet->estado='A';
+                        $usuariodet->id_usuario=$usuario->id;
+                        $usuariodet->id_tipo_usuario=3;
+                        $usuariodet->imagen=$persona->foto_pers_per;
+                        $usuariodet->save();
+                        //Mail::to($persona->mail_pers_per)->send(new EmailJurado($contrasena,$persona->mail_pers_per));
+                    }
                     ///////////////////////
-                    $usuariodet=new DetalleUsuario();
-                    $usuariodet->estado='A';
-                    $usuariodet->id_usuario=$usuario->id;
-                    $usuariodet->id_tipo_usuario=3;
-                    $usuariodet->imagen=$persona->foto_pers_per;
-                    $usuariodet->save();
-                    //Mail::to($persona->mail_pers_per)->send(new EmailJurado($contrasena,$persona->mail_pers_per));
+                    $docente= new Jurado();
+                    $docente->id_programacion_examen=$program->id_programacion_examen;
+                    $docente->codi_doce_per=$doc;
+                    $docente->estado='A';
+                    $docente->save();
                 }
-                ///////////////////////
-                $docente= new Jurado();
-                $docente->id_programacion_examen=$program->id_programacion_examen;
-                $docente->codi_doce_per=$doc;
-                $docente->estado='A';
-                $docente->save();
             }
             DB::commit();
         } catch (Exception $e) {
