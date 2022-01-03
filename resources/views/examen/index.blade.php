@@ -54,7 +54,7 @@
                             <div class="row ">
                                 <div class="col-md col-sm col-xs">
                                     <label for="enlace">Enlace</label>
-                                    <input type="url" required class="form-control" id="enlace"  name="enlace" placeholder="Ingrese Enlace" />
+                                    <input type="text" required class="form-control" id="enlace"  name="enlace" placeholder="Ingrese Enlace" />
                                 </div>
                             </div>
                             <br>
@@ -137,7 +137,7 @@
                             <div class="row ">
                                 <div class="col-md col-sm col-xs">
                                     <label for="enlace">Enlace</label>
-                                    <input type="url" required class="form-control" id="enlaceupd"  name="enlace" placeholder="Ingrese Enlace" />
+                                    <input type="text" required class="form-control" id="enlaceupd"  name="enlace" placeholder="Ingrese Enlace" />
                                 </div>
                             </div>
                             <br>
