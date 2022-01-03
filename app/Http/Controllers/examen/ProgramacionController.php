@@ -280,7 +280,7 @@ class ProgramacionController extends Controller
                         $postulante->update();
                     }
                     if($detalle->flag_jura=='N'){
-                        $exampost=ExamenPostulante::where('id_programacion_examen',$request->id_programacion_examen)
+                        $exampost=ExamenPostulante::where('id_postulante',$postulante->id_postulante)
                         ->where('nume_docu_sol',$nume);
                         if ($exampost->count()==0) {
                             $exampost=new ExamenPostulante();
