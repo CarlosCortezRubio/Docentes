@@ -18,6 +18,7 @@ use App\Model\Nota;
 use App\Model\Persona;
 use App\Model\Postulante;
 use App\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -267,11 +268,13 @@ class ProgramacionController extends Controller
             if($request->nume_docu_sol){
                 foreach ($request->nume_docu_sol as $key => $nume) {
                     $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
-                                        ->where('nume_docu_sol',$nume);
+                                        ->where('nume_docu_sol',$nume)
+                                        ->where('estado','P');
                     if ($postulante->count()==0) {
                         $postulante=new Postulante();
                         $postulante->id_programacion_examen=$request->id_programacion_examen;
                         $postulante->nume_docu_sol=$nume;
+                        $postulante->nota=0;
                         $postulante->estado='P';
                         $postulante->save();
                     }else{
@@ -340,7 +343,8 @@ class ProgramacionController extends Controller
             if($request->alumnodelete){
                 foreach ($request->alumnodelete as $key => $nume) {
                     $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
-                                        ->where('nume_docu_sol',$nume);
+                                        ->where('nume_docu_sol',$nume)
+                                        ->where('estado','A');
                     if ($postulante->count()!=0) {
                         $postulante=$postulante->first();
                         $postulante->estado='I';
