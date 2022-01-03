@@ -17,6 +17,7 @@ class CrearProgramacionSolicitud extends Migration
             $table->id('id_postulante');
             $table->bigInteger('id_programacion_examen');
             $table->char('nume_docu_sol',10);
+            $table->integer('nota')->nullable();
             $table->char('estado',1);
             $table->foreign('id_programacion_examen')->references('id_programacion_examen')->on('admision.adm_programacion_examen')->onDelete('cascade');
         });

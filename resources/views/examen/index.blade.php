@@ -51,6 +51,13 @@
                                 </div>
                             </div>
                             <br>
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="enlace">Enlace</label>
+                                    <input type="url" required class="form-control" id="enlace"  name="enlace" placeholder="Ingrese Enlace" />
+                                </div>
+                            </div>
+                            <br>
                             <div class='row'  @if (getTipoUsuario()!='Administrador' || getSeccion()!=null) style="display:none " @endif>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label for="">Seccion</label>
@@ -124,6 +131,13 @@
                                 <div class="col-md col-sm col-xs">
                                     <label for="">Descripcion</label>
                                     <textarea  class="form-control" id="descripcionupd" name="descripcion" placeholder="Ingrese Descripción" ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="enlace">Enlace</label>
+                                    <input type="url" required class="form-control" id="enlaceupd"  name="enlace" placeholder="Ingrese Enlace" />
                                 </div>
                             </div>
                             <br>
@@ -279,7 +293,8 @@
                                                                                             "'".$exa->nota_apro."',".
                                                                                             "'".$exa->nota_maxi."',".
                                                                                             "'".$exa->cara_elim."',".
-                                                                                            "'".$exa->flag_jura."'" }})"></button>
+                                                                                            "'".$exa->flag_jura."',".
+                                                                                            "'".$exa->enlace."'" }})"></button>
                             <button class='btn btn-success fa fa-plus-circle' onclick="Cargar({{ $exa->id_examen }})"></button>
                             <button class='btn btn-danger fa fa-trash' onclick="eliminarexamen({{ $exa->id_examen }})"></button>
                         </td>
@@ -297,7 +312,7 @@
          if ({{ $cargar }}==0)
              Cargar({{ $id_examen }});
     });
-    function editarexamen(id_examen,id_examen_admision,nombre,descripcion,codi_secc_sec,nota_apro,nota_maxi,cara_elim,flag_jura) {
+    function editarexamen(id_examen,id_examen_admision,nombre,descripcion,codi_secc_sec,nota_apro,nota_maxi,cara_elim,flag_jura,enlace) {
         $("#id_examen").val(id_examen);
         $("#id_examen_admision").val(id_examen_admision);
         $("#nombreupd").val(nombre);
@@ -305,6 +320,7 @@
         $("#codi_secc_secupd").val(codi_secc_sec);
         $("#nota_aproupd").val(nota_apro);
         $("#nota_maxiupd").val(nota_maxi);
+        $("#enlaceupd").val(enlace);
         if(cara_elim=='S'){
             $("#cara_elimupd").attr('checked',true);
         }else if(cara_elim=='N'){
@@ -348,20 +364,7 @@
     function eliminar(id){
         $(id).remove();
     }
-    function GuardarEva(id){
-        label1="<label>"+$(id+" div .col input").val()+"</label>";
-        label2="<label>"+$(id+" div .col-2 input").val()+"%</label>";
-        plus="<a href='/MOCUNM/PHP/VISTA/Preguntas.php' class='save'><i class='fa fa-plus-circle'></i></a>";
-        pen="<a href='#' onclick='editar("+'"'+id+'"'+")' class='save'><i class='fa fa-pencil'></i></a>";
-        del="<a href='#' onclick='eliminar("+'"'+id+'"'+")' class='delete'><i class='fa fa-trash'></i></a>";
-        $(id+" div .col").html(label1);
-        $(id+" div .col-2").html(label2);
-        $(id+" div .col-1 .save").remove();
-        $(id+" div .col-1 .delete").remove();
-        $(id+" div .col-1").append(plus+pen+del);
-        $(id+" div").removeClass("desactivado");
-        $(id+" div").addClass("activado");
-    }
+    
     function editar(id,idsec){
         valor1=$(id+" div .input1 label").html();
         valor2=$(id+" div .input2 label").html();

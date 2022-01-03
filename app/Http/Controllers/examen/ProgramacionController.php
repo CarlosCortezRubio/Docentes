@@ -4,11 +4,17 @@ namespace App\Http\Controllers\examen;
 
 use App\Http\Controllers\Controller;
 use App\Model\Aula;
+use App\Model\Comentario;
 use App\Model\Cupos;
 use App\Model\DetalleUsuario;
+use App\Model\Examen\DetalleExamen;
 use App\Model\Examen\Examen;
 use App\Model\Examen\ProgramacionExamen;
+use App\Model\Examen\SeccionExamen;
+use App\Model\ExamenPostulante;
 use App\Model\Jurado;
+use App\Model\JuradoPostulante;
+use App\Model\Nota;
 use App\Model\Persona;
 use App\Model\Postulante;
 use App\User;
@@ -17,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class ProgramacionController extends Controller
 {
@@ -135,6 +142,7 @@ class ProgramacionController extends Controller
                     $usuariodet->id_tipo_usuario=3;
                     $usuariodet->imagen=$persona->foto_pers_per;
                     $usuariodet->save();
+                    //Mail::to($persona->mail_pers_per)->send(new EmailJurado($contrasena,$persona->mail_pers_per));
                 }
                 ///////////////////////
                 $docente= new Jurado();
@@ -152,6 +160,8 @@ class ProgramacionController extends Controller
     }
     public function update(Request $request){
         $program= ProgramacionExamen::find($request->id_programacion_examen);
+        $postulantes= Postulante::where('id_programacion_examen',$request->id_programacion_examen)->get();
+        $secciones= SeccionExamen::where('id_examen',$request->id_examen)->get();
        // return $program;
         try {
             DB::beginTransaction();
@@ -172,6 +182,7 @@ class ProgramacionController extends Controller
                 }
                 foreach ($request->codi_doce_per as $key => $doc) {
                     $docente=Jurado::where('codi_doce_per',$doc)->where('id_programacion_examen',$program->id_programacion_examen);
+                    
                     if ($docente->count()==0) {
                         $contrasena = '12345678';//substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
                         $persona=Persona::find($doc);
@@ -203,7 +214,37 @@ class ProgramacionController extends Controller
                         $docente->update();
                         
                     }
-                    
+                    foreach ($postulantes as $key => $pos) {
+                        $jurapost=JuradoPostulante::where('id_postulante',$pos->id_postulante)
+                                    ->where('id_jurado',$docente->id_jurado);
+                        if ($jurapost->count()==0) {
+                            $jurapost=new JuradoPostulante();
+                            $jurapost->id_jurado=$docente->id_jurado;
+                            $jurapost->id_postulante=$pos->id_postulante;
+                            $jurapost->estado='A';
+                            $jurapost->save();
+                        }else{
+                            $jurapost=$jurapost->first();
+                        }
+                        $coment=Comentario::where('id_jurado_postulante',$jurapost->id_jurado_postulante);
+                        if ($coment->count()==0) {
+                            $coment=new Comentario();
+                            $coment->id_jurado_postulante=$jurapost->id_jurado_postulante;
+                            $coment->comentario='';
+                            $coment->save();
+                        }
+                        foreach ($secciones as $key => $sec) {
+                            $nota=Nota::where('id_jurado_postulante',$jurapost->id_jurado_postulante)
+                                      ->where('id_seccion_examen',$sec->id_seccion_examen);
+                            if ($nota->count()==0) {
+                                $nota=new Nota();
+                                $nota->id_jurado_postulante=$jurapost->id_jurado_postulante;
+                                $nota->id_seccion_examen=$sec->id_seccion_examen;
+                                $nota->nota=0;
+                                $nota->save();
+                            }
+                        }
+                    }
                 }
             }
             $program->update();
@@ -215,6 +256,10 @@ class ProgramacionController extends Controller
         return redirect()->back();
     }
     public function Agregar(Request $request){
+        $secciones= SeccionExamen::where('id_examen',$request->id_examen)->get();
+        $detalle= DetalleExamen::where($request->id_programacion_examen)->fist();
+        $programa= ProgramacionExamen::find($request->id_programacion_examen);
+        $docentes=Jurado::where('id_programacion_examen',$request->id_programacion_examen)->get();
         try {
             DB::beginTransaction();
             if($request->nume_docu_sol){
@@ -232,9 +277,57 @@ class ProgramacionController extends Controller
                         $postulante->estado='P';
                         $postulante->update();
                     }
+                    if($detalle->flag_jura=='N'){
+                        $exampost=ExamenPostulante::where('id_programacion_examen',$request->id_programacion_examen)
+                        ->where('nume_docu_sol',$nume);
+                        if ($exampost->count()==0) {
+                            $exampost=new ExamenPostulante();
+                            $exampost->id_postulante=$postulante->id_postulante;
+                            $exampost->minutos=$programa->minutos;
+                            $exampost->segundos=0;
+                            $exampost->estado='A';
+                            $exampost->save();
+                        }else{
+                            $exampost=$postulante->first();
+                            $exampost->estado='A';
+                            $exampost->update();
+                        }
+                    }
+                    foreach ($docentes as $key => $doc) {
+                        $jurapost=JuradoPostulante::where('id_postulante',$postulante->id_postulante)
+                                    ->where('id_jurado',$doc->id_jurado);
+                        if ($jurapost->count()==0) {
+                            $jurapost=new JuradoPostulante();
+                            $jurapost->id_jurado=$doc->id_jurado;
+                            $jurapost->id_postulante=$postulante->id_postulante;
+                            $jurapost->estado='A';
+                            $jurapost->save();
+                        }else{
+                            $jurapost=$jurapost->first();
+                        }
+                        $coment=Comentario::where('id_jurado_postulante',$jurapost->id_jurado_postulante);
+                        if ($coment->count()==0) {
+                            $coment=new Comentario();
+                            $coment->id_jurado_postulante=$jurapost->id_jurado_postulante;
+                            $coment->comentario='';
+                            $coment->save();
+                        }
+                        foreach ($secciones as $key => $sec) {
+                            $nota=Nota::where('id_jurado_postulante',$jurapost->id_jurado_postulante)
+                                      ->where('id_seccion_examen',$sec->id_seccion_examen);
+                            if ($nota->count()==0) {
+                                $nota=new Nota();
+                                $nota->id_jurado_postulante=$jurapost->id_jurado_postulante;
+                                $nota->id_seccion_examen=$sec->id_seccion_examen;
+                                $nota->nota=0;
+                                $nota->save();
+                            }
+                        }
+                    }
                 } 
             }
             DB::commit();
+            return $this->CargarAlumnos($request);
         } catch (Exception $e) {
                 DB::rollBack();
                 dd($e);
@@ -255,6 +348,7 @@ class ProgramacionController extends Controller
                 }
             }
             DB::commit();
+            return $this->CargarAlumnos($request);
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);
@@ -328,23 +422,27 @@ class ProgramacionController extends Controller
                                                    ->where('id_programacion_examen',$program->id_programacion_examen)
                                                    ->where('esta_post_pos','V')
                                                    ->where('estado','P')
-                                                   ->select('pos.*')->distinct()
                                                    //->whereYear('fech_regi_aud',$program->anio)
+                                                   ->select('pos.nume_docu_per',
+                                                            'pos.nomb_pers_per',
+                                                            'pos.apel_pate_per',
+                                                            'pos.apel_mate_per')->distinct()->orderByRaw('pos.nomb_pers_per')
                                                    ->get();
         $alumnosadd=DB::table('bdsigunm.ad_postulacion as pos')
-                                                    ->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
+                                                    //->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
                                                     ->where('codi_espe_esp',$program->codi_espe_esp)
                                                     ->where('codi_secc_sec',$program->codi_secc_sec)
                                                     ->where('esta_post_pos','V')
                                                     ->whereNotIn('nume_docu_per',$alumnosdelete->pluck("nume_docu_per")->all())
                                                     //->whereYear('fech_regi_aud',$program->anio)
-                                                   ->select('pos.*')->distinct()
+                                                   ->select('pos.nume_docu_per',
+                                                            'pos.nomb_pers_per',
+                                                            'pos.apel_pate_per',
+                                                            'pos.apel_mate_per')->distinct()->orderByRaw('pos.nomb_pers_per')
                                                    ->get();
-        //return $alumnosdelete;
-        $texto="";
-        $texto=$texto."<input type='text' value='$request->id_programacion_examen' id='id_programacion_examenA' name='id_programacion_examen' style='display: none'>
+        $texto="<input type='text' value='$request->id_programacion_examen' id='id_programacion_examenA' name='id_programacion_examen' style='display: none'>
                     <div class='col-5'>
-                    <form action=".route('programacion.alumnos.agregar',['id_programacion_examen'=>$program->id_programacion_examen])." id='agregarform$program->id_programacion_examen' method='get'>
+                    <form action=".route('programacion.alumnos.agregar',['id_programacion_examen'=>$program->id_programacion_examen,'id_examen'=>$program->id_examen])." id='agregarform$program->id_programacion_examen' method='get'>
                     <select class='multi form-control'  multiple='multiple' size='10'  name='nume_docu_sol[]' id='nume_docu_sol'>";
         foreach ($alumnosadd as $key => $alm) {
             $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";

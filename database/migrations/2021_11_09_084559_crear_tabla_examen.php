@@ -17,6 +17,7 @@ class CrearTablaExamen extends Migration
             $table->id('id_examen');
             $table->string('nombre');
             $table->string('descripcion')->nullable();
+            $table->string('enlace')->nullable();
             $table->integer('nota_apro');
             $table->integer('nota_maxi');
             $table->char('estado',1);

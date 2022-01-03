@@ -24,7 +24,7 @@ class ExamenController extends Controller
         $examenes= Examen::join('admision.adm_examen_admision as exd','exd.id_examen','admision.adm_examen.id_examen')
                          ->join('bdsig.ttablas_det as t','exd.codi_secc_sec','t.codi_tabl_det')
                          ->where('estado','A')
-                         ->select('exd.*','nombre','descripcion','nota_apro','nota_maxi','abre_tabl_det');
+                         ->select('exd.*','nombre','descripcion','nota_apro','nota_maxi','enlace','abre_tabl_det');
        
         if(getSeccion()){
             $examenes= $examenes->where('codi_secc_sec',getCodSeccion())->get();
@@ -57,6 +57,7 @@ class ExamenController extends Controller
             $examen->estado='A';
             $examen->user_regi=Auth::user()->id;
             $examen->id_tipo_examen=$tipo->id_tipo_examen;
+            $examen->enlace=$request->enlace;
             $examen->save();
 
             if(!$request->cara_elim){
@@ -90,6 +91,7 @@ class ExamenController extends Controller
             $examen->descripcion=$request->descripcion;
             $examen->nota_apro=$request->nota_apro;
             $examen->nota_maxi=$request->nota_maxi;
+            $examen->enlace=$request->enlace;
             $examen->user_actu=Auth::user()->id;
             $examen->update();
 
@@ -103,6 +105,7 @@ class ExamenController extends Controller
             }else{
                 $examendet->flag_jura=$request->flag_jura;
             }
+            
             $examendet->codi_secc_sec=$request->codi_secc_sec;
             $examendet->update();
 
@@ -179,7 +182,7 @@ class ExamenController extends Controller
     public function cargar(Request $request){
         $secciones= SeccionExamen::where('id_examen',$request->id_examen)
                                  ->where('estado','A')->get();
-        $examen= DetalleExamen::find($request->id_examen);
+        $examen= DetalleExamen::where('id_examen',$request->id_examen)->first();
         $content='';
         foreach ($secciones as $k => $sec) {
             $id='eva'.$sec->id_seccion_examen;

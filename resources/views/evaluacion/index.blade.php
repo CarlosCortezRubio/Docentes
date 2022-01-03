@@ -74,7 +74,7 @@
     </div>
     <div class="modal fade show" id="modalplus" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
+            <div class="modal-content" >
                 <div class="modal-header bg-dark">
                     <h5 class="modal-title">Parametros de Evaluación</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

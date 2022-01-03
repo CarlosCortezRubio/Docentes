@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CrearTablaNotaJurado extends Migration
+class CrearTablaComentarios extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CrearTablaNotaJurado extends Migration
      */
     public function up()
     {
-        Schema::create('admision.adm_nota_jurado', function (Blueprint $table) {
-            $table->id('id_notajurado');
+        Schema::create('admision.adm_comentarios', function (Blueprint $table) {
+            $table->id('id_comentario');
             $table->bigInteger('id_jurado_postulante');
-            $table->bigInteger('id_seccion_examen');
-            $table->Integer('nota')->nullable();
+            $table->string('comentario')->nullable();
             $table->foreign('id_jurado_postulante')->references('id_jurado_postulante')->on('admision.adm_jurado_postulante')->onDelete('cascade');
-            $table->foreign('id_seccion_examen')->references('id_seccion_examen')->on('admision.adm_seccion_examen')->onDelete('cascade');
         });
     }
 
@@ -30,6 +28,6 @@ class CrearTablaNotaJurado extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.adm_nota_jurado');
+        Schema::dropIfExists('admision.adm_comentarios');
     }
 }

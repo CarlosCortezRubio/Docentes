@@ -5,6 +5,7 @@ namespace App\Http\Controllers\evaluacion;
 use App\Http\Controllers\Controller;
 use App\Model\Examen\Examen;
 use App\Model\Examen\ProgramacionExamen;
+use App\Model\Postulante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +62,8 @@ class EvaluacionController extends Controller
         return $programaciones;
     }
     public function Evaluar(Request $request){
-        return $request;
+        //$postulante=Postulante::find($request->id_postulante);
+        return $this->Cargar($request);
     }
     public function Cargar(Request $request){
         $postulantes=DB::table('bdsigunm.ad_postulacion as ad')
@@ -71,6 +73,7 @@ class EvaluacionController extends Controller
                         ->where('adm.estado','P')
                         ->select('adm.id_programacion_examen',
                                  'adm.id_postulante',
+                                 'adm.estado',
                                  'ad.nume_docu_per',
                                  'ad.nomb_pers_per',
                                  'ad.apel_pate_per',
@@ -78,6 +81,7 @@ class EvaluacionController extends Controller
         $jurado = DB::table('admision.adm_jurado as jr')
                     ->join('bdsig.persona as pe','pe.codi_pers_per','jr.codi_doce_per')
                     ->where('pe.nume_docu_per',Auth::user()->ndocumento)
+                    ->where('jr.id_programacion_examen',$request->id_programacion_examen)
                     ->where('jr.estado','A')
                     ->select('jr.id_jurado')
                     ->first();
@@ -89,34 +93,62 @@ class EvaluacionController extends Controller
                                 'descripcion')->get();
         $examen=Examen::find($request->id_examen);
         $contenido="<div class='row'>
-                    <div class='col'>Alumno</div>";
+                    <div class='col-3'>Alumno</div>";
         foreach ($parametros as $key => $par) {
             $contenido=$contenido."<div class='col'>".$par->descripcion."</div>";
         }
         $contenido=$contenido."<div class='col'>Observaciòn</div>
                                <div class='col'>Acciones</div>
                                </div>
+                               <hr width='100%' size='5' noshade=''>
                                ";
         foreach ($postulantes as $key => $pos) {
             $contenido=$contenido."<form action='".route('evaluacion.evaluar')."' id='$pos->nume_docu_per' 
             class='evaluar' method='GET'><div class='row'>
-            <input type='text' name='id_jurado' value='$jurado->id_jurado' style='display: none'/>
             <input type='text' name='id_postulante' value='$pos->id_postulante' style='display: none'/>
-                                    <div class='col'>$pos->nomb_pers_per $pos->apel_pate_per $pos->apel_mate_per</div>";
+            <input type='text' name='id_jurado' value='$jurado->id_jurado' style='display: none'/>
+            <input type='text' name='id_programacion_examen' value='$request->id_programacion_examen' style='display: none'/>
+            <input type='text' name='id_examen' value='$request->id_examen' style='display: none'/>
+                                    <div class='col-3'>$pos->nomb_pers_per $pos->apel_pate_per $pos->apel_mate_per</div>";
+            
+            $estadoeval='';
             foreach ($parametros as $key => $par) {
-                $contenido=$contenido."<div class='col'><input class='form-control des$pos->nume_docu_per' name='sec$par->id_seccion_examen' min='0' max='$examen->nota_maxi' required type='number'></div>";
+                $nota=DB::table('admision.adm_nota_jurado as n')
+                        ->join('admision.adm_jurado_postulante as jp','jp.id_jurado_postulante','n.id_jurado_postulante')
+                        ->select('nota','jp.estado','jp.id_jurado_postulante')
+                        ->where('jp.id_jurado',$jurado->id_jurado)
+                        ->where('jp.id_postulante',$pos->id_postulante)
+                        ->where('id_seccion_examen',$par->id_seccion_examen)->first();
+                $estadoeval=$nota->estado;
+                if ($nota->estado=='A' ){
+                    $contenido=$contenido."<div class='col'><input class='form-control' name='nota-$nota->id_jurado_postulante' min='0' max='$examen->nota_maxi' required type='number'></div>";
+                }else{
+                    $contenido=$contenido."<div class='col'><input class='form-control' value='$nota->nota' disabled></div>";
+                }
+                
             }
-            $contenido=$contenido."<div class='col'><textarea></textarea></div>
-                                   <div class='col'>
-                                   <div class='row'>
-                                   <button onclick='formeval()' class='col btn btn-success des$pos->nume_docu_per'><i class='fas fa-check'></i></button>
-                                   <button class='col btn btn-primary des$pos->nume_docu_per'><i class='fas fa-forward'></i> </button>
-                                   </div>
-                                   </div>
-                                   
-                                   </div></form>";
+            $comentario=DB::table('admision.adm_comentarios as c')
+                            ->join('admision.adm_jurado_postulante as jp','jp.id_jurado_postulante','c.id_jurado_postulante')
+                            ->select('comentario')
+                            ->where('jp.id_jurado',$jurado->id_jurado)
+                            ->where('jp.id_postulante',$pos->id_postulante)->first();
+            
+            if ($estadoeval=='A') {
+                $contenido=$contenido."<div class='col'><textarea name='comentario'></textarea></div>";
+            } else {
+                $contenido=$contenido."<div class='col'><textarea disabled>$comentario->comentario</textarea></div>";
+            }
+            $contenido=$contenido."<div class='col'>
+                                   <div class='row'>";
+            if ($estadoeval=='A') {
+                $contenido=$contenido."<button onclick='formulario(`#$pos->nume_docu_per`)' class='col btn btn-success des$pos->nume_docu_per'><i class='fas fa-check'></i></button>
+                <button class='col btn btn-primary des$pos->nume_docu_per'><i class='fas fa-forward'></i> </button>";
+            } else {
+                $contenido=$contenido."<button disabled class='col btn btn-success'><i class='fas fa-check'></i></button>
+                <button disabled class='col btn btn-primary'><i class='fas fa-forward'></i> </button>";
+            }
+            $contenido=$contenido."</div></div></div></form>";
         }
-        //$contenido=$contenido."";
         return $contenido;
     }
 }

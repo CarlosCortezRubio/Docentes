@@ -301,8 +301,7 @@
                     <div id="cargar" class="row"></div>
                 </div>
                 <div class="modal-footer centrar-content">
-                    <button type="submit" class="btn btn-success"  form="formularioalumnos">Aceptar</button>
-                    <button type="button" class="btn btn-danger"  data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -398,6 +397,7 @@
 @stop
 @section('js')
     <script>
+
         function editar(id,descripcion,fecha_resol,minutos,modalidad,id_examen,id_cupos,id_aula,docentes) {
             $("#id_programacion_examen").val(id);
             $("#descripcionupd").val(descripcion);
