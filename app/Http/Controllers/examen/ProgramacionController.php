@@ -259,7 +259,7 @@ class ProgramacionController extends Controller
     }
     public function Agregar(Request $request){
         $secciones= SeccionExamen::where('id_examen',$request->id_examen)->get();
-        $detalle= DetalleExamen::where($request->id_programacion_examen)->first();
+        $detalle= DetalleExamen::where('id_programacion_examen',$request->id_programacion_examen)->first();
         $programa= ProgramacionExamen::find($request->id_programacion_examen);
         $docentes=Jurado::where('id_programacion_examen',$request->id_programacion_examen)->get();
         try {
