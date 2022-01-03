@@ -63,12 +63,12 @@ class ExamenController extends Controller
             if(!$request->cara_elim){
                 $examendet->cara_elim='N';
             }else {
-                $examendet->cara_elim=$request->cara_elim;
+                $examendet->cara_elim='S';
             }
             if(!$request->flag_jura){
                 $examendet->flag_jura='N';
             }else{
-                $examendet->flag_jura=$request->flag_jura;
+                $examendet->flag_jura='S';
             }
             $examendet->codi_secc_sec=$request->codi_secc_sec;
             $examendet->id_examen=$examen->id_examen;
