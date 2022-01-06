@@ -22,6 +22,12 @@ class CrearDatosUsuario extends Migration
                 "email" => "admin@hotmail.com",
                 "password" => Hash::make('12345678'),
             ]);
+           /* DB::table('admision.adm_usuario')->insert([
+                "name" => "Malak Jorge",
+                "ndocumento" => "12345678",
+                "email" => "admin@hotmail.com",
+                "password" => Hash::make('12345678'),
+            ]);*/
             
         });
     }

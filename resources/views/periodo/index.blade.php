@@ -289,6 +289,8 @@
         $("#peri_eval_inic_edit").val(peri_eval_inic);
         $("#peri_eval_fin_edit").val(peri_eval_fin);
         $("#modaledit").modal('show');
+        $('.dateedit').attr('max',anio+'-12-31');
+        $('.dateedit').attr('min',anio+'-01-01');
     }
     function desactivado(id_periodo) {
         $("#id_periodo_des").val(id_periodo);
