@@ -14,7 +14,7 @@ class DetalleUsuario extends Model
         'updated_at',
         'ultimo_inicio',
         'estado',
-        'codi_secc_sec',
+        'id_seccion',
         'id_usuario',
         'imagen'
     ];

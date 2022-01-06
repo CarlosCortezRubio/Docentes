@@ -17,7 +17,8 @@ class CrearTablaDetalleUsuario extends Migration
             $table->id('idusuario_det');
             $table->dateTime('ultimo_inicio')->nullable();
             $table->char('estado',1);
-            $table->char('codi_secc_sec',5)->nullable();
+            $table->bigInteger('id_seccion')->nullable();
+            $table->foreign('id_seccion')->references('id_seccion')->on('admision.adm_seccion_estudios')->onDelete('cascade');
             $table->bigInteger('id_usuario');
             $table->bigInteger('id_tipo_usuario');
             $table->foreign('id_usuario')->references('id')->on('admision.adm_usuario')->onDelete('cascade');

@@ -19,7 +19,7 @@ class Periodo extends Model
         'updated_at',
         'user_regi',
         'user_actu',
-        'codi_secc_sec',
+        'id_seccion',
     ];
     protected $dates=[
         'peri_insc_inic',

@@ -20,11 +20,17 @@ class PeriodoController extends Controller
         for ($i=0; $i < 10; $i++) {
             $anios->push(date('Y')+$i);
         }
-        $secciones =DB::table('bdsig.vw_sig_seccion')->get();
+        $secciones =DB::table('bdsig.vw_sig_seccion as sec')
+                    ->join('admision.adm_seccion_estudios as asec','asec.codi_secc_sec','sec.codi_secc_sec')
+                    ->select('sec.abre_secc_sec','asec.*')
+                    ->get();
+        $periodos= Periodo::join('admision.adm_seccion_estudios as asec','asec.id_seccion','admision.adm_periodo.id_seccion')
+                          ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','asec.codi_secc_sec')
+                          ->select('admision.adm_periodo.*','sec.abre_secc_sec','asec.categoria');
         if(getSeccion()){
-            $periodos= Periodo::where('codi_secc_sec',getCodSeccion())->get();
+            $periodos= $periodos->where('asec.id_seccion',getIdSeccion())->get();
         }else if(getTipoUsuario()=='Administrador'){
-            $periodos= Periodo::all();
+            $periodos= $periodos->get();
         }
         return view('periodo.index',['periodos'=>$periodos,'secciones'=>$secciones,'anios'=>$anios]);
     }
@@ -40,7 +46,7 @@ class PeriodoController extends Controller
             $periodo->peri_eval_fin=$request->peri_eval_fin;
             $periodo->estado='I';
             $periodo->user_regi=Auth::user()->id;
-            $periodo->codi_secc_sec=$request->codi_secc_sec;
+            $periodo->id_seccion=$request->id_seccion;
             $periodo->save();
             DB::commit();
         } catch (Exception $e) {
@@ -60,7 +66,7 @@ class PeriodoController extends Controller
             $periodo->peri_eval_inic=$request->peri_eval_inic;
             $periodo->peri_eval_fin=$request->peri_eval_fin;
             $periodo->user_actu=Auth::user()->id;
-            $periodo->codi_secc_sec=$request->codi_secc_sec;
+            $periodo->id_seccion=$request->id_seccion;
             $periodo->update();
             DB::commit();
         } catch (Exception $e) {
@@ -71,7 +77,7 @@ class PeriodoController extends Controller
     }
     public function updateEstado(Request $request){
         $periodo=Periodo::find($request->id_periodo);
-        $periodos=Periodo::where('codi_secc_sec',$periodo->codi_secc_sec)->get();
+        $periodos=Periodo::where('id_seccion',$periodo->id_seccion)->get();
         try {
             DB::beginTransaction();
             foreach ($periodos as $per) {
@@ -100,7 +106,7 @@ class PeriodoController extends Controller
 
     public function MensajeEstado(Request $request){
         $periodo=Periodo::find($request->idperiodo);
-        $periodos= Periodo::where('codi_secc_sec',$periodo->codi_secc_sec)->get();
+        $periodos= Periodo::where('id_seccion',$periodo->id_seccion)->get();
         foreach ($periodos as $per) {
             if($per->estado=='A'){
                 return "Existe un periodo activo.<br>¿Desea Activar el periodo?";

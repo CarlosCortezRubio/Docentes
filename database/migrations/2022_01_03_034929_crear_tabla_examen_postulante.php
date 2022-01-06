@@ -13,7 +13,7 @@ class CrearTablaExamenPostulante extends Migration
      */
     public function up()
     {
-        Schema::create('admision.adm_Examen_Postulante', function (Blueprint $table) {
+        Schema::create('admision.adm_examen_postulante', function (Blueprint $table) {
             $table->id('id_examen_postulante');
             $table->bigInteger('id_postulante');
             $table->integer('minutos');

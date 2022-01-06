@@ -12,7 +12,7 @@ class DetalleExamen extends Model
     protected $fillable = [
         'cara_elim',
         'flag_jura',
-        'codi_secc_sec',
+        'id_seccion',
         'id_examen'
     ];
 }

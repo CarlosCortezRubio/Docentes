@@ -20,14 +20,18 @@ class ExamenController extends Controller
 
     public function index(Request $request)
     {
-        $secciones =DB::table('bdsig.vw_sig_seccion')->get();
+        $secciones =DB::table('bdsig.vw_sig_seccion as sec')
+                    ->join('admision.adm_seccion_estudios as asec','asec.codi_secc_sec','sec.codi_secc_sec')
+                    ->select('sec.abre_secc_sec','asec.*')
+                    ->get();
         $examenes= Examen::join('admision.adm_examen_admision as exd','exd.id_examen','admision.adm_examen.id_examen')
-                         ->join('bdsig.ttablas_det as t','exd.codi_secc_sec','t.codi_tabl_det')
-                         ->where('estado','A')
+                         ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','exd.id_seccion')
+                         ->join('bdsig.ttablas_det as t','asec.codi_secc_sec','t.codi_tabl_det')
+                         ->where('admision.adm_examen.estado','A')
                          ->select('exd.*','nombre','descripcion','nota_apro','nota_maxi','enlace','abre_tabl_det');
        
         if(getSeccion()){
-            $examenes= $examenes->where('codi_secc_sec',getCodSeccion())->get();
+            $examenes= $examenes->where('asec.id_seccion',getIdSeccion())->get();
         }else if(getTipoUsuario()=='Administrador'){
             $examenes= $examenes->get();
         }
@@ -63,14 +67,14 @@ class ExamenController extends Controller
             if(!$request->cara_elim){
                 $examendet->cara_elim='N';
             }else {
-                $examendet->cara_elim='S';
+                $examendet->cara_elim=$request->cara_elim;
             }
             if(!$request->flag_jura){
                 $examendet->flag_jura='N';
             }else{
-                $examendet->flag_jura='S';
+                $examendet->flag_jura=$request->flag_jura;
             }
-            $examendet->codi_secc_sec=$request->codi_secc_sec;
+            $examendet->id_seccion=$request->id_seccion;
             $examendet->id_examen=$examen->id_examen;
             $examendet->save();
 
@@ -106,7 +110,7 @@ class ExamenController extends Controller
                 $examendet->flag_jura=$request->flag_jura;
             }
             
-            $examendet->codi_secc_sec=$request->codi_secc_sec;
+            $examendet->id_seccion=$request->id_seccion;
             $examendet->update();
 
             DB::commit();

@@ -34,10 +34,11 @@
                             <div class='row'  @if (getTipoUsuario()!='Administrador' || getSeccion()!=null) style="display:none " @endif>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label for="">Seccion</label>
-                                    <select class="form-control" name="codi_secc_sec" required id="codi_secc_sec">
+                                    <select class="form-control" name="id_seccion" required id="id_seccion">
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($secciones as $key => $secc)
-                                            <option  @if(getCodSeccion()==$secc->codi_secc_sec) selected @endif value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
+                                            <option  @if(getIdSeccion()==$secc->id_seccion) selected @endif value="{{ $secc->id_seccion }}">{{ $secc->abre_secc_sec }}
+                                                @if($secc->categoria) -{{ $secc->categoria }}  @endif</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -112,10 +113,11 @@
                         <div class='row' @if (getTipoUsuario()!='Administrador' || getSeccion()!=null) style="display:none " @endif>
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <label for="">Seccion</label>
-                                <select class="form-control" name="codi_secc_sec" required id="codi_secc_sec_edit" >
+                                <select class="form-control" name="id_seccion" required id="codi_secc_sec_edit" >
                                     <option value="">---- Seleccione -----</option>
                                     @foreach ($secciones as $key => $secc)
-                                        <option value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
+                                        <option value="{{ $secc->id_seccion }}">{{ $secc->abre_secc_sec }}
+                                            @if($secc->categoria) -{{ $secc->categoria }}  @endif</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -233,11 +235,7 @@
                 <tbody>
                     @foreach ($periodos as $key => $per)
                         @php
-                            $descsec='';
-                            foreach ($secciones as $sec) {
-                                if($sec->codi_secc_sec==$per->codi_secc_sec)
-                                $descsec=$sec->abre_secc_sec;
-                            }
+                            
                             $peri_insc_inic=substr($per->peri_insc_inic, 0, strpos($per->peri_insc_inic, " "));
                             $peri_insc_fin=substr($per->peri_insc_fin, 0, strpos($per->peri_insc_fin, " "));
                             $peri_eval_inic=substr($per->peri_eval_inic, 0, strpos($per->peri_eval_inic, " "));
@@ -247,7 +245,7 @@
                             <th scope="row">{{$key+1}}</th>
                             <td>{{ $per->anio }}</td>
                             @if (is_admin())
-                                <td>{{ $descsec }}</td>
+                                <td>{{ $per->abre_secc_sec }} @if($per->categoria) - {{ $per->categoria }} @endif </td>
                             @endif
                             <td>{{ $peri_insc_inic."    ||    ".$peri_insc_fin}}</td>
                             <td>{{ $peri_eval_inic."    ||    ".$peri_eval_fin}}</td>
@@ -258,7 +256,7 @@
                                 @else
                                     <button onclick="mensaje('{{  $per->id_periodo  }}');" class='btn btn-success fa fa-check'></button>
                                 @endif
-                                <button onclick=editar({{"'".$per->id_periodo."','".$per->anio."','".$per->codi_secc_sec."','".$peri_insc_inic."','".$peri_insc_fin."','".$peri_eval_inic."','".$peri_eval_fin."'"}});  class='btn btn-primary fa fa-pencil'></button>
+                                <button onclick=editar({{"'".$per->id_periodo."','".$per->anio."','".$per->id_seccion."','".$peri_insc_inic."','".$peri_insc_fin."','".$peri_eval_inic."','".$peri_eval_fin."'"}});  class='btn btn-primary fa fa-pencil'></button>
                             </td>
                         </tr>
                     @endforeach
@@ -282,10 +280,10 @@
 
 
     });
-    function editar(id_periodo,anio,codi_secc_sec,peri_insc_inic,peri_insc_fin,peri_eval_inic,peri_eval_fin) {
+    function editar(id_periodo,anio,id_seccion,peri_insc_inic,peri_insc_fin,peri_eval_inic,peri_eval_fin) {
         $("#id_periodo").val(id_periodo);
         $("#anio_edit").val(anio);
-        $("#codi_secc_sec_edit").val(codi_secc_sec);
+        $("#codi_secc_sec_edit").val(id_seccion);
         $("#peri_insc_inic_edit").val(peri_insc_inic);
         $("#peri_insc_fin_edit").val(peri_insc_fin);
         $("#peri_eval_inic_edit").val(peri_eval_inic);

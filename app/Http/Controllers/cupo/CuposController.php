@@ -21,18 +21,22 @@ class CuposController extends Controller
     public function index(){
         try{
             $cupos= Cupos::join('admision.adm_periodo as pe','pe.id_periodo','admision.adm_cupos.id_periodo')
-                        ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','pe.codi_secc_sec') 
+                        ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','pe.id_seccion')
+                        ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','asec.codi_secc_sec') 
                         ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','admision.adm_cupos.codi_espe_esp')
-                        ->select('admision.adm_cupos.*','esp.codi_espe_esp','esp.abre_espe_esp','pe.*','sec.abre_secc_sec')
+                        ->select('admision.adm_cupos.*','pe.id_seccion','esp.codi_espe_esp','esp.abre_espe_esp','pe.*','sec.abre_secc_sec','asec.categoria')
                         ->distinct('id_cupos')
                         ->where('admision.adm_cupos.estado','A');
 
             $programas= DB::table('bdsig.vw_sig_seccion_especialidad');
-            $periodos=Periodo::join('bdsig.vw_sig_seccion','bdsig.vw_sig_seccion.codi_secc_sec','=','admision.adm_periodo.codi_secc_sec');
+            $periodos=Periodo::join('admision.adm_seccion_estudios as asec','asec.id_seccion','admision.adm_periodo.id_seccion')
+                            ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','asec.codi_secc_sec')
+                            ->select('admision.adm_periodo.*','sec.*');
+                                
             if(getSeccion()){
-                $cupos=$cupos->where('sec.codi_secc_sec',getCodSeccion())->get();
+                $cupos=$cupos->where('pe.id_seccion',getIdSeccion())->get();
                 $programas=$programas->where('codi_secc_sec',getCodSeccion())->get();
-                $periodos=$periodos->where('admision.adm_periodo.codi_secc_sec',getCodSeccion())->get();
+                $periodos=$periodos->where('id_seccion',getIdSeccion())->get();
             }else if(getTipoUsuario()=='Administrador'){
                 $programas=$programas->distinct('codi_espe_esp')->get();
                 $cupos=$cupos->get();

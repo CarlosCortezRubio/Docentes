@@ -29,18 +29,24 @@ use Illuminate\Support\Facades\Mail;
 class ProgramacionController extends Controller
 {
     public function index(){
-        $secciones =DB::table('bdsig.vw_sig_seccion')->get();
+        $secciones =DB::table('bdsig.vw_sig_seccion as sec')
+                    ->join('admision.adm_seccion_estudios as asec','asec.codi_secc_sec','sec.codi_secc_sec')
+                    ->select('sec.abre_secc_sec','asec.*')
+                    ->get();
         $aulas= Aula::where("estado","A")->get();
         $examenes= Examen::join('admision.adm_examen_admision as exd','exd.id_examen','admision.adm_examen.id_examen')
-                         ->join('bdsig.ttablas_det as t','exd.codi_secc_sec','t.codi_tabl_det')
-                         ->where('estado','A')
-                         ->select('exd.id_examen','nombre','abre_tabl_det','exd.codi_secc_sec');
+                         ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','exd.id_seccion')
+                         ->join('bdsig.ttablas_det as t','asec.codi_secc_sec','t.codi_tabl_det')
+                         ->where('admision.adm_examen.estado','A')
+                         ->select('exd.id_examen','nombre','asec.id_seccion','abre_tabl_det','asec.codi_secc_sec');
         $cupos=Cupos::join('admision.adm_periodo as p',
                                 'p.id_periodo',
                                 'admision.adm_cupos.id_periodo')
+                        ->join('admision.adm_seccion_estudios as asec',
+                                'asec.id_seccion','p.id_seccion')
                         ->join('bdsig.vw_sig_seccion as sec',
                                 'sec.codi_secc_sec',
-                                'p.codi_secc_sec')
+                                'asec.codi_secc_sec')
                         ->join('bdsig.vw_sig_seccion_especialidad as esp',
                                 'esp.codi_espe_esp',
                                 'admision.adm_cupos.codi_espe_esp')
@@ -51,13 +57,16 @@ class ProgramacionController extends Controller
                                     'p.id_periodo',
                                     'p.anio',
                                     'sec.codi_secc_sec',
-                                    'sec.abre_secc_sec')->distinct();
+                                    'sec.abre_secc_sec'
+                                    ,'asec.categoria'
+                                    ,'asec.id_seccion')->distinct();
         $docentes=Persona::where('flag_trab_per','S')->where('tipo_trab_per','03001')->get();
         $programaciones=ProgramacionExamen::join('admision.adm_examen as ex','ex.id_examen','admision.adm_programacion_examen.id_examen')
                                           ->join('admision.adm_cupos as cu','cu.id_cupos','admision.adm_programacion_examen.id_cupos')
                                           ->join('admision.adm_aula as au','au.id_aula','admision.adm_programacion_examen.id_aula')
                                           ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','cu.codi_espe_esp')
                                           ->join('admision.adm_periodo as p','p.id_periodo','cu.id_periodo')
+                                          ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','p.id_seccion')
                                           ->where('admision.adm_programacion_examen.estado','A')
                                           ->select('admision.adm_programacion_examen.descripcion',
                                                    'id_programacion_examen',
@@ -72,11 +81,12 @@ class ProgramacionController extends Controller
                                                    'p.anio',
                                                    'ex.nombre as examen',
                                                    'au.nombre as aula',
-                                                   'p.codi_secc_sec')->distinct();
+                                                   'asec.codi_secc_sec'
+                                                   ,'p.id_seccion')->distinct();
         if(getSeccion()){
-            $examenes= $examenes->where('codi_secc_sec',getCodSeccion())->get();
-            $cupos= $cupos->where('codi_secc_sec',getCodSeccion())->get();
-            $programaciones=$programaciones->where('codi_secc_sec',getCodSeccion())->get();
+            $examenes= $examenes->where('asec.id_seccion',getIdSeccion())->get();
+            $cupos= $cupos->where('asec.id_seccion',getIdSeccion())->get();
+            $programaciones=$programaciones->where('p.id_seccion',getIdSeccion())->get();
         }else if(getTipoUsuario()=='Administrador'){
             $examenes= $examenes->get();
             $cupos= $cupos->get();
@@ -404,6 +414,7 @@ class ProgramacionController extends Controller
                                           ->join('admision.adm_aula as au','au.id_aula','admision.adm_programacion_examen.id_aula')
                                           ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','cu.codi_espe_esp')
                                           ->join('admision.adm_periodo as p','p.id_periodo','cu.id_periodo')
+                                          ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','p.id_seccion')
                                           ->where('admision.adm_programacion_examen.estado','A')
                                           ->where('admision.adm_programacion_examen.id_programacion_examen',$request->id_programacion_examen)
                                           ->select('admision.adm_programacion_examen.descripcion',
@@ -419,7 +430,7 @@ class ProgramacionController extends Controller
                                                    'p.anio',
                                                    'ex.nombre as examen',
                                                    'au.nombre as aula',
-                                                   'p.codi_secc_sec')->distinct()->first();
+                                                   'asec.*')->distinct()->first();
         $alumnosdelete=DB::table('bdsigunm.ad_postulacion as pos')
                                                    ->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
                                                    ->where('codi_espe_esp',$program->codi_espe_esp)
@@ -427,7 +438,7 @@ class ProgramacionController extends Controller
                                                    ->where('id_programacion_examen',$program->id_programacion_examen)
                                                    ->where('esta_post_pos','V')
                                                    ->where('estado','P')
-                                                   //->whereYear('fech_regi_aud',$program->anio)
+                                                   ->whereYear('fech_regi_aud',$program->anio)
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
@@ -437,9 +448,10 @@ class ProgramacionController extends Controller
                                                     //->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
                                                     ->where('codi_espe_esp',$program->codi_espe_esp)
                                                     ->where('codi_secc_sec',$program->codi_secc_sec)
+                                                    ->whereBetween('edad_calc_pos',[$program->edad_min,$program->edad_max])
                                                     ->where('esta_post_pos','V')
                                                     ->whereNotIn('nume_docu_per',$alumnosdelete->pluck("nume_docu_per")->all())
-                                                    //->whereYear('fech_regi_aud',$program->anio)
+                                                    ->whereYear('fech_regi_aud',$program->anio)
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',

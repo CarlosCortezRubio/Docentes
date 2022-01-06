@@ -61,10 +61,11 @@
                             <div class='row'  @if (getTipoUsuario()!='Administrador' || getSeccion()!=null) style="display:none " @endif>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label for="">Seccion</label>
-                                    <select class="form-control" name="codi_secc_sec" required id="codi_secc_sec">
+                                    <select class="form-control" name="id_seccion" required id="id_seccion">
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($secciones as $key => $secc)
-                                            <option  @if(getCodSeccion()==$secc->codi_secc_sec) selected @endif value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
+                                            <option  @if(getIdSeccion()==$secc->id_seccion) selected @endif value="{{ $secc->id_seccion }}">{{ $secc->abre_secc_sec }} 
+                                                @if($secc->categoria) -{{ $secc->categoria }}  @endif</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -144,10 +145,11 @@
                             <div class='row'  @if (getTipoUsuario()!='Administrador' || getSeccion()!=null) style="display:none " @endif>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label for="">Seccion</label>
-                                    <select class="form-control" name="codi_secc_sec" required id="codi_secc_secupd">
+                                    <select class="form-control" name="id_seccion" required id="codi_secc_secupd">
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($secciones as $key => $secc)
-                                            <option  @if(getCodSeccion()==$secc->codi_secc_sec) selected @endif value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
+                                            <option  @if(getIdSeccion()==$secc->id_seccion) selected @endif value="{{ $secc->id_seccion }}">{{ $secc->abre_secc_sec }}
+                                                @if($secc->categoria) -{{ $secc->categoria }}  @endif</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -289,7 +291,7 @@
                                                                                             "'".$exa->id_examen_admision."',".
                                                                                             "'".$exa->nombre."',".
                                                                                             "'".$exa->descripcion."',".
-                                                                                            "'".$exa->codi_secc_sec."',".
+                                                                                            "'".$exa->id_seccion."',".
                                                                                             "'".$exa->nota_apro."',".
                                                                                             "'".$exa->nota_maxi."',".
                                                                                             "'".$exa->cara_elim."',".
@@ -312,12 +314,12 @@
          if ({{ $cargar }}==0)
              Cargar({{ $id_examen }});
     });
-    function editarexamen(id_examen,id_examen_admision,nombre,descripcion,codi_secc_sec,nota_apro,nota_maxi,cara_elim,flag_jura,enlace) {
+    function editarexamen(id_examen,id_examen_admision,nombre,descripcion,id_seccion,nota_apro,nota_maxi,cara_elim,flag_jura,enlace) {
         $("#id_examen").val(id_examen);
         $("#id_examen_admision").val(id_examen_admision);
         $("#nombreupd").val(nombre);
         $("#descripcionupd").val(descripcion);
-        $("#codi_secc_secupd").val(codi_secc_sec);
+        $("#codi_secc_secupd").val(id_seccion);
         $("#nota_aproupd").val(nota_apro);
         $("#nota_maxiupd").val(nota_maxi);
         $("#enlaceupd").val(enlace);

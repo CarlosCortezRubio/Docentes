@@ -17,21 +17,11 @@
             <select class="buscar form-control" name="espec" id="espec">
                 <option value="">Todos</option>
                 @foreach ($periodos as $k => $per)
-                    <option value="{{ $per->id_periodo }}">{{ $per->anio }}@if (is_admin()) ({{ $per->abre_secc_sec }}) @endif</option>
+                    <option value="{{ $per->id_periodo }}">{{ $per->anio }}@if (is_admin()) ({{ $per->abre_secc_sec }} 
+                        @if($per->categoria) - {{ $per->categoria }} @endif ) @endif</option>
                 @endforeach
             </select>
         </div>
-        {{--@if (is_admin())
-        <div class="col-md col-sm col-xs">
-            <label for="">Secciòn</label>
-            <select class="buscar browser-default custom-select">
-                <option value="">Todos</option>
-                @foreach ($secciones as $k => $secc)
-                <option value="{{ $secc->codi_secc_sec }}">{{ $secc->abre_secc_sec }}</option>
-                @endforeach
-            </select>
-        </div>
-        @endif--}}
         <div class="col-md col-sm col-xs flex-center btn-search">
             <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> Buscar</button>
         </div>
@@ -69,7 +59,8 @@
                                     <select class="form-control" required name="id_periodo" id="id_periodo">
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($periodos as $k => $per)
-                                            <option value="{{ $per->id_periodo }}">{{ $per->anio }}@if (is_admin()) ({{ $per->abre_secc_sec }}) @endif</option>
+                                            <option value="{{ $per->id_periodo }}">{{ $per->anio }}@if (is_admin()) ({{ $per->abre_secc_sec }}
+                                                @if($per->categoria) - {{ $per->categoria }} @endif ) @endif</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -123,7 +114,8 @@
                                     <select class="form-control" required name="id_periodo" id="id_periodo_edit">
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($periodos as $k => $per)
-                                            <option value="{{ $per->id_periodo }}">{{ $per->anio }}@if (is_admin()) ({{ $per->abre_secc_sec }}) @endif</option>
+                                            <option value="{{ $per->id_periodo }}">{{ $per->anio }}@if (is_admin()) ({{ $per->abre_secc_sec }}
+                                                @if($per->categoria) - {{ $per->categoria }} @endif ) @endif</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -192,7 +184,8 @@
                     <tr>
                         <th scope="row">{{ $k+1 }}</th>
                         <td>{{ $cup->abre_espe_esp }}</td>
-                        <td>{{ $cup->anio }}@if (is_admin()) ({{ $cup->abre_secc_sec }}) @endif</td>
+                        <td>{{ $cup->anio }}@if (is_admin()) ({{ $cup->abre_secc_sec }}
+                            @if($per->categoria) - {{ $per->categoria }} @endif ) @endif</td>
                         <td>{{ $cup->cant_cupo }}</td>
                         <td>
                             <button onclick="editar({{ $cup->id_cupos.',"'.$cup->codi_espe_esp.'",'.$cup->id_periodo.','.$cup->cant_cupo }})" class='btn btn-primary fa fa-pencil'></button>

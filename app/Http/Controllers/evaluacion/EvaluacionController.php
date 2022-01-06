@@ -32,6 +32,7 @@ class EvaluacionController extends Controller
                         ->join('admision.adm_aula as au','au.id_aula','admision.adm_programacion_examen.id_aula')
                         ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','cu.codi_espe_esp')
                         ->join('admision.adm_periodo as p','p.id_periodo','cu.id_periodo')
+                        ->join('admision.adm_seccion_estudios as asec','p.id_seccion','asec.id_seccion')
                         ->where('admision.adm_programacion_examen.estado','A')
                         ->where('ex.estado','A')
                         ->where('adm.flag_jura','S')
@@ -48,9 +49,10 @@ class EvaluacionController extends Controller
                                  'p.anio',
                                  'ex.nombre as examen',
                                  'au.nombre as aula',
-                                 'p.codi_secc_sec')->distinct();
+                                 'asec.codi_secc_sec',
+                                 'p.id_seccion')->distinct();
         if(getSeccion()){
-            $programaciones=$programaciones->where('codi_secc_sec',getCodSeccion());
+            $programaciones=$programaciones->where('p.id_seccion',getIdSeccion());
         } if(getTipoUsuario()=='Administrador'){
             $programaciones=$programaciones->get();
         }else if(getTipoUsuario()=='Jurado'){

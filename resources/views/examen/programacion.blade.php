@@ -111,7 +111,8 @@
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($cupos as $k => $cu)
                                             <option value="{{ $cu->id_cupos }}">
-                                                {{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}) @endif</option>
+                                                {{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}
+                                                @if($per->categoria) - {{ $per->categoria }} @endif ) @endif</option>
                                             </option>
                                         @endforeach
                                     </select>
@@ -228,7 +229,8 @@
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($cupos as $k => $cu)
                                             <option value="{{ $cu->id_cupos }}">
-                                                {{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}) @endif</option>
+                                                {{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}
+                                                @if($per->categoria) - {{ $per->categoria }} @endif ) @endif</option>
                                             </option>
                                         @endforeach
                                     </select>
