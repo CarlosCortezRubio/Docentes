@@ -26,12 +26,14 @@ class CuposController extends Controller
                         ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','admision.adm_cupos.codi_espe_esp')
                         ->select('admision.adm_cupos.*','pe.id_seccion','esp.codi_espe_esp','esp.abre_espe_esp','pe.*','sec.abre_secc_sec','asec.categoria')
                         ->distinct('id_cupos')
-                        ->where('admision.adm_cupos.estado','A');
+                        ->where('admision.adm_cupos.estado','A')
+                        ->where('asec.estado','A');
 
             $programas= DB::table('bdsig.vw_sig_seccion_especialidad');
             $periodos=Periodo::join('admision.adm_seccion_estudios as asec','asec.id_seccion','admision.adm_periodo.id_seccion')
                             ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','asec.codi_secc_sec')
-                            ->select('admision.adm_periodo.*','sec.*');
+                            ->select('admision.adm_periodo.*','sec.*')
+                            ->where('asec.estado','A');
                                 
             if(getSeccion()){
                 $cupos=$cupos->where('pe.id_seccion',getIdSeccion())->get();

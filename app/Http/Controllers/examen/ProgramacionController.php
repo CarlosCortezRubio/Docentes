@@ -34,12 +34,14 @@ class ProgramacionController extends Controller
         $secciones =DB::table('bdsig.vw_sig_seccion as sec')
                     ->join('admision.adm_seccion_estudios as asec','asec.codi_secc_sec','sec.codi_secc_sec')
                     ->select('sec.abre_secc_sec','asec.*')
+                    ->where('asec.estado','A')
                     ->get();
         $aulas= Aula::where("estado","A")->get();
         $examenes= Examen::join('admision.adm_examen_admision as exd','exd.id_examen','admision.adm_examen.id_examen')
                          ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','exd.id_seccion')
                          ->join('bdsig.ttablas_det as t','asec.codi_secc_sec','t.codi_tabl_det')
                          ->where('admision.adm_examen.estado','A')
+                         ->where('asec.estado','A')
                          ->select('exd.id_examen','nombre','asec.id_seccion','abre_tabl_det','asec.codi_secc_sec');
         $cupos=Cupos::join('admision.adm_periodo as p',
                                 'p.id_periodo',
@@ -53,6 +55,7 @@ class ProgramacionController extends Controller
                                 'esp.codi_espe_esp',
                                 'admision.adm_cupos.codi_espe_esp')
                         ->where('p.estado','A')
+                        ->where('asec.estado','A')
                          ->select('id_cupos',
                                     'esp.codi_espe_esp',
                                     'esp.abre_espe_esp',
@@ -70,6 +73,10 @@ class ProgramacionController extends Controller
                                           ->join('admision.adm_periodo as p','p.id_periodo','cu.id_periodo')
                                           ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','p.id_seccion')
                                           ->where('admision.adm_programacion_examen.estado','A')
+                                          ->where('ex.estado','A')
+                                          ->where('cu.estado','A')
+                                          ->where('au.estado','A')
+                                          ->where('asec.estado','A')
                                           ->select('admision.adm_programacion_examen.descripcion',
                                                    'id_programacion_examen',
                                                    'fecha_resol',
@@ -184,8 +191,9 @@ class ProgramacionController extends Controller
     }
     public function update(Request $request){
         $program= ProgramacionExamen::find($request->id_programacion_examen);
-        $postulantes= Postulante::where('id_programacion_examen',$request->id_programacion_examen)->get();
-        $secciones= SeccionExamen::where('id_examen',$request->id_examen)->get();
+        $postulantes= Postulante::where('estado','P')
+                        ->where('id_programacion_examen',$request->id_programacion_examen)->get();
+        $secciones= SeccionExamen::where('id_examen',$request->id_examen)->where('estado','A')->get();
         $cupo= Cupos::find($program->id_cupos);
         $periodo= Periodo::find($cupo->id_periodo);
        // return $program;
@@ -292,24 +300,23 @@ class ProgramacionController extends Controller
     }
     public function ValidarExamenDocente(Request $request){
         $examen=DetalleExamen::find($request->id_examen_admision);
-        if($examen){
+        if($examen->flag_jura=='S'){
             return true;
         }else{
             return false;
         }
     }
     public function Agregar(Request $request){
-        $secciones= SeccionExamen::where('id_examen',$request->id_examen)->get();
+        $secciones= SeccionExamen::where('id_examen',$request->id_examen)->where('estado','A')->get();
         $detalle= DetalleExamen::where('id_examen',$request->id_examen)->first();
         $programa= ProgramacionExamen::find($request->id_programacion_examen);
-        $docentes=Jurado::where('id_programacion_examen',$request->id_programacion_examen)->get();
+        $docentes=Jurado::where('id_programacion_examen',$request->id_programacion_examen)->where('estado','A')->get();
         try {
             DB::beginTransaction();
             if($request->nume_docu_sol){
                 foreach ($request->nume_docu_sol as $key => $nume) {
                     $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
-                                        ->where('nume_docu_sol',$nume)
-                                        ->where('estado','P');
+                                        ->where('nume_docu_sol',$nume);
                     if ($postulante->count()==0) {
                         $postulante=new Postulante();
                         $postulante->id_programacion_examen=$request->id_programacion_examen;
@@ -348,6 +355,8 @@ class ProgramacionController extends Controller
                             $jurapost->save();
                         }else{
                             $jurapost=$jurapost->first();
+                            $jurapost->estado='A';
+                            $jurapost->update();
                         }
                         $coment=Comentario::where('id_jurado_postulante',$jurapost->id_jurado_postulante);
                         if ($coment->count()==0) {
@@ -454,6 +463,10 @@ class ProgramacionController extends Controller
                                           ->join('admision.adm_periodo as p','p.id_periodo','cu.id_periodo')
                                           ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','p.id_seccion')
                                           ->where('admision.adm_programacion_examen.estado','A')
+                                          ->where('ex.estado','A')
+                                          ->where('cu.estado','A')
+                                          ->where('au.estado','A')
+                                          ->where('asec.estado','A')
                                           ->where('admision.adm_programacion_examen.id_programacion_examen',$request->id_programacion_examen)
                                           ->select('admision.adm_programacion_examen.descripcion',
                                                    'id_programacion_examen',
