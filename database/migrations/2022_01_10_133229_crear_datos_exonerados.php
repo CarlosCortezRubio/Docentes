@@ -24,7 +24,7 @@ class CrearDatosExonerados extends Migration
      */
     public function down()
     {
-        Schema::table('admision.adm_seccion_estudios', function (Blueprint $table) {
+        Schema::table('bdsigunm.ad_exonerado', function (Blueprint $table) {
            // DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00086',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'73094782',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04001']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00087',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'72470176',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04013']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00088',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'72529875',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04116']);
