@@ -297,7 +297,9 @@
                                                                                             "'".$exa->cara_elim."',".
                                                                                             "'".$exa->flag_jura."',".
                                                                                             "'".$exa->enlace."'" }})"></button>
+                                                                                           @if ($exa->flag_jura=='S')
                             <button class='btn btn-success fa fa-plus-circle' onclick="Cargar({{ $exa->id_examen }})"></button>
+                                                                                           @endif
                             <button class='btn btn-danger fa fa-trash' onclick="eliminarexamen({{ $exa->id_examen }})"></button>
                         </td>
                     </tr>
