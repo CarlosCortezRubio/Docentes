@@ -374,8 +374,7 @@ class ProgramacionController extends Controller
             return $this->CargarAlumnos($request);
         } catch (Exception $e) {
                 DB::rollBack();
-                return redirect()->back()
-        ->with('no_success', 'Existe un error en los parámetros.');
+                return with('no_success', 'Existe un error en los parámetros.');
         }
     }
     public function Eliminar(Request $request){
