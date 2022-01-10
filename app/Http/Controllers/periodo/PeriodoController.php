@@ -51,9 +51,11 @@ class PeriodoController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
 
     public function update(Request $request){
@@ -71,9 +73,11 @@ class PeriodoController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
     public function updateEstado(Request $request){
         $periodo=Periodo::find($request->id_periodo);
@@ -99,9 +103,11 @@ class PeriodoController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
 
     public function MensajeEstado(Request $request){

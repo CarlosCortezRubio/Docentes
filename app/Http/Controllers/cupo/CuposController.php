@@ -19,7 +19,7 @@ class CuposController extends Controller
     }
 
     public function index(){
-        try{
+      
             $cupos= Cupos::join('admision.adm_periodo as pe','pe.id_periodo','admision.adm_cupos.id_periodo')
                         ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','pe.id_seccion')
                         ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','asec.codi_secc_sec') 
@@ -46,10 +46,6 @@ class CuposController extends Controller
             }
             
             return view('cupos.index',['cupos'=>$cupos,'programas'=>$programas,'periodos'=>$periodos]);
-        }catch(QueryException $e){
-            DB::rollBack();
-            dd($e);
-        }
     }
 
     public function insert(Request $request){
@@ -65,9 +61,11 @@ class CuposController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
 
     public function update(Request $request){
@@ -81,9 +79,11 @@ class CuposController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
     public function delete(Request $request){
         $cupo=Cupos::find($request->id_cupos);
@@ -95,9 +95,11 @@ class CuposController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
 
 }

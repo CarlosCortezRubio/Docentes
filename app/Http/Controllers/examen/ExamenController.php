@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\examen;
 
 use App\Http\Controllers\Controller;
+use App\Model\Comentario;
 use App\Model\Examen\DetalleExamen;
 use App\Model\Examen\Examen;
+use App\Model\Examen\ProgramacionExamen;
 use App\Model\Examen\SeccionExamen;
+use App\Model\Jurado;
+use App\Model\JuradoPostulante;
+use App\Model\Nota;
+use App\Model\Postulante;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -81,9 +87,11 @@ class ExamenController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
 
     public function update(Request $request){
@@ -116,9 +124,11 @@ class ExamenController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
 
     public function delete(Request $request){
@@ -131,9 +141,11 @@ class ExamenController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
 
     public function EliminarSeccion(Request $request){
@@ -145,7 +157,8 @@ class ExamenController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
         return $sec->id_examen;
     }
@@ -160,7 +173,8 @@ class ExamenController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
         return $sec->id_examen;
     }
@@ -174,10 +188,46 @@ class ExamenController extends Controller
             $sec->estado='A';
             $sec->id_examen=$request->id_examen;
             $sec->save();
+            //////////////////////
+            $programaciones=ProgramacionExamen::where('id_examen',$request->id_examen)->where('estado','P')->get();
+            foreach ($programaciones as $key => $prog) {
+                $docentes=Jurado::where('id_programacion_examen',$prog->id_programacion_examen)->where('estado','A')->get();
+                $postulantes=Postulante::where('id_programacion_examen',$prog->id_programacion_examen)->where('estado','A')->get();
+                foreach ($docentes as $key => $doc) {
+                    foreach ($postulantes as $key => $pos) {
+                        $jurapost=JuradoPostulante::where('id_postulante',$pos->id_postulante)
+                                    ->where('id_jurado',$doc->id_jurado);
+                        if ($jurapost->count()==0) {
+                            $jurapost=new JuradoPostulante();
+                            $jurapost->id_jurado=$doc->id_jurado;
+                            $jurapost->id_postulante=$pos->id_postulante;
+                            $jurapost->estado='A';
+                            $jurapost->save();
+                        }else{
+                            $jurapost=$jurapost->first();
+                        }
+                        $coment=Comentario::where('id_jurado_postulante',$jurapost->id_jurado_postulante);
+                        if ($coment->count()==0) {
+                            $coment=new Comentario();
+                            $coment->id_jurado_postulante=$jurapost->id_jurado_postulante;
+                            $coment->comentario='';
+                            $coment->save();
+                        }
+                        
+                        $nota=new Nota();
+                        $nota->id_jurado_postulante=$jurapost->id_jurado_postulante;
+                        $nota->id_seccion_examen=$sec->id_seccion_examen;
+                        $nota->nota=0;
+                        $nota->save();
+                    }
+                }
+            }
+            
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
         return $sec->id_examen;
     }

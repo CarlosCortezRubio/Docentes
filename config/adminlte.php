@@ -395,6 +395,21 @@
     */
 
     'plugins' => [
+        'toastr' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js',
+                ],
+            ],
+        ],
         'Datatables' => [
             'active' => true,
             'files' => [
@@ -480,6 +495,7 @@
                 ],
             ],
         ],
+        
         'datepicker' => [
             'active' => true,
             'files' => [

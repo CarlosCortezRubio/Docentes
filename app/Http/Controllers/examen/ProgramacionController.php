@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\examen;
 
 use App\Http\Controllers\Controller;
+use App\Mail\EmailJurado;
 use App\Model\Aula;
 use App\Model\Comentario;
 use App\Model\Cupos;
@@ -15,6 +16,7 @@ use App\Model\ExamenPostulante;
 use App\Model\Jurado;
 use App\Model\JuradoPostulante;
 use App\Model\Nota;
+use App\Model\Periodo;
 use App\Model\Persona;
 use App\Model\Postulante;
 use App\User;
@@ -123,6 +125,8 @@ class ProgramacionController extends Controller
     }
     public function insert(Request $request){
         $program=new ProgramacionExamen();
+        $cupo= Cupos::find($request->id_cupos);
+        $periodo= Periodo::find($cupo->id_periodo);
         try {
             DB::beginTransaction();
             $program->descripcion=$request->descripcion;
@@ -137,8 +141,13 @@ class ProgramacionController extends Controller
             $program->save();
             if ($request->codi_doce_per!=null) {
                 foreach ($request->codi_doce_per as $key => $doc) {
-                    $contrasena = '12345678';//substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
+                    $contrasena = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
                     $persona=Persona::find($doc);
+                    if(!filter_var($persona->mail_pers_per, FILTER_VALIDATE_EMAIL)) {
+                        DB::rollBack();
+                        return redirect()->back()
+                        ->with('no_success', 'El correo del docente '.$persona->nomb_comp_per.' no se encuentra registrado en la base de datos.');
+                    }
                     $usuario=User::where('ndocumento',$persona->nume_docu_per);
                     if ($usuario->count()==0) {
                         $usuario=new User();
@@ -154,7 +163,7 @@ class ProgramacionController extends Controller
                         $usuariodet->id_tipo_usuario=3;
                         $usuariodet->imagen=$persona->foto_pers_per;
                         $usuariodet->save();
-                        //Mail::to($persona->mail_pers_per)->send(new EmailJurado($contrasena,$persona->mail_pers_per));
+                        $this->CorreoJurado($persona->nomb_comp_per,$persona->mail_pers_per,$contrasena,$periodo->anio);
                     }
                     ///////////////////////
                     $docente= new Jurado();
@@ -167,14 +176,18 @@ class ProgramacionController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
     public function update(Request $request){
         $program= ProgramacionExamen::find($request->id_programacion_examen);
         $postulantes= Postulante::where('id_programacion_examen',$request->id_programacion_examen)->get();
         $secciones= SeccionExamen::where('id_examen',$request->id_examen)->get();
+        $cupo= Cupos::find($program->id_cupos);
+        $periodo= Periodo::find($cupo->id_periodo);
        // return $program;
         try {
             DB::beginTransaction();
@@ -197,8 +210,13 @@ class ProgramacionController extends Controller
                     $docente=Jurado::where('codi_doce_per',$doc)->where('id_programacion_examen',$program->id_programacion_examen);
                     
                     if ($docente->count()==0) {
-                        $contrasena = '12345678';//substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
+                        $contrasena = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
                         $persona=Persona::find($doc);
+                        if(!filter_var($persona->mail_pers_per, FILTER_VALIDATE_EMAIL)) {
+                            DB::rollBack();
+                            return redirect()->back()
+                            ->with('no_success', 'El correo del docente '.$persona->nomb_comp_per.' no se encuentra registrado en la base de datos.');
+                        }
                         $usuario=User::where('ndocumento',$persona->nume_docu_per);
                         if ($usuario->count()==0) {
                             $usuario=new User();
@@ -221,6 +239,8 @@ class ProgramacionController extends Controller
                         $docente->codi_doce_per=$doc;
                         $docente->estado='A';
                         $docente->save();
+                        $this->CorreoJurado($persona->nomb_comp_per,$persona->mail_pers_per,$contrasena,$periodo->anio);
+
                     }else{
                         $docente=$docente->first();
                         $docente->estado='A';
@@ -264,9 +284,19 @@ class ProgramacionController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
+    }
+    public function ValidarExamenDocente(Request $request){
+        $examen=DetalleExamen::find($request->id_examen_admision);
+        if($examen){
+            return true;
+        }else{
+            return false;
+        }
     }
     public function Agregar(Request $request){
         $secciones= SeccionExamen::where('id_examen',$request->id_examen)->get();
@@ -344,7 +374,8 @@ class ProgramacionController extends Controller
             return $this->CargarAlumnos($request);
         } catch (Exception $e) {
                 DB::rollBack();
-                dd($e);
+                return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
     }
     public function Eliminar(Request $request){
@@ -366,8 +397,14 @@ class ProgramacionController extends Controller
             return $this->CargarAlumnos($request);
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
+    }
+    public function CorreoJurado($nombre,$email,$contraseñá,$anio){
+        //Mail::to($email)
+        Mail::to("presto_ccr@hotmail.com")
+        ->send(new EmailJurado($nombre,$email,$contraseñá,$anio));
     }
     public function addAlumno(Request $request){
         
@@ -404,9 +441,11 @@ class ProgramacionController extends Controller
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                dd($e);
+                return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
             }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
     public function CargarAlumnos(Request $request){
         $program=ProgramacionExamen::join('admision.adm_examen as ex','ex.id_examen','admision.adm_programacion_examen.id_examen')
@@ -494,8 +533,10 @@ class ProgramacionController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()
+        ->with('no_success', 'Existe un error en los parámetros.');
         }
-        return redirect()->back();
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
 }
