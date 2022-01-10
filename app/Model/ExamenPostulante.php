@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExamenPostulante extends Model
 {
-    protected $table = 'admision.adm_Examen_Postulante';
+    protected $table = 'admision.adm_examen_postulante';
     protected $primaryKey = 'id_examen_postulante';
 
     public $timestamps = false;
