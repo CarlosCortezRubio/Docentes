@@ -2,7 +2,7 @@
 @section('title','Cupos')
 
 @section('content_header')
-    <form class="row">
+    {{--  <form class="row">
         <div class="col-md col-sm col-xs">
             <label for="">Programa de Estudio</label>
             <select class="buscar browser-default custom-select">
@@ -25,7 +25,7 @@
         <div class="col-md col-sm col-xs flex-center btn-search">
             <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> Buscar</button>
         </div>
-    </form>
+    </form>--}}
 @stop
 @section('content')
     <!--------------------------MODALS------------------------------------>

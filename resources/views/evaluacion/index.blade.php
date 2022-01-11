@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title','Evaluacion')
 @section('content_header')
-    <form class="table row ">
+    {{--  <form class="table row ">
         <div class=" col-md col-sm col-xs">
             <label for="">Programa de Estudio</label>
             <select class="buscar browser-default custom-select">
@@ -35,7 +35,7 @@
         <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
             <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
         </div>
-    </form>
+    </form>--}}
 @stop
 @section('content')
     <div class="card">

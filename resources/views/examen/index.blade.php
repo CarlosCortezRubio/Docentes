@@ -2,7 +2,7 @@
 @section('title','Examen')
 
 @section('content_header')
-    <form class="row centrar-content">
+    {{--  <form class="row centrar-content">
         <div class="col-md col-sm-3 col-xs-3">
             <label for="">Descripción</label>
             <input type="text" class="form-control" name="" id="">
@@ -20,7 +20,7 @@
             <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> Buscar</button>
         </div>
         
-    </form>
+    </form>--}}
 @stop
 @section('content')
     <!_/////////////////////////MODALS/////////////////////////////->
