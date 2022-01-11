@@ -69,11 +69,10 @@ class MigrateInOrder extends Command
             '2021_12_23_110524_crear_tabla_jurado_postulante.php',
             '2021_12_22_081815_crear_tabla_nota_jurado.php',
             '2021_12_22_121320_cargar_datos_aulas.php',
-            //'2021_12_13_031241_actualizar_solicitud.php',
+            '2021_12_13_031241_actualizar_solicitud.php',
             '2021_12_23_071740_crear_tabla_comentarios.php',
             '2022_01_03_034929_crear_tabla_examen_postulante.php',
-            
-            //'2022_01_10_133229_crear_datos_exonerados.php'
+            '2022_01_10_133229_crear_datos_exonerados.php'
         ];
 
         foreach($migrations as $migration)
