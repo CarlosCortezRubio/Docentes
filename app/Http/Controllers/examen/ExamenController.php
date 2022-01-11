@@ -36,7 +36,7 @@ class ExamenController extends Controller
                          ->join('bdsig.ttablas_det as t','asec.codi_secc_sec','t.codi_tabl_det')
                          ->where('admision.adm_examen.estado','A')
                          ->where('asec.estado','A')
-                         ->select('exd.*','nombre','descripcion','nota_apro','nota_maxi','enlace','abre_tabl_det');
+                         ->select('exd.*','nombre','descripcion','nota_apro','nota_maxi','exd.peso','enlace','abre_tabl_det');
        
         if(getSeccion()){
             $examenes= $examenes->where('asec.id_seccion',getIdSeccion())->get();
@@ -70,6 +70,7 @@ class ExamenController extends Controller
             $examen->descripcion=$request->descripcion;
             $examen->nota_apro=$request->nota_apro;
             $examen->nota_maxi=$request->nota_maxi;
+            
             $examen->estado='A';
             $examen->user_regi=Auth::user()->id;
             $examen->id_tipo_examen=$tipo->id_tipo_examen;
@@ -87,6 +88,7 @@ class ExamenController extends Controller
                 $examendet->flag_jura=$request->flag_jura;
             }
             $examendet->id_seccion=$request->id_seccion;
+            $examendet->peso=$request->peso;
             $examendet->id_examen=$examen->id_examen;
             $examendet->save();
 
@@ -94,7 +96,7 @@ class ExamenController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()
-        ->with('no_success', 'Existe un error en los parámetros.');
+            ->with('no_success', 'Existe un error en los parámetros.');
         }
         return redirect()->back()
         ->with('success', 'Configuración guardada con éxito.');
@@ -108,6 +110,7 @@ class ExamenController extends Controller
             $examen->nombre=$request->nombre;
             $examen->descripcion=$request->descripcion;
             $examen->nota_apro=$request->nota_apro;
+            $examen->peso=$request->peso;
             $examen->nota_maxi=$request->nota_maxi;
             $examen->enlace=$request->enlace;
             $examen->user_actu=Auth::user()->id;

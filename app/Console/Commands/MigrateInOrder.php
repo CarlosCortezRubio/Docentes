@@ -44,10 +44,11 @@ class MigrateInOrder extends Command
         *    ];
         */
         $migrations = [
-            /*'2022_01_05_155254_crear_tabla_seccion_estudios.php',
+            '2022_01_05_155254_crear_tabla_seccion_estudios.php',
             '2022_01_05_155825_crear_datos_seccion_estudios.php',
             '2014_10_12_000000_create_users_table.php',
             '2014_10_12_100000_create_password_resets_table.php',
+            '2019_10_23_005755_create_jobs_table.php',
             '2019_08_19_000000_create_failed_jobs_table.php',
             '2021_10_30_053815_crear_tabla_periodo.php',
             '2021_10_26_235440_create_cupos_table.php',
@@ -71,8 +72,8 @@ class MigrateInOrder extends Command
             //'2021_12_13_031241_actualizar_solicitud.php',
             '2021_12_23_071740_crear_tabla_comentarios.php',
             '2022_01_03_034929_crear_tabla_examen_postulante.php',
-            '2019_10_23_005755_create_jobs_table.php',*/
-            '2022_01_10_133229_crear_datos_exonerados.php'
+            
+            //'2022_01_10_133229_crear_datos_exonerados.php'
         ];
 
         foreach($migrations as $migration)

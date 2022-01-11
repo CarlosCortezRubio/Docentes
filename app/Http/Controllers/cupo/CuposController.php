@@ -38,7 +38,7 @@ class CuposController extends Controller
             if(getSeccion()){
                 $cupos=$cupos->where('pe.id_seccion',getIdSeccion())->get();
                 $programas=$programas->where('codi_secc_sec',getCodSeccion())->get();
-                $periodos=$periodos->where('id_seccion',getIdSeccion())->get();
+                $periodos=$periodos->where('asec.id_seccion',getIdSeccion())->get();
             }else if(getTipoUsuario()=='Administrador'){
                 $programas=$programas->distinct('codi_espe_esp')->get();
                 $cupos=$cupos->get();
@@ -75,6 +75,7 @@ class CuposController extends Controller
         try {
             DB::beginTransaction();
             $cupo->cant_cupo=$request->cant_cupo;
+            $cupo->codi_espe_esp=$request->codi_espe_esp;
             $cupo->id_periodo=$request->id_periodo;
             $cupo->user_actu=Auth::user()->id;
             $cupo->update();
