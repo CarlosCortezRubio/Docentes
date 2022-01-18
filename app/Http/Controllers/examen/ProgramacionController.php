@@ -502,7 +502,7 @@ class ProgramacionController extends Controller
                                                     ->where('codi_secc_sec',$program->codi_secc_sec)
                                                     ->where('esta_post_pos','V')
                                                     ->whereNotIn('nume_docu_per',$alumnosdelete->pluck("nume_docu_per")->all())
-                                                    ->where('pos.esta_proc_adm','V')
+                                                    ->where('pr.esta_proc_adm','V')
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
