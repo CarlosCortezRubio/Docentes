@@ -481,7 +481,7 @@
             ],
         ],
         'JqueryUI' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'css',
@@ -497,7 +497,7 @@
         ],
         
         'datepicker' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',
