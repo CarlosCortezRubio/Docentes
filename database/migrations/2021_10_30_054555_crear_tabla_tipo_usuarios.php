@@ -28,6 +28,6 @@ class CrearTablaTipoUsuarios extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.tipo_usuarios');
+        //
     }
 }

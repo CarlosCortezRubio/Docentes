@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CrearTablaTipoExamen extends Migration
+class CrearTablaAudioTemporal extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CrearTablaTipoExamen extends Migration
      */
     public function up()
     {
-        Schema::create('admision.adm_tipo_examen', function (Blueprint $table) {
-            $table->id('id_tipo_examen');
-            $table->string('nombre');
-            $table->string('descripcion')->nullable();
+        Schema::create('admision.adm_audiostmp', function (Blueprint $table) {
+            $table->id('id_audio');
+            $table->bigInteger('id_examen_postulante');
+            $table->string('archivo');
             $table->char('estado',1);
+            $table->foreign('id_examen_postulante')->references('id_examen_postulante')->on('admision.adm_examen_postulante')->onDelete('cascade');
         });
     }
 

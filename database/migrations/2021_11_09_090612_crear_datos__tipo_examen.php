@@ -31,8 +31,6 @@ class CrearDatosTipoExamen extends Migration
      */
     public function down()
     {
-        Schema::table('admision.adm_tipo_examen', function (Blueprint $table) {
-            //
-        });
+        //
     }
 }

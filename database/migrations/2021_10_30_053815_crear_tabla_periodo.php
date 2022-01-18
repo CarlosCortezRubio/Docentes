@@ -38,6 +38,6 @@ class CrearTablaPeriodo extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.adm_periodo');
+        //
     }
 }

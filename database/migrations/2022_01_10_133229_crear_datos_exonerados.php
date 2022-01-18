@@ -14,16 +14,6 @@ class CrearDatosExonerados extends Migration
      */
     public function up()
     {
-        //
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
         Schema::table('bdsigunm.ad_exonerado', function (Blueprint $table) {
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00086',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'73094782',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04001']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00087',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'72470176',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04013']);
@@ -117,5 +107,15 @@ class CrearDatosExonerados extends Migration
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00175',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'76086369',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04005']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00176',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'77804448',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04010']);
         });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //
     }
 }

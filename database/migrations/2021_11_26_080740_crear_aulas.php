@@ -28,6 +28,6 @@ class CrearAulas extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.adm_aula');
+        //
     }
 }

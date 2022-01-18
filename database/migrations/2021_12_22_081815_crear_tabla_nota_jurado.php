@@ -30,6 +30,6 @@ class CrearTablaNotaJurado extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.adm_nota_jurado');
+        //
     }
 }

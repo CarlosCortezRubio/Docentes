@@ -35,6 +35,6 @@ class CrearTablaDetalleUsuario extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.detalle_usuarios');
+        //
     }
 }

@@ -43,6 +43,6 @@ class CrearProgramacionExamen extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.adm_programacion_examen');
+        //
     }
 }

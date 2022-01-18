@@ -60,8 +60,6 @@ class CrearDatosDetalleUsuario extends Migration
      */
     public function down()
     {
-        Schema::table('admision.detalle_usuarios', function (Blueprint $table) {
-            //
-        });
+        //
     }
 }

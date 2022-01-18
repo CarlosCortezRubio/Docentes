@@ -40,8 +40,6 @@ class CrearDatosTipoUsuario extends Migration
      */
     public function down()
     {
-        Schema::table('admision.tipo_usuarios', function (Blueprint $table) {
-            //
-        });
+        //
     }
 }

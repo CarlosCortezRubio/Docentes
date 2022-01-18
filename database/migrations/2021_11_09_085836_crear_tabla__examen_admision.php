@@ -32,6 +32,6 @@ class CrearTablaExamenAdmision extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.adm_examen_admision');
+        //
     }
 }

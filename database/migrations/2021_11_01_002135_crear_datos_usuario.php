@@ -57,8 +57,6 @@ class CrearDatosUsuario extends Migration
      */
     public function down()
     {
-        Schema::table('admision.adm_usuario', function (Blueprint $table) {
-            //
-        });
+        //
     }
 }

@@ -30,6 +30,6 @@ class CrearTablaJuradoPostulante extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admision.adm_jurado_postulante');
+        //
     }
 }
