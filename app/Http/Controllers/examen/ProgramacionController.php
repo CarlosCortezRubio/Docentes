@@ -500,7 +500,7 @@ class ProgramacionController extends Controller
                                                     //->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
                                                     ->where('codi_espe_esp',$program->codi_espe_esp)
                                                     ->where('codi_secc_sec',$program->codi_secc_sec)
-                                                    ->whereBetween('edad_calc_pos',[$program->edad_min,$program->edad_max])
+                                                    //->whereBetween('edad_calc_pos',[$program->edad_min,$program->edad_max])
                                                     ->where('esta_post_pos','V')
                                                     ->whereNotIn('nume_docu_per',$alumnosdelete->pluck("nume_docu_per")->all())
                                                     ->whereYear('fech_regi_aud',$program->anio)
