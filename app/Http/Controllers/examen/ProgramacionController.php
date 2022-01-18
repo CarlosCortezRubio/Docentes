@@ -485,12 +485,13 @@ class ProgramacionController extends Controller
                                                    'asec.*')->distinct()->first();
         $alumnosdelete=DB::table('bdsigunm.ad_postulacion as pos')
                                                    ->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
+                                                   ->join('bdsigunm.ad_proceso as pr','pos.codi_proc_adm','pr.codi_proc_adm')
                                                    ->where('codi_espe_esp',$program->codi_espe_esp)
                                                    ->where('codi_secc_sec',$program->codi_secc_sec)
                                                    ->where('id_programacion_examen',$program->id_programacion_examen)
                                                    ->where('esta_post_pos','V')
                                                    ->where('estado','P')
-                                                   ->whereYear('fech_regi_aud',$program->anio)
+                                                   ->where('pr.esta_proc_adm','V')
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
