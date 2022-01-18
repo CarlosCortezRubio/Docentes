@@ -18,6 +18,7 @@ class CrearTablaAudioTemporal extends Migration
             $table->bigInteger('id_examen_postulante');
             $table->string('archivo');
             $table->char('estado',1);
+            $table->integer('contador');
             $table->foreign('id_examen_postulante')->references('id_examen_postulante')->on('admision.adm_examen_postulante')->onDelete('cascade');
         });
     }
