@@ -500,15 +500,19 @@ class ProgramacionController extends Controller
                                                     //->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
                                                     ->where('codi_espe_esp',$program->codi_espe_esp)
                                                     ->where('codi_secc_sec',$program->codi_secc_sec)
-                                                    ->whereBetween('edad_calc_pos',[$program->edad_min,$program->edad_max])
+                                                    //->whereBetween('edad_calc_pos',[$program->edad_min,$program->edad_max])
                                                     ->where('esta_post_pos','V')
                                                     ->whereNotIn('nume_docu_per',$alumnosdelete->pluck("nume_docu_per")->all())
                                                     ->whereYear('fech_regi_aud',$program->anio)
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
-                                                            'pos.apel_mate_per')->distinct()->orderByRaw('pos.nomb_pers_per')
-                                                   ->get();
+                                                            'pos.apel_mate_per')->distinct()->orderByRaw('pos.nomb_pers_per');
+        if ($program->edad_min && $program->edad_max) {
+            $alumnosadd=$alumnosadd->whereBetween('edad_calc_pos',[$program->edad_min,$program->edad_max])->get();
+        }else{
+            $alumnosadd=$alumnosadd->get();
+        }
         $texto="<input type='text' value='$request->id_programacion_examen' id='id_programacion_examenA' name='id_programacion_examen' style='display: none'>
                     <div class='col-5'>
                     <form action=".route('programacion.alumnos.agregar',['id_programacion_examen'=>$program->id_programacion_examen,'id_examen'=>$program->id_examen])." id='agregarform$program->id_programacion_examen' method='get'>
