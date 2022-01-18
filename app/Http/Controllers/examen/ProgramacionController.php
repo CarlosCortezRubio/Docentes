@@ -497,13 +497,12 @@ class ProgramacionController extends Controller
                                                             'pos.apel_mate_per')->distinct()->orderByRaw('pos.nomb_pers_per')
                                                    ->get();
         $alumnosadd=DB::table('bdsigunm.ad_postulacion as pos')
-                                                    //->join('admision.adm_postulante','nume_docu_sol','nume_docu_per')
+                                                    ->join('bdsigunm.ad_proceso as pr','pos.codi_proc_adm','pr.codi_proc_adm')
                                                     ->where('codi_espe_esp',$program->codi_espe_esp)
                                                     ->where('codi_secc_sec',$program->codi_secc_sec)
-                                                    //->whereBetween('edad_calc_pos',[$program->edad_min,$program->edad_max])
                                                     ->where('esta_post_pos','V')
                                                     ->whereNotIn('nume_docu_per',$alumnosdelete->pluck("nume_docu_per")->all())
-                                                    ->whereYear('fech_regi_aud',$program->anio)
+                                                    ->where('pos.esta_proc_adm','V')
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
