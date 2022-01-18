@@ -2,7 +2,7 @@
 
 @section('title', 'Programacion')
 @section('content_header')
-    <form class="table row centrar-content">
+   {{--   <form class="table row centrar-content">
         <div class="col-md col-sm col-xs">
             <label for="">Programa de Estudio</label>
             <select class="buscar browser-default custom-select">
@@ -40,7 +40,7 @@
         <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
             <button type="submit" class="btn btn-info">Buscar</button>
         </div>
-    </form>
+    </form>--}}
 @stop
 @section('content')
     <div class="modal fade" id="modaladd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">

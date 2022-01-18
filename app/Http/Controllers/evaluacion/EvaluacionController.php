@@ -35,6 +35,9 @@ class EvaluacionController extends Controller
                         ->join('admision.adm_seccion_estudios as asec','p.id_seccion','asec.id_seccion')
                         ->where('admision.adm_programacion_examen.estado','A')
                         ->where('ex.estado','A')
+                        ->where('cu.estado','A')
+                        ->where('au.estado','A')
+                        ->where('asec.estado','A')
                         ->where('adm.flag_jura','S')
                         ->select('admision.adm_programacion_examen.descripcion',
                                  'admision.adm_programacion_examen.id_programacion_examen',
@@ -56,10 +59,10 @@ class EvaluacionController extends Controller
         } if(getTipoUsuario()=='Administrador'){
             $programaciones=$programaciones->get();
         }else if(getTipoUsuario()=='Jurado'){
-            $programaciones=$programaciones/*->join('admision.adm_jurado as jr','admision.adm_programacion_examen.id_programacion_examen','jr.id_programacion_examen')
+            $programaciones=$programaciones->join('admision.adm_jurado as jr','admision.adm_programacion_examen.id_programacion_examen','jr.id_programacion_examen')
                                            ->join('bdsig.persona as pe','pe.codi_pers_per','jr.codi_doce_per')
-                                           ->where('pe.nume_docu_per',Auth::user()->ndocumento)*/->get();
-                                          // return "entro aqui";
+                                            ->where('jr.estado','A')
+                                           ->where('pe.nume_docu_per',Auth::user()->ndocumento)->get();
         }
         return $programaciones;
     }

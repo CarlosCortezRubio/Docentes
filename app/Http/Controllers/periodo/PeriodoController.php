@@ -22,10 +22,12 @@ class PeriodoController extends Controller
         }
         $secciones =DB::table('bdsig.vw_sig_seccion as sec')
                     ->join('admision.adm_seccion_estudios as asec','asec.codi_secc_sec','sec.codi_secc_sec')
+                    ->where('asec.estado','A')
                     ->select('sec.abre_secc_sec','asec.*')
                     ->get();
         $periodos= Periodo::join('admision.adm_seccion_estudios as asec','asec.id_seccion','admision.adm_periodo.id_seccion')
                           ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','asec.codi_secc_sec')
+                          ->where('admision.adm_periodo.estado','<>','E')
                           ->select('admision.adm_periodo.*','sec.abre_secc_sec','asec.categoria');
         if(getSeccion()){
             $periodos= $periodos->where('asec.id_seccion',getIdSeccion())->get();
@@ -81,7 +83,7 @@ class PeriodoController extends Controller
     }
     public function updateEstado(Request $request){
         $periodo=Periodo::find($request->id_periodo);
-        $periodos=Periodo::where('id_seccion',$periodo->id_seccion)->get();
+        $periodos=Periodo::where('id_seccion',$periodo->id_seccion)->where('estado','<>','E')->get();
         try {
             DB::beginTransaction();
             foreach ($periodos as $per) {
@@ -112,7 +114,7 @@ class PeriodoController extends Controller
 
     public function MensajeEstado(Request $request){
         $periodo=Periodo::find($request->idperiodo);
-        $periodos= Periodo::where('id_seccion',$periodo->id_seccion)->get();
+        $periodos= Periodo::where('id_seccion',$periodo->id_seccion)->where('estado','<>','E')->get();
         foreach ($periodos as $per) {
             if($per->estado=='A'){
                 return "Existe un periodo activo.<br>¿Desea Activar el periodo?";

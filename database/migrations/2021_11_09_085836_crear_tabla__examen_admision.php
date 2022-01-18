@@ -17,6 +17,7 @@ class CrearTablaExamenAdmision extends Migration
             $table->id('id_examen_admision');
             $table->char('cara_elim',1);
             $table->char('flag_jura',1);
+            $table->Integer('peso');
             $table->bigInteger('id_seccion');
             $table->foreign('id_seccion')->references('id_seccion')->on('admision.adm_seccion_estudios')->onDelete('cascade');
             $table->bigInteger('id_examen');

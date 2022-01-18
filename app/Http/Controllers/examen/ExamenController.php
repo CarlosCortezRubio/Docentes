@@ -29,12 +29,14 @@ class ExamenController extends Controller
         $secciones =DB::table('bdsig.vw_sig_seccion as sec')
                     ->join('admision.adm_seccion_estudios as asec','asec.codi_secc_sec','sec.codi_secc_sec')
                     ->select('sec.abre_secc_sec','asec.*')
+                    ->where('asec.estado','A')
                     ->get();
         $examenes= Examen::join('admision.adm_examen_admision as exd','exd.id_examen','admision.adm_examen.id_examen')
                          ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','exd.id_seccion')
                          ->join('bdsig.ttablas_det as t','asec.codi_secc_sec','t.codi_tabl_det')
                          ->where('admision.adm_examen.estado','A')
-                         ->select('exd.*','nombre','descripcion','nota_apro','nota_maxi','enlace','abre_tabl_det');
+                         ->where('asec.estado','A')
+                         ->select('exd.*','nombre','descripcion','nota_apro','nota_maxi','exd.peso','enlace','abre_tabl_det');
        
         if(getSeccion()){
             $examenes= $examenes->where('asec.id_seccion',getIdSeccion())->get();
@@ -45,7 +47,9 @@ class ExamenController extends Controller
         foreach ($examenes as $k => $exa) {
             $ids[$k]=$exa->id_examen;
         }
-        $secexamen=SeccionExamen::whereIn('id_examen',$ids)->get();
+        $secexamen=SeccionExamen::whereIn('id_examen',$ids)
+        ->where('estado','A')
+        ->get();
         if ($request) {
             return view('examen.index',["secciones"=>$secciones,"examenes"=>$examenes,"secexamen"=>$secexamen,"id_examen"=>$request->id_examen,"cargar"=>true]);
         }else{
@@ -56,7 +60,9 @@ class ExamenController extends Controller
     public function insert(Request $request){
         $examen=new Examen();
         $examendet=new DetalleExamen();
-        $tipo=DB::table('admision.adm_tipo_examen')->where('nombre','LIKE','Examen de Admision')->first();
+        $tipo=DB::table('admision.adm_tipo_examen')
+                ->where('nombre','LIKE','Examen de Admision')
+                ->where('estado','A')->first();
         
         try {
             DB::beginTransaction();
@@ -64,6 +70,7 @@ class ExamenController extends Controller
             $examen->descripcion=$request->descripcion;
             $examen->nota_apro=$request->nota_apro;
             $examen->nota_maxi=$request->nota_maxi;
+            
             $examen->estado='A';
             $examen->user_regi=Auth::user()->id;
             $examen->id_tipo_examen=$tipo->id_tipo_examen;
@@ -81,6 +88,7 @@ class ExamenController extends Controller
                 $examendet->flag_jura=$request->flag_jura;
             }
             $examendet->id_seccion=$request->id_seccion;
+            $examendet->peso=$request->peso;
             $examendet->id_examen=$examen->id_examen;
             $examendet->save();
 
@@ -88,7 +96,7 @@ class ExamenController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()
-        ->with('no_success', 'Existe un error en los parámetros.');
+            ->with('no_success', 'Existe un error en los parámetros.');
         }
         return redirect()->back()
         ->with('success', 'Configuración guardada con éxito.');
@@ -102,6 +110,7 @@ class ExamenController extends Controller
             $examen->nombre=$request->nombre;
             $examen->descripcion=$request->descripcion;
             $examen->nota_apro=$request->nota_apro;
+            $examen->peso=$request->peso;
             $examen->nota_maxi=$request->nota_maxi;
             $examen->enlace=$request->enlace;
             $examen->user_actu=Auth::user()->id;
@@ -157,8 +166,8 @@ class ExamenController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()
-        ->with('no_success', 'Existe un error en los parámetros.');
+         //   return redirect()->back()
+        //->with('no_success', 'Existe un error en los parámetros.');
         }
         return $sec->id_examen;
     }
@@ -173,8 +182,8 @@ class ExamenController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()
-        ->with('no_success', 'Existe un error en los parámetros.');
+        //    return redirect()->back()
+        //->with('no_success', 'Existe un error en los parámetros.');
         }
         return $sec->id_examen;
     }
@@ -226,8 +235,8 @@ class ExamenController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()
-        ->with('no_success', 'Existe un error en los parámetros.');
+        //    return redirect()->back()
+        //->with('no_success', 'Existe un error en los parámetros.');
         }
         return $sec->id_examen;
     }

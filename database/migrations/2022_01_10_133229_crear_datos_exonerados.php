@@ -25,7 +25,7 @@ class CrearDatosExonerados extends Migration
     public function down()
     {
         Schema::table('bdsigunm.ad_exonerado', function (Blueprint $table) {
-           // DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00086',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'73094782',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04001']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00086',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'73094782',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04001']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00087',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'72470176',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04013']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00088',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'72529875',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04116']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00089',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'74530469',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04008']);
@@ -60,7 +60,7 @@ class CrearDatosExonerados extends Migration
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00118',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'72357393',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04001']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00119',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'47888411',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04115']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00120',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'74937901',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04012']);
-            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00121',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'010778979',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04115']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00121',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'10778979',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04115']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00122',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'73201060',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04056']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00123',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'72679817',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04029']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00124',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'76270637',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04021']);
@@ -106,6 +106,16 @@ class CrearDatosExonerados extends Migration
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00164',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'75446903',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04033']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00165',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'71372161',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04021']);
             DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00166',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'74700120',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04115']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00167',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'73049252',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04001']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00168',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'70459442',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04056']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00169',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'75827624',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04021']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00170',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'60797892',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04014']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00171',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'73459363',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04021']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00172',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'76595498',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04005']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00173',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'70389423',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04010']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00174',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'71554564',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04008']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00175',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'76086369',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04005']);
+            DB::table('bdsigunm.ad_exonerado')->insert(["codi_exon_exo"=>'00176',"codi_proc_adm"=>'00002',"tipo_docu_exo"=>'01001',"nume_docu_exo"=>'77804448',"codi_secc_exo"=>'05001',"codi_espe_exo"=>'04010']);
         });
     }
 }

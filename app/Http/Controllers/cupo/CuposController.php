@@ -26,17 +26,19 @@ class CuposController extends Controller
                         ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','admision.adm_cupos.codi_espe_esp')
                         ->select('admision.adm_cupos.*','pe.id_seccion','esp.codi_espe_esp','esp.abre_espe_esp','pe.*','sec.abre_secc_sec','asec.categoria')
                         ->distinct('id_cupos')
-                        ->where('admision.adm_cupos.estado','A');
+                        ->where('admision.adm_cupos.estado','A')
+                        ->where('asec.estado','A');
 
             $programas= DB::table('bdsig.vw_sig_seccion_especialidad');
             $periodos=Periodo::join('admision.adm_seccion_estudios as asec','asec.id_seccion','admision.adm_periodo.id_seccion')
                             ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','asec.codi_secc_sec')
-                            ->select('admision.adm_periodo.*','sec.*');
+                            ->select('admision.adm_periodo.*','sec.*')
+                            ->where('asec.estado','A');
                                 
             if(getSeccion()){
                 $cupos=$cupos->where('pe.id_seccion',getIdSeccion())->get();
                 $programas=$programas->where('codi_secc_sec',getCodSeccion())->get();
-                $periodos=$periodos->where('id_seccion',getIdSeccion())->get();
+                $periodos=$periodos->where('asec.id_seccion',getIdSeccion())->get();
             }else if(getTipoUsuario()=='Administrador'){
                 $programas=$programas->distinct('codi_espe_esp')->get();
                 $cupos=$cupos->get();
@@ -73,6 +75,7 @@ class CuposController extends Controller
         try {
             DB::beginTransaction();
             $cupo->cant_cupo=$request->cant_cupo;
+            $cupo->codi_espe_esp=$request->codi_espe_esp;
             $cupo->id_periodo=$request->id_periodo;
             $cupo->user_actu=Auth::user()->id;
             $cupo->update();

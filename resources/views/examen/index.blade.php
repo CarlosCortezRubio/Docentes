@@ -2,7 +2,7 @@
 @section('title','Examen')
 
 @section('content_header')
-    <form class="row centrar-content">
+    {{--  <form class="row centrar-content">
         <div class="col-md col-sm-3 col-xs-3">
             <label for="">Descripción</label>
             <input type="text" class="form-control" name="" id="">
@@ -20,7 +20,7 @@
             <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> Buscar</button>
         </div>
         
-    </form>
+    </form>--}}
 @stop
 @section('content')
     <!_/////////////////////////MODALS/////////////////////////////->
@@ -55,6 +55,13 @@
                                 <div class="col-md col-sm col-xs">
                                     <label for="enlace">Enlace</label>
                                     <input type="text" required class="form-control" id="enlace"  name="enlace" placeholder="Ingrese Enlace" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="peso">Peso (%)</label>
+                                    <input type="number" required class="form-control" id="peso" min="1" max="100"  name="peso" placeholder="Ingrese porcentaje" />
                                 </div>
                             </div>
                             <br>
@@ -139,6 +146,13 @@
                                 <div class="col-md col-sm col-xs">
                                     <label for="enlace">Enlace</label>
                                     <input type="text" required class="form-control" id="enlaceupd"  name="enlace" placeholder="Ingrese Enlace" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="peso">Peso (%)</label>
+                                    <input type="number" required class="form-control" id="pesoupd" min="1" max="100"  name="peso" placeholder="Ingrese porcentaje" />
                                 </div>
                             </div>
                             <br>
@@ -266,6 +280,7 @@
                         <th scope="col">Nombre</th>
                         <th scope="col">Nota de Aprobación</th>
                         <th scope="col">Nota Maxima</th>
+                        <th scope="col">Peso (%)</th>
                         <th scope="col">Caracter Eliminatorio</th>
                         <th scope="col">Examen con Jurado</th>
                         @if (!getSeccion())
@@ -281,6 +296,7 @@
                         <td>{{ $exa->nombre }}</td>
                         <td>{{ $exa->nota_apro }}</td>
                         <td>{{ $exa->nota_maxi }}</td>
+                        <td>{{ $exa->peso }}</td>
                         <td style="color:@if ($exa->cara_elim=='S') green  @elseif ($exa->cara_elim=='N')  red  @endif">@if ($exa->cara_elim=='S') Si  @elseif ($exa->cara_elim=='N')  No  @endif    </td>
                         <td style="color:@if ($exa->flag_jura=='S') green  @elseif ($exa->flag_jura=='N')  red  @endif">@if ($exa->flag_jura=='S') Si  @elseif ($exa->flag_jura=='N')  No  @endif    </td>
                         @if (!getSeccion())
@@ -296,7 +312,8 @@
                                                                                             "'".$exa->nota_maxi."',".
                                                                                             "'".$exa->cara_elim."',".
                                                                                             "'".$exa->flag_jura."',".
-                                                                                            "'".$exa->enlace."'" }})"></button>
+                                                                                            "'".$exa->enlace."',".
+                                                                                            "'".$exa->peso."'" }})"></button>
                                                                                            @if ($exa->flag_jura=='S')
                             <button class='btn btn-success fa fa-plus-circle' onclick="Cargar({{ $exa->id_examen }})"></button>
                                                                                            @endif
@@ -316,7 +333,7 @@
          if ({{ $cargar }}==0)
              Cargar({{ $id_examen }});
     });
-    function editarexamen(id_examen,id_examen_admision,nombre,descripcion,id_seccion,nota_apro,nota_maxi,cara_elim,flag_jura,enlace) {
+    function editarexamen(id_examen,id_examen_admision,nombre,descripcion,id_seccion,nota_apro,nota_maxi,cara_elim,flag_jura,enlace,peso) {
         $("#id_examen").val(id_examen);
         $("#id_examen_admision").val(id_examen_admision);
         $("#nombreupd").val(nombre);
@@ -325,6 +342,7 @@
         $("#nota_aproupd").val(nota_apro);
         $("#nota_maxiupd").val(nota_maxi);
         $("#enlaceupd").val(enlace);
+        $("#pesoupd").val(peso);
         if(cara_elim=='S'){
             $("#cara_elimupd").attr('checked',true);
         }else if(cara_elim=='N'){
