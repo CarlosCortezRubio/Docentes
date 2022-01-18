@@ -232,6 +232,8 @@ class ProgramacionController extends Controller
                             $usuariodet->id_tipo_usuario=3;
                             $usuariodet->imagen=$persona->foto_pers_per;
                             $usuariodet->save();
+                        $this->CorreoJurado($persona->nomb_comp_per,$persona->mail_pers_per,$contrasena,$periodo->anio);
+
                         }
                         ///////////////////////
                         $docente= new Jurado();
@@ -239,7 +241,6 @@ class ProgramacionController extends Controller
                         $docente->codi_doce_per=$doc;
                         $docente->estado='A';
                         $docente->save();
-                        $this->CorreoJurado($persona->nomb_comp_per,$persona->mail_pers_per,$contrasena,$periodo->anio);
 
                     }else{
                         $docente=$docente->first();

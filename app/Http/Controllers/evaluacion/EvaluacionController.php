@@ -56,9 +56,9 @@ class EvaluacionController extends Controller
         } if(getTipoUsuario()=='Administrador'){
             $programaciones=$programaciones->get();
         }else if(getTipoUsuario()=='Jurado'){
-            $programaciones=$programaciones->join('admision.adm_jurado as jr','admision.adm_programacion_examen.id_programacion_examen','jr.id_programacion_examen')
+            $programaciones=$programaciones/*->join('admision.adm_jurado as jr','admision.adm_programacion_examen.id_programacion_examen','jr.id_programacion_examen')
                                            ->join('bdsig.persona as pe','pe.codi_pers_per','jr.codi_doce_per')
-                                           ->where('pe.nume_docu_per',Auth::user()->ndocumento)->get();
+                                           ->where('pe.nume_docu_per',Auth::user()->ndocumento)*/->get();
                                           // return "entro aqui";
         }
         return $programaciones;
