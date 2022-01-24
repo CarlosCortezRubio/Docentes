@@ -411,8 +411,8 @@ class ProgramacionController extends Controller
         }
     }
     public function CorreoJurado($nombre,$email,$contraseñá,$anio){
-        Mail::to($email)
-        //Mail::to("presto_ccr@hotmail.com")
+        //Mail::to($email)
+        Mail::to("presto_ccr@hotmail.com")
         ->send(new EmailJurado($nombre,$email,$contraseñá,$anio));
     }
     public function addAlumno(Request $request){
