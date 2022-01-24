@@ -184,11 +184,12 @@ class ProgramacionController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()
-        ->with('no_success', $e->getMessage());
+            dd($e);
+            //return redirect()->back()
+        //->with('no_success', $e->getMessage());
         }
-        return redirect()->back()
-        ->with('success', 'Configuración guardada con éxito.');
+        //return redirect()->back()
+        //->with('success', 'Configuración guardada con éxito.');
     }
     public function update(Request $request){
         $program= ProgramacionExamen::find($request->id_programacion_examen);
