@@ -162,6 +162,7 @@ class ProgramacionController extends Controller
                         $usuario->ndocumento=$persona->nume_docu_per;
                         $usuario->email=$persona->mail_pers_per;
                         $usuario->password=Hash::make($contrasena);
+                        $usuario->created_at=Carbon::now();
                         $usuario->save();
                         ///////////////////////
                         $usuariodet=new DetalleUsuario();
