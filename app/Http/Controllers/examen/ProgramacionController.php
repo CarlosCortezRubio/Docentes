@@ -184,7 +184,7 @@ class ProgramacionController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()
-        ->with('no_success', 'Existe un error en los parámetros.');
+        ->with('no_success', $e->getMessage());
         }
         return redirect()->back()
         ->with('success', 'Configuración guardada con éxito.');
