@@ -14,7 +14,7 @@ class EmailJurado extends Mailable implements ShouldQueue
     public $subject;
 
     public $contraseña;
-    public $email;
+    public $correo;
     public $nombre;
 
     /**
@@ -22,11 +22,11 @@ class EmailJurado extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($nombre,$email,$contraseña,$anio)
+    public function __construct($nombre,$correo,$contraseña,$anio)
     {
         $this->subject = 'Periodo de Admision '.$anio;
         $this->contraseña=$contraseña;
-        $this->email=$email;
+        $this->correo=$correo;
         $this->nombre=$nombre;
     }
 

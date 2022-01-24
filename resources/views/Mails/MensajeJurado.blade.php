@@ -14,7 +14,7 @@
             style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box; margin: 30px auto; padding: 0; text-align: center; width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; -premailer-width: 100%;">
             <tr>
                 <td style="text-align: right">Usuario:</td>
-                <td style="text-align: left">{{ $email }}</td>
+                <td style="text-align: left">{{ $correo }}</td>
             </tr>
             <tr>
                 <td style="text-align: right">Contraseña:</td>
