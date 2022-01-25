@@ -17,6 +17,7 @@ class CrearTablaNotaJurado extends Migration
             $table->id('id_notajurado');
             $table->bigInteger('id_jurado_postulante');
             $table->bigInteger('id_seccion_examen');
+            $table->char('estado',1);
             $table->Integer('nota')->nullable();
             $table->foreign('id_jurado_postulante')->references('id_jurado_postulante')->on('admision.adm_jurado_postulante')->onDelete('cascade');
             $table->foreign('id_seccion_examen')->references('id_seccion_examen')->on('admision.adm_seccion_examen')->onDelete('cascade');

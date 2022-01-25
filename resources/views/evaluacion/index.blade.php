@@ -94,7 +94,7 @@
 
 @section('js')
     <script>
-    $(".evaluar").submit(function(e) {
+    /*$(".evaluar").submit(function(e) {
         e.preventDefault(); 
         var form = $(this);
         var url = form.attr('action');
@@ -108,14 +108,13 @@
             $(".des"+form.attr('id')).attr('disabled', true);
         }
         });
-    });
+    });*/
     function formulario(id) {
         var form = $(id);
-        var url = form.attr('action');
         
         $.ajax({
                type: form.attr('method'),
-               url: url,
+               url: form.attr('action'),
                data: form.serialize(), 
                success: function(data){
                    //alert(data);

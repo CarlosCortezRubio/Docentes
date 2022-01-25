@@ -188,8 +188,8 @@ class ProgramacionController extends Controller
             //return redirect()->back()
         //->with('no_success', $e->getMessage());
         }
-        //return redirect()->back()
-        //->with('success', 'Configuración guardada con éxito.');
+        return redirect()->back()
+        ->with('success', 'Configuración guardada con éxito.');
     }
     public function update(Request $request){
         $program= ProgramacionExamen::find($request->id_programacion_examen);
@@ -285,6 +285,7 @@ class ProgramacionController extends Controller
                                 $nota->id_jurado_postulante=$jurapost->id_jurado_postulante;
                                 $nota->id_seccion_examen=$sec->id_seccion_examen;
                                 $nota->nota=0;
+                                $nota->estado='A';
                                 $nota->save();
                             }
                         }
@@ -376,6 +377,7 @@ class ProgramacionController extends Controller
                                 $nota->id_jurado_postulante=$jurapost->id_jurado_postulante;
                                 $nota->id_seccion_examen=$sec->id_seccion_examen;
                                 $nota->nota=0;
+                                $nota->estado='A';
                                 $nota->save();
                             }
                         }
@@ -493,7 +495,7 @@ class ProgramacionController extends Controller
                                                    ->where('id_programacion_examen',$program->id_programacion_examen)
                                                    ->where('esta_post_pos','V')
                                                    ->where('estado','P')
-                                                   ->where('pr.esta_proc_adm','V')
+                                                  // ->where('pr.esta_proc_adm','V')
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
@@ -505,7 +507,7 @@ class ProgramacionController extends Controller
                                                     ->where('codi_secc_sec',$program->codi_secc_sec)
                                                     ->where('esta_post_pos','V')
                                                     ->whereNotIn('nume_docu_per',$alumnosdelete->pluck("nume_docu_per")->all())
-                                                    ->where('pr.esta_proc_adm','V')
+                                                    //->where('pr.esta_proc_adm','V')
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
@@ -526,8 +528,8 @@ class ProgramacionController extends Controller
                     </form>
                     </div>
                     <div class='col' style='font-size: 50px;'>
-                    <div class='row flex-center'><button style='background-color:green;border-radius: 35px;' onclick='formulario(`#agregarform$program->id_programacion_examen`);' aria-hidden='true'><i class='fas fa-arrow-circle-right'></i></button></div>
-                    <div class='row flex-center'><button style='background-color:red;border-radius: 35px;' onclick='formulario(`#eliminarform$program->id_programacion_examen`);' aria-hidden='true'><i class='fas fa-arrow-circle-left'></i></button></div></div>
+                    <div class='row flex-center'><button href='#' style='background-color:green;border-radius: 35px;' onclick='formulario(`#agregarform$program->id_programacion_examen`);' aria-hidden='true'><i class='fas fa-arrow-circle-right'></i></button></div>
+                    <div class='row flex-center'><button href='#' style='background-color:red;border-radius: 35px;' onclick='formulario(`#eliminarform$program->id_programacion_examen`);' aria-hidden='true'><i class='fas fa-arrow-circle-left'></i></button></div></div>
                     <div class='col-5'>
                     <form action=".route('programacion.alumnos.eliminar',['id_programacion_examen'=>$program->id_programacion_examen])." id='eliminarform$program->id_programacion_examen' method='get'>
                     <select class='multi form-control'  multiple='multiple' size='10'  name='alumnodelete[]' id='alumnodelete'>";

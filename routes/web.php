@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/Programacion', 'examen\ProgramacionController@index')->name('programacion');
     Route::post('/Programacion/Nuevo', 'examen\ProgramacionController@insert')->name('programacion.insert');
     Route::post('/Programacion/Actualizar', 'examen\ProgramacionController@update')->name('programacion.update');
-    Route::post('/Programacion/AgregarAlumnos', 'examen\ProgramacionController@addAlumno')->name('programacion.alumnos');
+    //Route::post('/Programacion/AgregarAlumnos', 'examen\ProgramacionController@addAlumno')->name('programacion.alumnos');
     Route::get('/Programacion/CargarAlumnos', 'examen\ProgramacionController@CargarAlumnos')->name('programacion.alumnos.cargar');
     Route::get('/Programacion/Agregar', 'examen\ProgramacionController@Agregar')->name('programacion.alumnos.agregar');
     Route::get('/Programacion/AlumnoEliminar', 'examen\ProgramacionController@Eliminar')->name('programacion.alumnos.eliminar');
