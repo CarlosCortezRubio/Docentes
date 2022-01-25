@@ -17,19 +17,15 @@ use Illuminate\Support\Facades\DB;
 
 class EvaluacionController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware('auth');
     }
-
-    public function index()
-    {
+    public function index(){
         
         $programaciones=$this->programaciones();
         
         return view('evaluacion.index',['programaciones'=>$programaciones]);
     }
-
     public function programaciones(){
         $programaciones=ProgramacionExamen::join('admision.adm_examen as ex','ex.id_examen','admision.adm_programacion_examen.id_examen')
                         ->join('admision.adm_cupos as cu','cu.id_cupos','admision.adm_programacion_examen.id_cupos')
@@ -73,42 +69,46 @@ class EvaluacionController extends Controller
     }
     public function Evaluar(Request $request){
         try {
+            DB::beginTransaction();
+            $count=0;
             foreach ($request->idnotas as $idnota) {
                 $modelnota=Nota::find($idnota);
-                DB::beginTransaction();
+                
                 $modelnota->nota=$request->get("nota".$idnota);
                 $modelnota->estado='E';
                 $modelnota->update();
-                if ($request->get("nota".$idnota)==null || $request->get("nota".$idnota)>$request->nota_maxi) {
+                if ($request->get("nota".$idnota)==null || 
+                    $request->get("nota".$idnota)>$request->nota_maxi) {
                     DB::rollBack();
-                    return $this->Cargar($request);
+                    //return $this->Cargar($request);
+                    return "fallo de parametros";
                 }
+                $count=$count+1;
             }
             $comentario=Comentario::where('id_jurado_postulante',$request->id_jurado_postulante)->first();
             $comentario->comentario=$request->comentario;
-            $comentario->update();
-            
-        DB::commit();
+            $comentario->update();          
+            $postulante=Postulante::find($request->id_postulante);
+            $jurados=JuradoPostulante::where('estado','A')->where('id_postulante',$request->id_postulante);
+            $Notas=Nota::where('admision.adm_nota_jurado.id_jurado_postulante',$request->id_jurado_postulante)
+                    ->where('admision.adm_nota_jurado.estado','E')
+                    ->where('sec.estado','A')
+                    ->select('sec.porcentaje','admision.adm_nota_jurado.nota')
+                    ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen');
+            $count=$jurados->count();
+            $promedio=0;
+            $Notas=$Notas->get();
+            foreach ($Notas as $key => $nota) {
+                $promedio=$promedio+((($nota->porcentaje/100)*$nota->nota)/$count);
+            }
+            $postulante->nota=$promedio;
+            $postulante->estado='E';
+            $postulante->update();
+            DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             return $e->getMessage();
         }
-        $postulante=Postulante::find($request->id_postulante);
-        $jurados=JuradoPostulante::where('estado','A')->where('id_postulante',$request->id_postulante);
-        $Notas=Nota::where('admision.adm_nota_jurado.id_jurado_postulante',$request->id_jurado_postulante)
-                   ->where('admision.adm_nota_jurado.estado','E')
-                   ->where('sec.estado','A')
-                   ->select('sec.porcentaje','admision.adm_nota_jurado.nota')
-                   ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen');
-        $count=$jurados->count();
-        $promedio=0;
-        $Notas=$Notas->get();
-        foreach ($Notas as $key => $nota) {
-            $promedio=$promedio+((($nota->porcentaje/100)*$nota->nota)/$count);
-        }
-        $postulante->nota=$promedio;
-        $postulante->estado='E';
-        
         return $this->Cargar($request);
     }
     public function Cargar(Request $request){
@@ -149,18 +149,17 @@ class EvaluacionController extends Controller
                                <hr width='100%' size='5' noshade=''>
                                ";
         foreach ($postulantes as $key => $pos) {
-            
-            
-            $estadoeval='';
-            foreach ($parametros as $key => $par) {
-                $contenido=$contenido."<form action='".route('evaluacion.evaluar')."' id='$pos->nume_docu_per' 
+            $contenido=$contenido."<form action='".route('evaluacion.evaluar')."' id='$pos->nume_docu_per'
             class='evaluar' method='GET'><div class='row'>
             <input type='text' name='id_postulante' value='$pos->id_postulante' style='display: none'/>
             <input type='text' name='id_jurado' value='$jurado->id_jurado' style='display: none'/>
             <input type='text' name='id_programacion_examen' value='$request->id_programacion_examen' style='display: none'/>
             <input type='text' name='id_examen' value='$request->id_examen' style='display: none'/>
-            <input type='text' name='id_seccion_examen' value='$par->id_seccion_examen' style='display: none'/>
+            <input type='text' name='nota_maxi' value='$examen->nota_maxi' style='display: none'/>
             <div class='col-3'>$pos->nomb_pers_per $pos->apel_pate_per $pos->apel_mate_per</div>";
+            $estadoeval='';
+            foreach ($parametros as $key => $par) {
+                
                 $nota=DB::table('admision.adm_nota_jurado as n')
                         ->join('admision.adm_jurado_postulante as jp','jp.id_jurado_postulante','n.id_jurado_postulante')
                         ->select('n.id_notajurado','nota','n.estado','jp.id_jurado_postulante')
@@ -171,8 +170,7 @@ class EvaluacionController extends Controller
                 if ($nota->estado=='A' ){
                     $contenido=$contenido."<div class='col'><input class='form-control' name='nota$nota->id_notajurado' min='0' max='$examen->nota_maxi' required type='number'></div>
                     <input type='text' name='idnotas[]' value='$nota->id_notajurado' style='display: none'/>
-                    <input type='text' name='id_jurado_postulante' value='$nota->id_jurado_postulante' style='display: none'/>
-                    <input type='text' name='nota_maxi' value='$examen->nota_maxi' style='display: none'/>";
+                    <input type='text' name='id_jurado_postulante' value='$nota->id_jurado_postulante' style='display: none'/>";
                     
                 }else{
                     $contenido=$contenido."<div class='col'><input class='form-control' value='$nota->nota' disabled></div>";
