@@ -149,7 +149,9 @@ class EvaluacionController extends Controller
             foreach ($Notas as $nota) {
                 $promedio=$promedio+(($nota->porcentaje/100)*$nota->nota);
             }
-            $promedio=$promedio/$count;
+            if ($promedio>0) {
+                $promedio=$promedio/$count;
+            }
             $postulante->nota=$promedio;
             $postulante->estado='E';
             $postulante->update();
