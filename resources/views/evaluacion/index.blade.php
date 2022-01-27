@@ -94,21 +94,6 @@
 
 @section('js')
     <script>
-    /*$(".evaluar").submit(function(e) {
-        e.preventDefault(); 
-        var form = $(this);
-        var url = form.attr('action');
-        $.ajax({
-        type: "GET",
-        url: url,
-        data: form.serialize(), 
-        success: function(data){
-            //$("tbody tr td").css('background-color', 'black');
-            $(".des"+form.attr('id')).attr('disabled', true);
-            $(".des"+form.attr('id')).attr('disabled', true);
-        }
-        });
-    });*/
     function formulario(id) {
         var form = $(id);
         
@@ -120,6 +105,32 @@
                    //alert(data);
                     $('#cargar').html(data);
                     $("#modalplus").modal('show');
+                }
+             });
+    }
+    function Evaluar(id) {
+        var form = $(id);
+        
+        $.ajax({
+               type: form.attr('method'),
+               url: "{{ route('evaluacion.evaluar') }}",
+               data: form.serialize(), 
+               success: function(data){
+                   //alert(data);
+                    $('#cargar').html(data);
+                }
+             });
+    }
+    function Abstener(id) {
+        var form = $(id);
+        
+        $.ajax({
+               type: form.attr('method'),
+               url: "{{ route('evaluacion.abstener') }}",
+               data: form.serialize(), 
+               success: function(data){
+                   //alert(data);
+                    $('#cargar').html(data);
                 }
              });
     }

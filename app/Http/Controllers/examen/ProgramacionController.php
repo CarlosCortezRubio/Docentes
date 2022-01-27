@@ -145,6 +145,7 @@ class ProgramacionController extends Controller
             $program->id_examen=$request->id_examen;
             $program->id_aula=$request->id_aula;
             $program->id_cupos=$request->id_cupos;
+            $program->id_prog_requ=$request->id_prog_requ;
             $program->save();
             if ($request->codi_doce_per!=null) {
                 foreach ($request->codi_doce_per as $key => $doc) {
@@ -193,8 +194,9 @@ class ProgramacionController extends Controller
     }
     public function update(Request $request){
         $program= ProgramacionExamen::find($request->id_programacion_examen);
-        $postulantes= Postulante::where('estado','P')
+        $postulantes= Postulante::whereIn('estado',['P','E'])
                         ->where('id_programacion_examen',$request->id_programacion_examen)->get();
+        $detalle= DetalleExamen::where('id_examen',$request->id_examen)->first();
         $secciones= SeccionExamen::where('id_examen',$request->id_examen)->where('estado','A')->get();
         $cupo= Cupos::find($program->id_cupos);
         $periodo= Periodo::find($cupo->id_periodo);
@@ -209,6 +211,7 @@ class ProgramacionController extends Controller
             $program->id_examen=$request->id_examen;
             $program->id_aula=$request->id_aula;
             $program->id_cupos=$request->id_cupos;
+            $program->id_prog_requ=$request->id_prog_requ;
             $docentes=Jurado::where('id_programacion_examen',$program->id_programacion_examen);
             if(!$docentes->count()==0){
                 $docentes=$docentes->get();
@@ -259,6 +262,21 @@ class ProgramacionController extends Controller
                         
                     }
                     foreach ($postulantes as $key => $pos) {
+                        if($detalle->flag_jura=='N'){
+                            $exampost=ExamenPostulante::where('id_postulante',$pos->id_postulante);
+                            if ($exampost->count()==0) {
+                                $exampost=new ExamenPostulante();
+                                $exampost->id_postulante=$pos->id_postulante;
+                                $exampost->minutos=$program->minutos;
+                                $exampost->segundos=0;
+                                $exampost->estado='A';
+                                $exampost->save();
+                            }else{
+                                $exampost=$exampost->first();
+                                $exampost->estado='A';
+                                $exampost->update();
+                            }
+                        }
                         $jurapost=JuradoPostulante::where('id_postulante',$pos->id_postulante)
                                     ->where('id_jurado',$docente->id_jurado);
                         if ($jurapost->count()==0) {
@@ -343,7 +361,7 @@ class ProgramacionController extends Controller
                             $exampost->estado='A';
                             $exampost->save();
                         }else{
-                            $exampost=$postulante->first();
+                            $exampost=$exampost->first();
                             $exampost->estado='A';
                             $exampost->update();
                         }

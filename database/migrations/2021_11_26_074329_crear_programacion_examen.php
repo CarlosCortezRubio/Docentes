@@ -26,12 +26,13 @@ class CrearProgramacionExamen extends Migration
             $table->bigInteger('user_regi');
             $table->bigInteger('id_aula');
             $table->bigInteger('user_actu')->nullable();
-            
+            $table->bigInteger('id_prog_requ')->nullable();
             $table->foreign('user_regi')->references('id')->on('admision.adm_usuario')->onDelete('cascade');
             $table->foreign('user_actu')->references('id')->on('admision.adm_usuario')->onDelete('cascade');
             $table->foreign('id_aula')->references('id_aula')->on('admision.adm_aula')->onDelete('cascade');
             $table->foreign('id_examen')->references('id_examen')->on('admision.adm_examen')->onDelete('cascade');
             $table->foreign('id_cupos')->references('id_cupos')->on('admision.adm_cupos')->onDelete('cascade');
+            $table->foreign('id_prog_requ')->references('id_programacion_examen')->on('admision.adm_programacion_examen')->onDelete('cascade');
             
         });
     }

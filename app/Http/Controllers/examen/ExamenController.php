@@ -19,13 +19,11 @@ use Illuminate\Support\Facades\DB;
 
 class ExamenController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware('auth');
     }
 
-    public function index(Request $request)
-    {
+    public function index(Request $request){
         $secciones =DB::table('bdsig.vw_sig_seccion as sec')
                     ->join('admision.adm_seccion_estudios as asec','asec.codi_secc_sec','sec.codi_secc_sec')
                     ->select('sec.abre_secc_sec','asec.*')
@@ -227,6 +225,7 @@ class ExamenController extends Controller
                         $nota->id_jurado_postulante=$jurapost->id_jurado_postulante;
                         $nota->id_seccion_examen=$sec->id_seccion_examen;
                         $nota->nota=0;
+                        $nota->estado='A';
                         $nota->save();
                     }
                 }
@@ -240,7 +239,6 @@ class ExamenController extends Controller
         }
         return $sec->id_examen;
     }
-
 
     public function cargar(Request $request){
         $secciones= SeccionExamen::where('id_examen',$request->id_examen)

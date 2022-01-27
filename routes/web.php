@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function() {
     ///////////////////////////////////////
     Route::get('/Evaluacion', 'evaluacion\EvaluacionController@index')->name('evaluacion');
     Route::get('/Evaluacion/Evaluar', 'evaluacion\EvaluacionController@Evaluar')->name('evaluacion.evaluar');
+    Route::get('/Evaluacion/Abstener', 'evaluacion\EvaluacionController@Abstener')->name('evaluacion.abstener');
     Route::get('/Evaluacion/Cargar', 'evaluacion\EvaluacionController@Cargar')->name('evaluacion.cargar');
     /////////////////////////////////////
     Route::get('/Programacion', 'examen\ProgramacionController@index')->name('programacion');

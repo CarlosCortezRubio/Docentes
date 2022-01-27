@@ -20,12 +20,14 @@ class EvaluacionController extends Controller
     public function __construct(){
         $this->middleware('auth');
     }
+
     public function index(){
         
         $programaciones=$this->programaciones();
         
         return view('evaluacion.index',['programaciones'=>$programaciones]);
     }
+
     public function programaciones(){
         $programaciones=ProgramacionExamen::join('admision.adm_examen as ex','ex.id_examen','admision.adm_programacion_examen.id_examen')
                         ->join('admision.adm_cupos as cu','cu.id_cupos','admision.adm_programacion_examen.id_cupos')
@@ -67,10 +69,10 @@ class EvaluacionController extends Controller
         }
         return $programaciones;
     }
+
     public function Evaluar(Request $request){
         try {
             DB::beginTransaction();
-            $count=0;
             foreach ($request->idnotas as $idnota) {
                 $modelnota=Nota::find($idnota);
                 
@@ -83,24 +85,24 @@ class EvaluacionController extends Controller
                     //return $this->Cargar($request);
                     return "fallo de parametros";
                 }
-                $count=$count+1;
             }
             $comentario=Comentario::where('id_jurado_postulante',$request->id_jurado_postulante)->first();
             $comentario->comentario=$request->comentario;
             $comentario->update();          
             $postulante=Postulante::find($request->id_postulante);
             $jurados=JuradoPostulante::where('estado','A')->where('id_postulante',$request->id_postulante);
-            $Notas=Nota::where('admision.adm_nota_jurado.id_jurado_postulante',$request->id_jurado_postulante)
+            $Notas=Nota::where('jp.id_postulante',$request->id_postulante)
                     ->where('admision.adm_nota_jurado.estado','E')
                     ->where('sec.estado','A')
                     ->select('sec.porcentaje','admision.adm_nota_jurado.nota')
-                    ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen');
+                    ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen')
+                    ->join('admision.adm_jurado_postulante as jp','admision.adm_nota_jurado.id_jurado_postulante','jp.id_jurado_postulante')->get();
             $count=$jurados->count();
             $promedio=0;
-            $Notas=$Notas->get();
-            foreach ($Notas as $key => $nota) {
-                $promedio=$promedio+((($nota->porcentaje/100)*$nota->nota)/$count);
+            foreach ($Notas as $nota) {
+                $promedio=$promedio+(($nota->porcentaje/100)*$nota->nota);
             }
+            $promedio=$promedio/$count;
             $postulante->nota=$promedio;
             $postulante->estado='E';
             $postulante->update();
@@ -111,12 +113,60 @@ class EvaluacionController extends Controller
         }
         return $this->Cargar($request);
     }
+
+    public function Abstener(Request $request){
+        try {
+            DB::beginTransaction();
+            foreach ($request->idnotas as $idnota) {
+                $modelnota=Nota::find($idnota);
+                $modelnota->estado='N';
+                $modelnota->nota=0;
+                $modelnota->update();
+            }
+            if ($request->comentario==null) {
+                DB::rollBack();
+                //return $this->Cargar($request);
+                return "Es necesario realizar un comentario para esta opción";
+            }
+            $comentario=Comentario::where('id_jurado_postulante',$request->id_jurado_postulante)->first();
+            $comentario->comentario=$request->comentario." (Comentario de Abstención)";
+            $comentario->update();  
+
+            $jupos=JuradoPostulante::find($request->id_jurado_postulante);
+            $jupos->estado='N';
+            $jupos->update();
+
+            $postulante=Postulante::find($request->id_postulante);
+            $jurados=JuradoPostulante::where('estado','A')->where('id_postulante',$request->id_postulante);
+            $Notas=Nota::where('jp.id_postulante',$request->id_postulante)
+                    ->where('admision.adm_nota_jurado.estado','E')
+                    ->where('sec.estado','A')
+                    ->select('sec.porcentaje','admision.adm_nota_jurado.nota')
+                    ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen')
+                    ->join('admision.adm_jurado_postulante as jp','admision.adm_nota_jurado.id_jurado_postulante','jp.id_jurado_postulante')->get();
+            $count=$jurados->count();
+            $promedio=0;
+            foreach ($Notas as $nota) {
+                $promedio=$promedio+(($nota->porcentaje/100)*$nota->nota);
+            }
+            $promedio=$promedio/$count;
+            $postulante->nota=$promedio;
+            $postulante->estado='E';
+            $postulante->update();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+        return $this->Cargar($request);
+    }
+
     public function Cargar(Request $request){
         $postulantes=DB::table('bdsigunm.ad_postulacion as ad')
                         ->join('admision.adm_postulante as adm','adm.nume_docu_sol','ad.nume_docu_per')
                         ->where('esta_post_pos','V')
                         ->where('adm.id_programacion_examen',$request->id_programacion_examen)
-                        ->where('adm.estado','P')
+                        //->where('adm.estado','P')
                         ->select('adm.id_programacion_examen',
                                  'adm.id_postulante',
                                  'adm.estado',
@@ -149,8 +199,7 @@ class EvaluacionController extends Controller
                                <hr width='100%' size='5' noshade=''>
                                ";
         foreach ($postulantes as $key => $pos) {
-            $contenido=$contenido."<form action='".route('evaluacion.evaluar')."' id='$pos->nume_docu_per'
-            class='evaluar' method='GET'><div class='row'>
+            $contenido=$contenido."<form id='$pos->nume_docu_per' class='evaluar' method='GET'><div class='row'>
             <input type='text' name='id_postulante' value='$pos->id_postulante' style='display: none'/>
             <input type='text' name='id_jurado' value='$jurado->id_jurado' style='display: none'/>
             <input type='text' name='id_programacion_examen' value='$request->id_programacion_examen' style='display: none'/>
@@ -184,15 +233,15 @@ class EvaluacionController extends Controller
                             ->where('jp.id_postulante',$pos->id_postulante)->first();
             
             if ($estadoeval=='A') {
-                $contenido=$contenido."<div class='col'><textarea name='comentario'></textarea></div>";
+                $contenido=$contenido."<div class='col'><textarea name='comentario'>$comentario->comentario</textarea></div>";
             } else {
                 $contenido=$contenido."<div class='col'><textarea disabled>$comentario->comentario</textarea></div>";
             }
             $contenido=$contenido."<div class='col'>
                                    <div class='row'>";
             if ($estadoeval=='A') {
-                $contenido=$contenido."<a href='#' onclick='formulario(`#$pos->nume_docu_per`)' class='col btn btn-success des$pos->nume_docu_per'><i class='fas fa-check'></i></a>
-                <a href='#'  class='col btn btn-primary des$pos->nume_docu_per'><i class='fas fa-forward'></i> </a>";
+                $contenido=$contenido."<a href='#' onclick='Evaluar(`#$pos->nume_docu_per`)' class='col btn btn-success'><i class='fas fa-check'></i></a>
+                                       <a href='#' onclick='Abstener(`#$pos->nume_docu_per`)' class='col btn btn-primary'><i class='fas fa-forward'></i></a>";
             } else {
                 $contenido=$contenido."<a disabled class='col btn btn-success'><i class='fas fa-check'></i></a>
                 <a  disabled class='col btn btn-primary'><i class='fas fa-forward'></i> </a>";
@@ -201,4 +250,5 @@ class EvaluacionController extends Controller
         }
         return $contenido;
     }
+
 }

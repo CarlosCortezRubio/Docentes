@@ -94,6 +94,18 @@
                             <br>
                             <div class='row'>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Examen de Requerimiento</label>
+                                    <select class="form-control" required name="id_prog_requ" id="id_prog_requ">
+                                        <option value="">Ninguno</option>
+                                        @foreach ($programaciones as $k => $prog)
+                                            <option value="{{ $prog->id_programacion_examen }}">{{ $prog->descripcion }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label for="">Aula</label>
                                     <select class="form-control" required name="id_aula" id="id_aula">
                                         <option value="">---- Seleccione -----</option>
@@ -205,6 +217,18 @@
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($examenes as $k => $exa)
                                             <option value="{{ $exa->id_examen }}">{{ $exa->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Examen de Requerimiento</label>
+                                    <select class="form-control" required name="id_prog_requ" id="id_prog_requupd">
+                                        <option value="">Ninguno</option>
+                                        @foreach ($programaciones as $k => $prog)
+                                            <option value="{{ $prog->id_programacion_examen }}">{{ $prog->descripcion }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -383,6 +407,7 @@
                                                                                                 "'".$prog->id_examen."',".
                                                                                                 "'".$prog->id_cupos."',".
                                                                                                 "'".$prog->id_aula."',".
+                                                                                                "'".$prog->id_prog_requ."',".
                                                                                                 "['".implode("','",$arraydoc[$prog->id_programacion_examen])."']" }});" aria-hidden="true"></button>
                                 <button class='btn btn-danger fa fa-trash' onclick="eliminar({{ $prog->id_programacion_examen }});" aria-hidden="true"></button>
                                 <button class='btn btn-success fa fa-plus-circle' onclick="formulario('#formcargaralumno{{ $prog->id_programacion_examen }}');" aria-hidden="true"></button>
@@ -400,7 +425,7 @@
 @section('js')
     <script>
 
-        function editar(id,descripcion,fecha_resol,minutos,modalidad,id_examen,id_cupos,id_aula,docentes) {
+        function editar(id,descripcion,fecha_resol,minutos,modalidad,id_examen,id_cupos,id_aula,id_prog_requ,docentes) {
             $("#id_programacion_examen").val(id);
             $("#descripcionupd").val(descripcion);
             $("#fecha_resolupd").val(fecha_resol);
@@ -409,6 +434,7 @@
             $("#id_cuposupd").val(id_cupos);
             $("#id_aulaupd").val(id_aula);
             $("#codi_doce_perupd").val(docentes).trigger('change');
+            $("#id_prog_requupd").val(id_prog_requ);
             if(modalidad=='V'){
                 $("#modalidadVupd").attr('checked',true);
                 $("#modalidadPupd").attr('checked',false);
