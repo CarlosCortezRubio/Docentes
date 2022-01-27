@@ -95,7 +95,7 @@
                             <div class='row'>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label for="">Examen de Requerimiento</label>
-                                    <select class="form-control" required name="id_prog_requ" id="id_prog_requ">
+                                    <select class="form-control" name="id_prog_requ" id="id_prog_requ">
                                         <option value="">Ninguno</option>
                                         @foreach ($programaciones as $k => $prog)
                                             <option value="{{ $prog->id_programacion_examen }}">{{ $prog->descripcion }}</option>
@@ -225,7 +225,7 @@
                             <div class='row'>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label for="">Examen de Requerimiento</label>
-                                    <select class="form-control" required name="id_prog_requ" id="id_prog_requupd">
+                                    <select class="form-control" name="id_prog_requ" id="id_prog_requupd">
                                         <option value="">Ninguno</option>
                                         @foreach ($programaciones as $k => $prog)
                                             <option value="{{ $prog->id_programacion_examen }}">{{ $prog->descripcion }}</option>
