@@ -44,6 +44,7 @@
                 <thead class="thead">
                     <tr>
                         <th scope="col">#</th>
+                        <th scope="col">Examen</th>
                         <th scope="col">Programa de Estudio</th>
                         <th scope="col">Horario</th>
                         <th scope="col">Tiempo</th>
@@ -58,6 +59,7 @@
                         <tr>
                             <th scope="row">{{ $k+1 }}</th>
                             <td>{{ $prog->abre_espe_esp . '(' . $prog->anio . ')' }}</td>
+                            <td>{{ $prog->examen }}</td>
                             <td>{{ $prog->fecha_resol }}</td>
                             <td>{{ $prog->minutos }} min</td>
                             <td>@if ($prog->modalidad == 'V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>
