@@ -58,8 +58,8 @@
                     @foreach ($programaciones as $k => $prog)
                         <tr>
                             <th scope="row">{{ $k+1 }}</th>
-                            <td>{{ $prog->abre_espe_esp . '(' . $prog->anio . ')' }}</td>
                             <td>{{ $prog->examen }}</td>
+                            <td>{{ $prog->abre_espe_esp . '(' . $prog->anio . ')' }}</td>
                             <td>{{ $prog->fecha_resol }}</td>
                             <td>{{ $prog->minutos }} min</td>
                             <td>@if ($prog->modalidad == 'V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>
