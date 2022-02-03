@@ -416,12 +416,13 @@ class ProgramacionController extends Controller
                 foreach ($request->alumnodelete as $key => $nume) {
                     $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
                                         ->where('nume_docu_sol',$nume)
-                                        ->where('estado','A');
+                                        ->where('estado','P');
                     if ($postulante->count()!=0) {
                         $postulante=$postulante->first();
                         $postulante->estado='I';
                         $postulante->update();
                     }
+                    
                 }
             }
             DB::commit();
@@ -564,11 +565,16 @@ class ProgramacionController extends Controller
     }
     public function delete(Request $request){
         $program=ProgramacionExamen::find($request->id_programacion_examen);
+        $postulantes=Postulante::where('id_programacion_examen',$program->id_programacion_examen)->get();
         try {
             DB::beginTransaction();
             $program->estado='E';
             $program->user_actu=Auth::user()->id;
             $program->update();
+            foreach ($postulantes as $key => $pos) {
+                $pos->estado='I';
+                $pos->update();
+            }
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
