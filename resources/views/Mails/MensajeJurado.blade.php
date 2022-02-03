@@ -1,6 +1,6 @@
 @extends('layouts.email')
 @section('title')
-    Estimado {{ $nombre }}
+    Estimado(a) {{ $nombre }}
 @endsection
 
 @section('content')

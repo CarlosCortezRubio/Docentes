@@ -38,9 +38,7 @@
                 "language": {
                     "url": "{{ asset('js/datatables.spanish.json') }}"
                 },
-                "order": [
-                    [1, "asc"]
-                ],
+                "responsive": true,
                 "info": false,
                 "stateSave": true,
                 "columnDefs": [{

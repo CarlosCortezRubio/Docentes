@@ -102,7 +102,9 @@ class EvaluacionController extends Controller
             foreach ($Notas as $nota) {
                 $promedio=$promedio+(($nota->porcentaje/100)*$nota->nota);
             }
-            $promedio=$promedio/$count;
+            if ($promedio>0 ) {
+                $promedio=$promedio/$count;
+            }
             $postulante->nota=$promedio;
             $postulante->estado='E';
             $postulante->update();
@@ -190,24 +192,22 @@ class EvaluacionController extends Controller
                                 'id_examen',
                                 'descripcion')->get();
         $examen=Examen::find($request->id_examen);
-        $contenido="<div class='row'>
-                    <div class='col-3'>Alumno</div>";
+        $contenido="<table class='table'><thead><tr>
+                    <th scope='col'>Alumno</th>";
         foreach ($parametros as $key => $par) {
-            $contenido=$contenido."<div class='col'>".$par->descripcion."</div>";
+            $contenido=$contenido."<th scope='col'>".$par->descripcion."</th>";
         }
-        $contenido=$contenido."<div class='col'>Observaciòn</div>
-                               <div class='col'>Acciones</div>
-                               </div>
-                               <hr width='100%' size='5' noshade=''>
-                               ";
+        $contenido=$contenido."<th scope='col'>Observaciòn</th>
+                               <th scope='col'>Acciones</th>
+                               </tr></thead><tbody>";
         foreach ($postulantes as $key => $pos) {
-            $contenido=$contenido."<form id='$pos->nume_docu_per' class='evaluar' method='GET'><div class='row'>
+            $contenido=$contenido."<tr><form id='$pos->nume_docu_per' class='evaluar' method='GET'><td>
             <input type='text' name='id_postulante' value='$pos->id_postulante' style='display: none'/>
             <input type='text' name='id_jurado' value='$jurado->id_jurado' style='display: none'/>
             <input type='text' name='id_programacion_examen' value='$request->id_programacion_examen' style='display: none'/>
             <input type='text' name='id_examen' value='$request->id_examen' style='display: none'/>
             <input type='text' name='nota_maxi' value='$examen->nota_maxi' style='display: none'/>
-            <div class='col-3'>$pos->nomb_pers_per $pos->apel_pate_per $pos->apel_mate_per</div>";
+            $pos->nomb_pers_per $pos->apel_pate_per $pos->apel_mate_per</td>";
             $estadoeval='';
             foreach ($parametros as $key => $par) {
                 
@@ -219,12 +219,12 @@ class EvaluacionController extends Controller
                         ->where('id_seccion_examen',$par->id_seccion_examen)->first();
                 $estadoeval=$nota->estado;
                 if ($nota->estado=='A' ){
-                    $contenido=$contenido."<div class='col'><input class='form-control' name='nota$nota->id_notajurado' min='0' max='$examen->nota_maxi' required type='number'></div>
+                    $contenido=$contenido."<td><input class='form-control' name='nota$nota->id_notajurado' min='0' max='$examen->nota_maxi' required type='number'>
                     <input type='text' name='idnotas[]' value='$nota->id_notajurado' style='display: none'/>
-                    <input type='text' name='id_jurado_postulante' value='$nota->id_jurado_postulante' style='display: none'/>";
+                    <input type='text' name='id_jurado_postulante' value='$nota->id_jurado_postulante' style='display: none'/></td>";
                     
                 }else{
-                    $contenido=$contenido."<div class='col'><input class='form-control' value='$nota->nota' disabled></div>";
+                    $contenido=$contenido."<td><input class='form-control' value='$nota->nota' disabled></td>";
                 }
                 
             }
@@ -235,21 +235,22 @@ class EvaluacionController extends Controller
                             ->where('jp.id_postulante',$pos->id_postulante)->first();
             
             if ($estadoeval=='A') {
-                $contenido=$contenido."<div class='col'><textarea name='comentario'>$comentario->comentario</textarea></div>";
+                $contenido=$contenido."<td><textarea name='comentario'>$comentario->comentario</textarea></td>";
             } else {
-                $contenido=$contenido."<div class='col'><textarea disabled>$comentario->comentario</textarea></div>";
+                $contenido=$contenido."<td><textarea disabled>$comentario->comentario</textarea></td>";
             }
-            $contenido=$contenido."<div class='col'>
-                                   <div class='row'>";
+            $contenido=$contenido."<td>
+                                   ";
             if ($estadoeval=='A') {
-                $contenido=$contenido."<a href='#' onclick='Evaluar(`#$pos->nume_docu_per`)' class='col btn btn-success'><i class='fas fa-check'></i></a>
-                                       <a href='#' onclick='Abstener(`#$pos->nume_docu_per`)' class='col btn btn-primary'><i class='fas fa-forward'></i></a>";
+                $contenido=$contenido."<a href='#' onclick='Evaluar(`#$pos->nume_docu_per`)' class='col btn btn-success'>Grabar</a>
+                                       <a href='#' onclick='Abstener(`#$pos->nume_docu_per`)' class='col btn btn-primary'>Abstener</a>";
             } else {
-                $contenido=$contenido."<a disabled class='col btn btn-success'><i class='fas fa-check'></i></a>
-                <a  disabled class='col btn btn-primary'><i class='fas fa-forward'></i> </a>";
+                $contenido=$contenido."<a disabled class='col btn btn-success'>Grabar</a>
+                <a  disabled class='col btn btn-primary'>Abstener</a>";
             }
-            $contenido=$contenido."</div></div></div></form>";
+            $contenido=$contenido."</td></form></tr>";
         }
+        $contenido=$contenido."</tbody>";
         return $contenido;
     }
 
