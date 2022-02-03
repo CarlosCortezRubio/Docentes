@@ -416,12 +416,13 @@ class ProgramacionController extends Controller
                 foreach ($request->alumnodelete as $key => $nume) {
                     $postulante=Postulante::where('id_programacion_examen',$request->id_programacion_examen)
                                         ->where('nume_docu_sol',$nume)
-                                        ->where('estado','A');
+                                        ->where('estado','P');
                     if ($postulante->count()!=0) {
                         $postulante=$postulante->first();
                         $postulante->estado='I';
                         $postulante->update();
                     }
+                    
                 }
             }
             DB::commit();
@@ -433,8 +434,8 @@ class ProgramacionController extends Controller
         }
     }
     public function CorreoJurado($nombre,$email,$contraseñá,$anio){
-        //Mail::to($email)
-        Mail::to("presto_ccr@hotmail.com")
+        Mail::to($email)
+        //Mail::to("presto_ccr@hotmail.com")
         ->send(new EmailJurado($nombre,$email,$contraseñá,$anio));
     }
     public function addAlumno(Request $request){
@@ -513,7 +514,7 @@ class ProgramacionController extends Controller
                                                    ->where('id_programacion_examen',$program->id_programacion_examen)
                                                    ->where('esta_post_pos','V')
                                                    ->where('estado','P')
-                                                  // ->where('pr.esta_proc_adm','V')
+                                                   //->where('pr.esta_proc_adm','V')
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
@@ -525,7 +526,7 @@ class ProgramacionController extends Controller
                                                     ->where('codi_secc_sec',$program->codi_secc_sec)
                                                     ->where('esta_post_pos','V')
                                                     ->whereNotIn('nume_docu_per',$alumnosdelete->pluck("nume_docu_per")->all())
-                                                    //->where('pr.esta_proc_adm','V')
+                                                    ->where('pr.esta_proc_adm','V')
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
@@ -564,11 +565,16 @@ class ProgramacionController extends Controller
     }
     public function delete(Request $request){
         $program=ProgramacionExamen::find($request->id_programacion_examen);
+        $postulantes=Postulante::where('id_programacion_examen',$program->id_programacion_examen)->get();
         try {
             DB::beginTransaction();
             $program->estado='E';
             $program->user_actu=Auth::user()->id;
             $program->update();
+            foreach ($postulantes as $key => $pos) {
+                $pos->estado='I';
+                $pos->update();
+            }
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
