@@ -150,12 +150,12 @@
                                     <div class="col-1"></div>
                                     <div class="col">
                                         <input class="col-1" type="radio" id="modalidadV" value="V"
-                                            name="modalidad" />
+                                        required  name="modalidad" />
                                         <label class="col-3 control control--radio" for="modalidadV">Virtual</label>
                                     </div>
                                     <div class="col">
                                         <input class="col-1" type="radio" id="modalidadP" value="P"
-                                            name="modalidad" />
+                                           required name="modalidad" />
                                         <label class="col-3 control control--radio" for="modalidadP">Presencial</label>
                                     </div>
                                 </div>
