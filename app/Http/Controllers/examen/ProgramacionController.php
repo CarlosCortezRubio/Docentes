@@ -151,7 +151,7 @@ class ProgramacionController extends Controller
                 foreach ($request->codi_doce_per as $key => $doc) {
                     $contrasena = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
                     $persona=Persona::find($doc);
-                    if(!filter_var($persona->mail_pers_per, FILTER_VALIDATE_EMAIL)) {
+                    if(!filter_var($persona->mail_acad_per, FILTER_VALIDATE_EMAIL)) {
                         DB::rollBack();
                         return redirect()->back()
                         ->with('no_success', 'El correo del docente '.$persona->nomb_comp_per.' no se encuentra registrado en la base de datos.');
@@ -161,7 +161,7 @@ class ProgramacionController extends Controller
                         $usuario=new User();
                         $usuario->name=$persona->nomb_comp_per;
                         $usuario->ndocumento=$persona->nume_docu_per;
-                        $usuario->email=$persona->mail_pers_per;
+                        $usuario->email=$persona->mail_acad_per;
                         $usuario->password=Hash::make($contrasena);
                         $usuario->created_at=Carbon::now();
                         $usuario->save();
@@ -172,7 +172,7 @@ class ProgramacionController extends Controller
                         $usuariodet->id_tipo_usuario=3;
                         $usuariodet->imagen=$persona->foto_pers_per;
                         $usuariodet->save();
-                        $this->CorreoJurado($persona->nomb_comp_per,$persona->mail_pers_per,$contrasena,$periodo->anio);
+                        $this->CorreoJurado($persona->nomb_comp_per,$persona->mail_acad_per,$contrasena,$periodo->anio);
                     }
                     ///////////////////////
                     $docente= new Jurado();
@@ -225,7 +225,7 @@ class ProgramacionController extends Controller
                     if ($docente->count()==0) {
                         $contrasena = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'), 0, 8);
                         $persona=Persona::find($doc);
-                        if(!filter_var($persona->mail_pers_per, FILTER_VALIDATE_EMAIL)) {
+                        if(!filter_var($persona->mail_acad_per, FILTER_VALIDATE_EMAIL)) {
                             DB::rollBack();
                             return redirect()->back()
                             ->with('no_success', 'El correo del docente '.$persona->nomb_comp_per.' no se encuentra registrado en la base de datos.');
@@ -235,7 +235,7 @@ class ProgramacionController extends Controller
                             $usuario=new User();
                             $usuario->name=$persona->nomb_comp_per;
                             $usuario->ndocumento=$persona->nume_docu_per;
-                            $usuario->email=$persona->mail_pers_per;
+                            $usuario->email=$persona->mail_acad_per;
                             $usuario->password=Hash::make($contrasena);
                             $usuario->save();
                             ///////////////////////
@@ -245,7 +245,7 @@ class ProgramacionController extends Controller
                             $usuariodet->id_tipo_usuario=3;
                             $usuariodet->imagen=$persona->foto_pers_per;
                             $usuariodet->save();
-                        $this->CorreoJurado($persona->nomb_comp_per,$persona->mail_pers_per,$contrasena,$periodo->anio);
+                        $this->CorreoJurado($persona->nomb_comp_per,$persona->mail_acad_per,$contrasena,$periodo->anio);
 
                         }
                         ///////////////////////
