@@ -192,7 +192,11 @@ class EvaluacionController extends Controller
                                 'id_examen',
                                 'descripcion')->get();
         $examen=Examen::find($request->id_examen);
-        $contenido="<table class='table'><thead><tr>
+        $contenido="<div class='container'>
+        <div class='row'>
+          <div class='col-12'>
+            <div class='table-responsive'>
+        <table class='table'><thead><tr>
                     <th scope='col'>Alumno</th>";
         foreach ($parametros as $key => $par) {
             $contenido=$contenido."<th scope='col'>".$par->descripcion."</th>";
@@ -201,14 +205,15 @@ class EvaluacionController extends Controller
                                <th scope='col'>Acciones</th>
                                </tr></thead><tbody>";
         foreach ($postulantes as $key => $pos) {
-            $contenido=$contenido."<tr><form id='$pos->nume_docu_per' class='evaluar' method='GET'><td>
+            $estadoeval='';
+            $contenido=$contenido."<tr><td><form id='$pos->nume_docu_per' class='evaluar' method='GET'>
             <input type='text' name='id_postulante' value='$pos->id_postulante' style='display: none'/>
             <input type='text' name='id_jurado' value='$jurado->id_jurado' style='display: none'/>
             <input type='text' name='id_programacion_examen' value='$request->id_programacion_examen' style='display: none'/>
             <input type='text' name='id_examen' value='$request->id_examen' style='display: none'/>
             <input type='text' name='nota_maxi' value='$examen->nota_maxi' style='display: none'/>
-            $pos->nomb_pers_per $pos->apel_pate_per $pos->apel_mate_per</td>";
-            $estadoeval='';
+            $pos->nomb_pers_per $pos->apel_pate_per $pos->apel_mate_per";
+            
             foreach ($parametros as $key => $par) {
                 
                 $nota=DB::table('admision.adm_nota_jurado as n')
@@ -219,7 +224,27 @@ class EvaluacionController extends Controller
                         ->where('id_seccion_examen',$par->id_seccion_examen)->first();
                 $estadoeval=$nota->estado;
                 if ($nota->estado=='A' ){
-                    $contenido=$contenido."<td><input class='form-control' name='nota$nota->id_notajurado' min='0' max='$examen->nota_maxi' required type='number'>
+                    $contenido=$contenido."<input type='text' name='idnotas[]' value='$nota->id_notajurado' style='display: none'/>
+                    <input type='text' id='nota$nota->id_notajurado' name='nota$nota->id_notajurado' style='display: none' />
+                    <input type='text' name='id_jurado_postulante' value='$nota->id_jurado_postulante' style='display: none'/>";
+                    
+                }
+                
+            }
+            
+            $contenido=$contenido."</form></td>";
+            
+            foreach ($parametros as $key => $par) {
+                
+                $nota=DB::table('admision.adm_nota_jurado as n')
+                        ->join('admision.adm_jurado_postulante as jp','jp.id_jurado_postulante','n.id_jurado_postulante')
+                        ->select('n.id_notajurado','nota','n.estado','jp.id_jurado_postulante')
+                        ->where('jp.id_jurado',$jurado->id_jurado)
+                        ->where('jp.id_postulante',$pos->id_postulante)
+                        ->where('id_seccion_examen',$par->id_seccion_examen)->first();
+                $estadoeval=$nota->estado;
+                if ($nota->estado=='A' ){
+                    $contenido=$contenido."<td><input class='form-control' onkeyup='$(".'"#nota'.$nota->id_notajurado.'"'.").val($(this).val())' name='' min='0' max='$examen->nota_maxi' required type='number'>
                     <input type='text' name='idnotas[]' value='$nota->id_notajurado' style='display: none'/>
                     <input type='text' name='id_jurado_postulante' value='$nota->id_jurado_postulante' style='display: none'/></td>";
                     
@@ -248,9 +273,9 @@ class EvaluacionController extends Controller
                 $contenido=$contenido."<a disabled class='col btn btn-success'>Grabar</a>
                 <a  disabled class='col btn btn-primary'>Abstener</a>";
             }
-            $contenido=$contenido."</td></form></tr>";
+            $contenido=$contenido."</td></tr>";
         }
-        $contenido=$contenido."</tbody>";
+        $contenido=$contenido."</tbody></table></div></div></div></div>";
         return $contenido;
     }
 
