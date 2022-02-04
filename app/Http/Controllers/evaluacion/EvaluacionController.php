@@ -201,7 +201,7 @@ class EvaluacionController extends Controller
         foreach ($parametros as $key => $par) {
             $contenido=$contenido."<th scope='col'>".$par->descripcion."</th>";
         }
-        $contenido=$contenido."<th scope='col'>Observaciòn</th>
+        $contenido=$contenido."<th scope='col'>Observación</th>
                                <th scope='col'>Acciones</th>
                                </tr></thead><tbody>";
         foreach ($postulantes as $key => $pos) {
