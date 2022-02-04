@@ -55,6 +55,7 @@ class ProgramacionController extends Controller
                                 'esp.codi_espe_esp',
                                 'admision.adm_cupos.codi_espe_esp')
                         ->where('p.estado','A')
+                        ->where('admision.adm_cupos.estado','A')
                         ->where('asec.estado','A')
                          ->select('id_cupos',
                                     'esp.codi_espe_esp',
