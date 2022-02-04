@@ -212,6 +212,7 @@ class EvaluacionController extends Controller
             <input type='text' name='id_programacion_examen' value='$request->id_programacion_examen' style='display: none'/>
             <input type='text' name='id_examen' value='$request->id_examen' style='display: none'/>
             <input type='text' name='nota_maxi' value='$examen->nota_maxi' style='display: none'/>
+            <input type='text' id='comentario$pos->nume_docu_per' name='comentario' style='display: none'/>
             $pos->nomb_pers_per $pos->apel_pate_per $pos->apel_mate_per";
             
             foreach ($parametros as $key => $par) {
@@ -260,7 +261,7 @@ class EvaluacionController extends Controller
                             ->where('jp.id_postulante',$pos->id_postulante)->first();
             
             if ($estadoeval=='A') {
-                $contenido=$contenido."<td><textarea name='comentario'>$comentario->comentario</textarea></td>";
+                $contenido=$contenido."<td><textarea onkeyup='$(".'"#comentario'.$pos->nume_docu_per.'"'.").val($(this).val())'>$comentario->comentario</textarea></td>";
             } else {
                 $contenido=$contenido."<td><textarea disabled>$comentario->comentario</textarea></td>";
             }
