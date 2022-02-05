@@ -98,7 +98,7 @@
                                     <select class="form-control" name="id_prog_requ" id="id_prog_requ">
                                         <option value="">Ninguno</option>
                                         @foreach ($programaciones as $k => $prog)
-                                            <option value="{{ $prog->id_programacion_examen }}">{{ $prog->descripcion }}</option>
+                                            <option value="{{ $prog->id_programacion_examen }}">{{ $prog->descripcion.' - '.$prog->abre_espe_esp . '(' . $prog->anio . ')' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -228,7 +228,7 @@
                                     <select class="form-control" name="id_prog_requ" id="id_prog_requupd">
                                         <option value="">Ninguno</option>
                                         @foreach ($programaciones as $k => $prog)
-                                            <option value="{{ $prog->id_programacion_examen }}">{{ $prog->descripcion }}</option>
+                                            <option value="{{ $prog->id_programacion_examen }}">{{ $prog->descripcion.' - '.$prog->abre_espe_esp . '(' . $prog->anio . ')' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
