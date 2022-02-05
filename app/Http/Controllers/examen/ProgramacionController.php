@@ -79,6 +79,7 @@ class ProgramacionController extends Controller
                                           ->where('au.estado','A')
                                           ->where('asec.estado','A')
                                           ->select('admision.adm_programacion_examen.descripcion',
+                                                   'id_prog_requ',
                                                    'id_programacion_examen',
                                                    'fecha_resol',
                                                    'minutos',
