@@ -515,7 +515,7 @@ class ProgramacionController extends Controller
                                                    ->where('id_programacion_examen',$program->id_programacion_examen)
                                                    ->where('esta_post_pos','V')
                                                    ->where('estado','P')
-                                                   //->where('pr.esta_proc_adm','V')
+                                                   ->where('pr.esta_proc_adm','V')
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
