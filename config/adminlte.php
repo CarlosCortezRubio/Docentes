@@ -155,7 +155,7 @@
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
     'sidebar_nav_accordion' => true,
-    'sidebar_nav_animation_speed' => 300,
+    'sidebar_nav_animation_speed' => 200,
 
     /*
     |--------------------------------------------------------------------------
@@ -262,6 +262,28 @@
             'route'  => 'evaluacion',
             'icon' => 'fas fa-fw fa-check',
             'can' => 'Jurado'
+        ],
+        [   
+            'text'    => 'Reportes',
+            'icon'    => 'fa-fw fas fa-table',
+            'can' => 'Administrador',
+            'submenu' => [
+                [
+                    'text' => 'Notas Finales',
+                    'can' => 'Administrador',
+                    'route'  => 'notafinal',
+                ],
+                [
+                    'text' => 'Notas por rubrica',
+                    'can' => 'Administrador',
+                    'route'  => 'notarubrica',
+                ],
+                [
+                    'text' => 'Notas de Conocimiento general',
+                    'can' => 'Administrador',
+                    'route'  => 'notaconocimiento',
+                ]
+            ]
         ]
     ]
 

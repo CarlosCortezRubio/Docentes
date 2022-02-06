@@ -62,5 +62,9 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/Programacion/Agregar', 'examen\ProgramacionController@Agregar')->name('programacion.alumnos.agregar');
     Route::get('/Programacion/AlumnoEliminar', 'examen\ProgramacionController@Eliminar')->name('programacion.alumnos.eliminar');
     Route::post('/Programacion/Eliminar', 'examen\ProgramacionController@delete')->name('programacion.delete');
+    ///////////////////////////////////////
+    Route::get('/NotasFinales', 'ReporteController@notafinal')->name('notafinal');
+    Route::get('/NotasConocimiento', 'ReporteController@notaconocimiento')->name('notaconocimiento');
+    Route::get('/NotasRubricas', 'ReporteController@notarubrica')->name('notarubrica');
     Route::get('/', function () { return view('home');});
 });
