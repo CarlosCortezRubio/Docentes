@@ -80,7 +80,7 @@
                                 @endif
                             @endif
                             <td>{{ $v->examen }}</td>
-                            <td>{{ $v->nota }}---{{ $v->peso }}</td>
+                            <td>{{ $v->nota }}</td>
                             @if ($loop->first)
                                 @foreach ($postulantes as $kp => $vp)
                                     @if ($vp->nombre == $v->nombre)
