@@ -26,7 +26,7 @@ class ReporteController extends Controller
                               ->get();
         $postulantes=$reporte->select('p.nomb_comp_per as nombre', 
                                       DB::raw('count(p.nomb_comp_per)'),
-                                      DB::raw('sum(ap.nota*(ea.peso/100)) as final'))
+                                      DB::raw('ROUND(sum(ap.nota*(ea.peso/100)),2) as final'))
                              ->groupBy('p.nomb_comp_per')
                              ->get();
         $reporte=$reporte->select('tt.abre_tabl_det as  especialidad',
