@@ -528,6 +528,21 @@
                 ],
             ],
         ],
+        'table-to-excel' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'https://cdn.jsdelivr.net/npm/@linways/table-to-excel@1.0.4/dist/tableToExcel.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.min.js',
+                ],
+            ],
+        ],
         'fontawesome' => [
             'active' => true,
             'files' => [

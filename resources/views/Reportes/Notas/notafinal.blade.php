@@ -31,12 +31,12 @@
     <div class="card">
         <div class="card-header">
             <div class='col'>
-                <button data-toggle="modal" data-target="#modaladd" class='btn btn-success'><i class="fa fa-plus"
-                        aria-hidden="true"></i> Nuevo</button>
+                <button id="btnExport" onclick="exportReportToExcel(this)" class='btn btn-success'><i class="fa fa-plus"
+                        aria-hidden="true"></i> Export</button>
             </div>
         </div>
         <div class="card-body">
-            <table class="tablaresponse table tprincipal table-striped">
+            <table id="table" class="tablaresponse table tprincipal table-striped">
                 <thead class="thead">
                     <tr>
                         <th scope="col">Especialdad</th>
@@ -104,12 +104,40 @@
     </div>
 @stop
 @section('css')
-<style>
-    td,th{
-        text-align: center; 
-        vertical-align: middle !important;
-    }
-</style>
+    <style>
+        td,
+        th {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+    </style>
 @stop
 @section('js')
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" , type="text/javascript">
+        function Export() {
+            $("#table").table2excel({
+                filename: "Promedios{{ date('Y') }}.xls"
+            });
+        }
+    </script>
+    <script>
+        TableExport(document.getElementsByTagName("table"), {
+            filename: 'excelfile',
+            sheetname: "sheet1"
+        });
+    </script>
+    <script type="text/javascript">
+        function exportReportToExcel() {
+            let table = document.getElementsByTagName("table");
+            TableToExcel.convert(table[0], {
+                name: `Promedios{{ date('Y') }}.xls`,
+                sheet: {
+                    name: 'Sheet 1'
+                }
+            });
+        }
+    </script>
+
+
 @stop
