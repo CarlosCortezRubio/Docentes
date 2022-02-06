@@ -34,7 +34,7 @@ class ReporteController extends Controller
                                     'pr.descripcion as examen',
                                     'ap.nota as nota',
                                     'ea.peso')
-                            ->orderBy('tt.abre_tabl_det','p.nomb_comp_per','pr.descripcion','ap.nota')
+                            ->orderByDesc('tt.abre_tabl_det','p.nomb_comp_per','pr.descripcion','ap.nota')
                             ->groupBy("pr.descripcion",'ap.nota','ea.peso')->get();
         
         return view('Reportes.Notas.notafinal',["reporte"=>$reporte,"especialidad"=>$especialidad,"postulantes"=>$postulantes]);
