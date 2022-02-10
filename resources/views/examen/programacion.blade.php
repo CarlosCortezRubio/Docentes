@@ -372,6 +372,7 @@
                         <th scope="col">Descripcion</th>
                         <th scope="col">Programa de Estudio</th>
                         <th scope="col">Examen</th>
+                        <th scope="col">Seccion</th>
                         <th scope="col">Horario</th>
                         <th scope="col">Tiempo</th>
                         <th scope="col">Modalidad</th>
@@ -392,6 +393,7 @@
                             <td>{{ $prog->descripcion }}</td>
                             <td>{{ $prog->abre_espe_esp . '(' . $prog->anio . ')' }}</td>
                             <td>{{ $prog->examen }}</td>
+                            <td>{{ $prog->abre_secc_sec }}</td>
                             <td>{{ $prog->fecha_resol }}</td>
                             <td>{{ $prog->minutos }} min</td>
                             <td>@if ($prog->modalidad == 'V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>

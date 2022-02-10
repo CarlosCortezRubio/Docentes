@@ -73,6 +73,7 @@ class ProgramacionController extends Controller
                                           ->join('bdsig.vw_sig_seccion_especialidad as esp','esp.codi_espe_esp','cu.codi_espe_esp')
                                           ->join('admision.adm_periodo as p','p.id_periodo','cu.id_periodo')
                                           ->join('admision.adm_seccion_estudios as asec','asec.id_seccion','p.id_seccion')
+                                          ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','asec.codi_secc_sec')
                                           ->where('admision.adm_programacion_examen.estado','A')
                                           ->where('ex.estado','A')
                                           ->where('cu.estado','A')
@@ -92,7 +93,8 @@ class ProgramacionController extends Controller
                                                    'p.anio',
                                                    'ex.nombre as examen',
                                                    'au.nombre as aula',
-                                                   'asec.codi_secc_sec'
+                                                   'asec.codi_secc_sec',
+                                                   'sec.abre_secc_sec'
                                                    ,'p.id_seccion')->distinct();
         if(getSeccion()){
             $examenes= $examenes->where('asec.id_seccion',getIdSeccion())->get();
