@@ -126,29 +126,45 @@
     }
     function Evaluar(id) {
         var form = $(id);
+        var opcion = confirm("¿Está seguro de grabar las notas?");
+        if (opcion == true) {
+            $.ajax({
+                type: form.attr('method'),
+                url: "{{ route('evaluacion.evaluar') }}",
+                data: form.serialize(), 
+                success: function(data){
+                    if(data=="fallo de parametros"){
+                        alert("Falto completar o corregir un parametro");
+                    }else{
+                        $('#cargar').html(data);
+                        alert("Las notas fueron grabadas satisfactoriamente");
+                    }
+                 }
+              });
+        }
         
-        $.ajax({
-               type: form.attr('method'),
-               url: "{{ route('evaluacion.evaluar') }}",
-               data: form.serialize(), 
-               success: function(data){
-                   //alert(data);
-                    $('#cargar').html(data);
-                }
-             });
     }
     function Abstener(id) {
         var form = $(id);
-        
+        var opcion = confirm("¿Está seguro que desea Abstenerse?");
+        if (opcion == true) {
         $.ajax({
                type: form.attr('method'),
                url: "{{ route('evaluacion.abstener') }}",
                data: form.serialize(), 
                success: function(data){
                    //alert(data);
-                    $('#cargar').html(data);
+                   if(data=="fallo de parametros"){
+                        alert("Falto completar o corregir un parametro");
+                   }else if(data=="Es necesario realizar un comentario para esta opción"){
+                        alert(data);
+                   }else{
+                        $('#cargar').html(data);
+                        alert("Usted se abstuvo satisfactoriamente");
+                   }
                 }
              });
+        }
     }
 </script>
 @stop

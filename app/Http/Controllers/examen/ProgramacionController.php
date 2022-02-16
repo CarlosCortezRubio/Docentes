@@ -522,7 +522,7 @@ class ProgramacionController extends Controller
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
-                                                            'pos.apel_mate_per')->distinct()->orderByRaw('pos.nomb_pers_per')
+                                                            'pos.apel_mate_per')->distinct()->orderByRaw('pos.apel_pate_per')
                                                    ->get();
         $alumnosadd=DB::table('bdsigunm.ad_postulacion as pos')
                                                     ->join('bdsigunm.ad_proceso as pr','pos.codi_proc_adm','pr.codi_proc_adm')
@@ -534,7 +534,7 @@ class ProgramacionController extends Controller
                                                    ->select('pos.nume_docu_per',
                                                             'pos.nomb_pers_per',
                                                             'pos.apel_pate_per',
-                                                            'pos.apel_mate_per')->distinct()->orderByRaw('pos.nomb_pers_per');
+                                                            'pos.apel_mate_per')->distinct()->orderByRaw('pos.apel_pate_per');
         if ($program->edad_min && $program->edad_max) {
             $alumnosadd=$alumnosadd->whereBetween('edad_calc_pos',[$program->edad_min,$program->edad_max])->get();
         }else{
@@ -545,7 +545,7 @@ class ProgramacionController extends Controller
                     <form action=".route('programacion.alumnos.agregar',['id_programacion_examen'=>$program->id_programacion_examen,'id_examen'=>$program->id_examen])." id='agregarform$program->id_programacion_examen' method='get'>
                     <select class='multi form-control'  multiple='multiple' size='10'  name='nume_docu_sol[]' id='nume_docu_sol'>";
         foreach ($alumnosadd as $key => $alm) {
-            $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";
+            $texto=$texto."<option value='$alm->nume_docu_per'>$alm->apel_pate_per $alm->apel_mate_per $alm->nomb_pers_per</option>";
         }
         $texto=$texto."</select>
                     </form>
@@ -557,7 +557,7 @@ class ProgramacionController extends Controller
                     <form action=".route('programacion.alumnos.eliminar',['id_programacion_examen'=>$program->id_programacion_examen])." id='eliminarform$program->id_programacion_examen' method='get'>
                     <select class='multi form-control'  multiple='multiple' size='10'  name='alumnodelete[]' id='alumnodelete'>";
         foreach ($alumnosdelete as $key => $alm) {
-            $texto=$texto."<option value='$alm->nume_docu_per'> $alm->nomb_pers_per $alm->apel_pate_per $alm->apel_mate_per</option>";
+            $texto=$texto."<option value='$alm->nume_docu_per'>$alm->apel_pate_per $alm->apel_mate_per $alm->nomb_pers_per</option>";
         }
         $texto=$texto."</select>
                         </form>

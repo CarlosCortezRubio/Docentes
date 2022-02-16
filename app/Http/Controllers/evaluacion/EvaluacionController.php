@@ -94,7 +94,11 @@ class EvaluacionController extends Controller
             $Notas=Nota::where('jp.id_postulante',$request->id_postulante)
                     ->where('admision.adm_nota_jurado.estado','E')
                     ->where('sec.estado','A')
+                    ->whereIn('jp.estado',['A','E'])
+                    ->where('j.estado','A')
                     ->select('sec.porcentaje','admision.adm_nota_jurado.nota')
+
+                    ->join('admision.adm_jurado as j','j.id_jurado','jp.id_jurado')
                     ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen')
                     ->join('admision.adm_jurado_postulante as jp','admision.adm_nota_jurado.id_jurado_postulante','jp.id_jurado_postulante')->get();
             $count=$jurados->count();
@@ -125,11 +129,11 @@ class EvaluacionController extends Controller
                 $modelnota->nota=0;
                 $modelnota->update();
             }
-            if ($request->comentario==null) {
+            /*if ($request->comentario==null) {
                 DB::rollBack();
                 //return $this->Cargar($request);
                 return "Es necesario realizar un comentario para esta opción";
-            }
+            }*/
             $comentario=Comentario::where('id_jurado_postulante',$request->id_jurado_postulante)->first();
             $comentario->comentario=$request->comentario." (Comentario de Abstención)";
             $comentario->update();  
@@ -143,7 +147,10 @@ class EvaluacionController extends Controller
             $Notas=Nota::where('jp.id_postulante',$request->id_postulante)
                     ->where('admision.adm_nota_jurado.estado','E')
                     ->where('sec.estado','A')
+                    ->whereIn('jp.estado',['A','E'])
+                    ->where('j.estado','A')
                     ->select('sec.porcentaje','admision.adm_nota_jurado.nota')
+                    ->join('admision.adm_jurado as j','j.id_jurado','jp.id_jurado')
                     ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen')
                     ->join('admision.adm_jurado_postulante as jp','admision.adm_nota_jurado.id_jurado_postulante','jp.id_jurado_postulante')->get();
             $count=$jurados->count();
@@ -228,7 +235,7 @@ class EvaluacionController extends Controller
                 $estadoeval=$nota->estado;
                 if ($nota->estado=='A' ){
                     $contenido=$contenido."<input type='text' name='idnotas[]' value='$nota->id_notajurado' style='display: none'/>
-                    <input type='text' id='nota$nota->id_notajurado' name='nota$nota->id_notajurado' style='display: none' />
+                    <input type='text' id='nota$nota->id_notajurado' name='nota$nota->id_notajurado'  style='display: none'/>
                     <input type='text' name='id_jurado_postulante' value='$nota->id_jurado_postulante' style='display: none'/>";
                     
                 }
@@ -247,7 +254,7 @@ class EvaluacionController extends Controller
                         ->where('id_seccion_examen',$par->id_seccion_examen)->first();
                 $estadoeval=$nota->estado;
                 if ($nota->estado=='A' ){
-                    $contenido=$contenido."<td><input class='form-control' onkeyup='$(".'"#nota'.$nota->id_notajurado.'"'.").val($(this).val())' name='' min='0' max='$examen->nota_maxi' required type='number'>
+                    $contenido=$contenido."<td><input class='form-control' onkeyup='$(".'"#nota'.$nota->id_notajurado.'"'.").val($(this).val())' name='' maxlength='2' onKeypress='if (event.keyCode < 45 || event.keyCode > 57 ) event.returnValue = false;' max='$examen->nota_maxi' required type='text'>
                     <input type='text' name='idnotas[]' value='$nota->id_notajurado' style='display: none'/>
                     <input type='text' name='id_jurado_postulante' value='$nota->id_jurado_postulante' style='display: none'/></td>";
                     
