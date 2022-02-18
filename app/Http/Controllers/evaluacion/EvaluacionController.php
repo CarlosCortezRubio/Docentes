@@ -74,11 +74,9 @@ class EvaluacionController extends Controller
 
     public function Evaluar(Request $request){
         $postulante=Postulante::find($request->id_postulante);
-        $persona=Persona::where('nume_docu_per',$postulante->nume_docu_sol);
-        $mensaje=$persona->count();
-        //$mensaje="El Usuario ".Auth::user()->name." evaluó a ".$persona->nomb_comp_per."\n";
-        Log::info($mensaje);
-        return $this->Cargar($request);
+        $persona=Persona::where('nume_docu_per',rtrim($postulante->nume_docu_sol))->first();
+        $perdoce=Persona::where('nume_docu_per',Auth::user()->ndocumento)->first();
+        $mensaje="El Usuario ".Auth::user()->name."(".$perdoce->codi_pers_per.")"." evaluó a ".$persona->nomb_comp_per."(".$persona->nume_docu_per.")"."\n";
         try {
             DB::beginTransaction();
             foreach ($request->idnotas as $idnota) {
@@ -107,10 +105,9 @@ class EvaluacionController extends Controller
                     ->whereIn('jp.estado',['A','E'])
                     ->where('j.estado','A')
                     ->select('sec.porcentaje','admision.adm_nota_jurado.nota')
-
+                    ->join('admision.adm_jurado_postulante as jp','admision.adm_nota_jurado.id_jurado_postulante','jp.id_jurado_postulante')
                     ->join('admision.adm_jurado as j','j.id_jurado','jp.id_jurado')
-                    ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen')
-                    ->join('admision.adm_jurado_postulante as jp','admision.adm_nota_jurado.id_jurado_postulante','jp.id_jurado_postulante')->get();
+                    ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen')->get();
             $count=$jurados->count();
             $promedio=0;
             foreach ($Notas as $nota) {
@@ -134,8 +131,9 @@ class EvaluacionController extends Controller
 
     public function Abstener(Request $request){
         $postulante=Postulante::find($request->id_postulante);
-        $persona=DB::table("bdsig.persona")->where('nume_docu_per',$postulante->nume_docu_sol)->first();
-        $mensaje="El Usuario ".Auth::user()->name." se abstuvo al evaluar a ".$persona->nomb_comp_per;
+        $persona=Persona::where('nume_docu_per',rtrim($postulante->nume_docu_sol))->first();
+        $perdoce=Persona::where('nume_docu_per',Auth::user()->ndocumento)->first();
+        $mensaje="El Usuario ".Auth::user()->name."(".$perdoce->codi_pers_per.")"." se abstuvo al evaluar a ".$persona->nomb_comp_per."(".$persona->nume_docu_per.")";
         
         try {
             DB::beginTransaction();
@@ -164,9 +162,9 @@ class EvaluacionController extends Controller
                     ->whereIn('jp.estado',['A','E'])
                     ->where('j.estado','A')
                     ->select('sec.porcentaje','admision.adm_nota_jurado.nota')
+                    ->join('admision.adm_jurado_postulante as jp','admision.adm_nota_jurado.id_jurado_postulante','jp.id_jurado_postulante')
                     ->join('admision.adm_jurado as j','j.id_jurado','jp.id_jurado')
-                    ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen')
-                    ->join('admision.adm_jurado_postulante as jp','admision.adm_nota_jurado.id_jurado_postulante','jp.id_jurado_postulante')->get();
+                    ->join('admision.adm_seccion_examen as sec','sec.id_seccion_examen','admision.adm_nota_jurado.id_seccion_examen')->get();
             $count=$jurados->count();
             $promedio=0;
             foreach ($Notas as $nota) {
