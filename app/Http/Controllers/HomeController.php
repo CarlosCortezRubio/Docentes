@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\EmailJurado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
@@ -25,6 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        Log::info("El Usuario ".Auth::user()->name." ingresó");
         return view('home');
     }
 }
