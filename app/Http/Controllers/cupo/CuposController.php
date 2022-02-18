@@ -32,7 +32,7 @@ class CuposController extends Controller
             $programas= DB::table('bdsig.vw_sig_seccion_especialidad');
             $periodos=Periodo::join('admision.adm_seccion_estudios as asec','asec.id_seccion','admision.adm_periodo.id_seccion')
                             ->join('bdsig.vw_sig_seccion as sec','sec.codi_secc_sec','asec.codi_secc_sec')
-                            ->select('admision.adm_periodo.*','sec.*')
+                            ->select('admision.adm_periodo.*','sec.*','asec.categoria')
                             ->where('asec.estado','A');
                                 
             if(getSeccion()){

@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EvaluacionController extends Controller
 {
@@ -24,7 +25,7 @@ class EvaluacionController extends Controller
     public function index(){
         
         $programaciones=$this->programaciones();
-        
+        Log::info("El Usuario ".Auth::user()->name." ingresó a evaluar");
         return view('evaluacion.index',['programaciones'=>$programaciones]);
     }
 
@@ -71,6 +72,9 @@ class EvaluacionController extends Controller
     }
 
     public function Evaluar(Request $request){
+        $postulante=Postulante::find($request->id_postulante);
+        $persona=DB::table("bdsig.persona")->where('nume_docu_per',$postulante->nume_docu_sol)->first();
+        $mensaje="El Usuario ".Auth::user()->name." evaluó a ".$persona->nomb_comp_per."\n";
         try {
             DB::beginTransaction();
             foreach ($request->idnotas as $idnota) {
@@ -85,11 +89,13 @@ class EvaluacionController extends Controller
                     //return $this->Cargar($request);
                     return "fallo de parametros";
                 }
+                $mensaje=$mensaje.$idnota." : ".$request->get("nota".$idnota)."\n";
             }
+            
             $comentario=Comentario::where('id_jurado_postulante',$request->id_jurado_postulante)->first();
             $comentario->comentario=$request->comentario;
             $comentario->update();          
-            $postulante=Postulante::find($request->id_postulante);
+            
             $jurados=JuradoPostulante::where('estado','A')->where('id_postulante',$request->id_postulante);
             $Notas=Nota::where('jp.id_postulante',$request->id_postulante)
                     ->where('admision.adm_nota_jurado.estado','E')
@@ -113,14 +119,20 @@ class EvaluacionController extends Controller
             $postulante->estado='E';
             $postulante->update();
             DB::commit();
+            Log::info($mensaje);
         } catch (Exception $e) {
             DB::rollBack();
-            return $e->getMessage();
+            Log::error($mensaje."(Ocurrio un error inesperado) \n".$e->getMessage());
+            return "Ocurrió un error inesperado, Contáctese con soporte";
         }
         return $this->Cargar($request);
     }
 
     public function Abstener(Request $request){
+        $postulante=Postulante::find($request->id_postulante);
+        $persona=DB::table("bdsig.persona")->where('nume_docu_per',$postulante->nume_docu_sol)->first();
+        $mensaje="El Usuario ".Auth::user()->name." se abstuvo al evaluar a ".$persona->nomb_comp_per;
+        
         try {
             DB::beginTransaction();
             foreach ($request->idnotas as $idnota) {
@@ -141,8 +153,6 @@ class EvaluacionController extends Controller
             $jupos=JuradoPostulante::find($request->id_jurado_postulante);
             $jupos->estado='N';
             $jupos->update();
-
-            $postulante=Postulante::find($request->id_postulante);
             $jurados=JuradoPostulante::where('estado','A')->where('id_postulante',$request->id_postulante);
             $Notas=Nota::where('jp.id_postulante',$request->id_postulante)
                     ->where('admision.adm_nota_jurado.estado','E')
@@ -165,9 +175,11 @@ class EvaluacionController extends Controller
             $postulante->estado='E';
             $postulante->update();
             DB::commit();
+            Log::info($mensaje);
         } catch (Exception $e) {
             DB::rollBack();
-            return $e->getMessage();
+            Log::error($mensaje."(Ocurrio un error inesperado) \n".$e->getMessage());
+            return "Ocurrió un error inesperado, Contáctese con soporte";
         }
         return $this->Cargar($request);
     }
