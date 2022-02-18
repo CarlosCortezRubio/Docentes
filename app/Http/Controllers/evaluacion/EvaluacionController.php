@@ -9,6 +9,7 @@ use App\Model\Examen\ProgramacionExamen;
 use App\Model\Jurado;
 use App\Model\JuradoPostulante;
 use App\Model\Nota;
+use App\Model\Persona;
 use App\Model\Postulante;
 use Exception;
 use Illuminate\Http\Request;
@@ -73,8 +74,11 @@ class EvaluacionController extends Controller
 
     public function Evaluar(Request $request){
         $postulante=Postulante::find($request->id_postulante);
-        $persona=DB::table("bdsig.persona")->where('nume_docu_per',$postulante->nume_docu_sol)->first();
-        $mensaje="El Usuario ".Auth::user()->name." evaluó a ".$persona->nomb_comp_per."\n";
+        $persona=Persona::where('nume_docu_per',$postulante->nume_docu_sol);
+        $mensaje=$persona->count();
+        //$mensaje="El Usuario ".Auth::user()->name." evaluó a ".$persona->nomb_comp_per."\n";
+        Log::info($mensaje);
+        return $this->Cargar($request);
         try {
             DB::beginTransaction();
             foreach ($request->idnotas as $idnota) {
