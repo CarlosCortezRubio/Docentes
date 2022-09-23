@@ -76,7 +76,7 @@
             }
             nav ul li a{
                 color: white !important;
-                
+
             }
             .flex-center {
                 align-items: center;
@@ -93,7 +93,7 @@
 
     {{-- Body Content --}}
     @yield('body')
-    
+
     {{-- Base Scripts --}}
     @if(!config('adminlte.enabled_laravel_mix'))
         <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
@@ -151,13 +151,13 @@
             "language": {
                "url": "{{ asset('js/datatables.spanish.json') }}"
             },
-            "order": [[ 1, "asc" ]],
+            "order": [[ 0, "asc" ]],
             "info": false,
             "stateSave": true,
             "columnDefs": [
                { "orderable": false, "targets": 0 }
             ],
-            "pageLength": 100
+            "pageLength": 10
         });
     </script>
 </body>

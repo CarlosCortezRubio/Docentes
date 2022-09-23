@@ -2,45 +2,21 @@
 
 @section('title', 'Programacion')
 @section('content_header')
-   {{--   <form class="table row centrar-content">
-        <div class="col-md col-sm col-xs">
-            <label for="">Programa de Estudio</label>
-            <select class="buscar browser-default custom-select">
-                <option>Todos</option>
-                <option value="">Guitarra-Escolar(2019)</option>
-                <option value="">Violín-Escolar(2019)</option>
-                <option value="">Violonchelo-Escolar(2019)</option>
-            </select>
+<form action="{{ route('programacion') }}" method="get">
+    @csrf
+    <div class="container">
+        <div class="row">
+            @include('layouts.filter.descripcionExamen')
+            @include('layouts.filter.seccion')
+            @include('layouts.filter.modalidad')
+            @include('layouts.filter.anio')
+            @include('layouts.filter.ProgramaEstudio')
+            <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
+                <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
+            </div>
         </div>
-        <div class="col-md col-sm col-xs">
-            <label for="">Descripción</label>
-            <input type="text" class='form-control' name="" id="">
-        </div>
-        <div class="col-md col-sm col-xs">
-            <label for="espec">Modalidad</label>
-            <select class="buscar form-control" name="espec" id="espec">
-                <option value="">Todos</option>
-                <option value="2020">Virtual</option>
-                <option value="2021">Presencial</option>
-            </select>
-        </div>
-        <div class="col-md col-sm col-xs">
-            <label for="espec">Aula</label>
-            <select class="buscar form-control" name="espec" id="espec">
-                <option value="">Todos</option>
-                <option value="2020">AULA 12-A</option>
-                <option value="2021">AULA 12-B</option>
-                <option value="2021">AULA 13-A</option>
-                <option value="2021">AULA 13-B</option>
-                <option value="2021">AULA 14-A</option>
-                <option value="2021">AULA 14-B</option>
-                <option value="2021">AULA 15-A</option>
-            </select>
-        </div>
-        <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
-            <button type="submit" class="btn btn-info">Buscar</button>
-        </div>
-    </form>--}}
+    </div>
+</form>
 @stop
 @section('content')
     <div class="modal fade" id="modaladd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -134,7 +110,7 @@
                             <div class='row'>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label class="row" for="">Jurados</label>
-                                    <select class="row buscar form-control" multiple="multiple" 
+                                    <select class="row buscar form-control" multiple="multiple"
                                         name="codi_doce_per[]" id="codi_doce_per">
                                         @foreach ($docentes as $k => $doc)
                                             <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}</option>
@@ -312,18 +288,18 @@
                         </button>
                 </div>
                 <div class="modal-body">
-                    
+
                     <div class="row">
                         <div class="col-5 flex-center">
                             <h5>Postulantes Por Programar</h5>
                         </div>
                         <div class="col">
-                            
+
                         </div>
                         <div class="col-5 flex-center">
                             <h5>Postulantes Programados</h5>
                         </div>
-                    </div>    
+                    </div>
                     <div id="cargar" class="row"></div>
                 </div>
                 <div class="modal-footer centrar-content">
@@ -382,7 +358,7 @@
                     </tr>
                 </thead>
                 <tbody style='font-size:15px'>
-                    
+
                     @foreach ($programaciones as $k => $prog)
 
                         @php
@@ -398,7 +374,7 @@
                             <td>{{ $prog->minutos }} min</td>
                             <td>@if ($prog->modalidad == 'V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>
                             <td>{{ $prog->aula }}</td>
-                    
+
                     <td>
                         <form action="{{ route('programacion.alumnos.cargar') }}" id="formcargaralumno{{ $prog->id_programacion_examen }}" method="get"> @csrf<input   type="number" style="display: none" name="id_programacion_examen" value="{{ $prog->id_programacion_examen }}"></form>
                                 <button class='btn btn-primary fa fa-pencil' onclick="editar({{ "'".$prog->id_programacion_examen."',".
@@ -422,7 +398,7 @@
             </table>
         </div>
     </div>
-    
+
 @stop
 @section('js')
     <script>
@@ -453,20 +429,20 @@
             $("#nume_docu_sol").multiSelect('select', data);
             $("#modalplus").modal('show');
         }
-    
+
         function eliminar(id_programacion_examen){
             $("#id_programacion_examendel").val(id_programacion_examen);
             $("#modaldelete").modal('show');
         }
- 
+
         function formulario(id) {
             var form = $(id);
             var url = form.attr('action');
-            
+
             $.ajax({
                    type: form.attr('method'),
                    url: url,
-                   data: form.serialize(), 
+                   data: form.serialize(),
                    success: function(data){
                        //alert(data);
                         $('#cargar').html(data);

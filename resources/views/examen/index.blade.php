@@ -2,25 +2,20 @@
 @section('title','Examen')
 
 @section('content_header')
-    {{--  <form class="row centrar-content">
-        <div class="col-md col-sm-3 col-xs-3">
-            <label for="">Descripción</label>
-            <input type="text" class="form-control" name="" id="">
+<form action="{{ route('examen') }}" method="get">
+    @csrf
+    <div class="container">
+        <div class="row">
+            @include('layouts.filter.nombreexamen')
+            @include('layouts.filter.caracelim')
+            @include('layouts.filter.exajura')
+            @include('layouts.filter.seccion')
+            <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
+                <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
+            </div>
         </div>
-        <div class="col-md col-sm-3 col-xs-3">
-            <label for="espec" >Periodo</label>
-            <select class="buscar form-control" name="espec" id="espec">
-                <option value="">Todos</option>
-                <option value="2020">2020(Escolar)</option>
-                <option value="2021">2021(Escolar)</option>
-                <option value="2022">2022(Escolar)</option>
-            </select>
-        </div>
-        <div class="col-md col-sm col-xs centrar-content btn-search flex-center">
-            <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> Buscar</button>
-        </div>
-        
-    </form>--}}
+    </div>
+</form>
 @stop
 @section('content')
     <!_/////////////////////////MODALS/////////////////////////////->
@@ -35,7 +30,7 @@
                 </div>
                 <div class="modal-body">
                 <form action="{{ route('examen.insert') }}" method="POST" id='formularioadd'>
-                    @csrf   
+                    @csrf
                     <div class="form-group">
                             <div class="row ">
                                 <div class="col-md col-sm col-xs">
@@ -71,7 +66,7 @@
                                     <select class="form-control" name="id_seccion" required id="id_seccion">
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($secciones as $key => $secc)
-                                            <option  @if(getIdSeccion()==$secc->id_seccion) selected @endif value="{{ $secc->id_seccion }}">{{ $secc->abre_secc_sec }} 
+                                            <option  @if(getIdSeccion()==$secc->id_seccion) selected @endif value="{{ $secc->id_seccion }}">{{ $secc->abre_secc_sec }}
                                                 @if($secc->categoria) -{{ $secc->categoria }}  @endif</option>
                                         @endforeach
                                     </select>
@@ -79,30 +74,30 @@
                             </div>
                             <br>
                             <div class="row ">
-                                <div class="col-md col-sm col-xs"> 
+                                <div class="col-md col-sm col-xs">
                                     <label for="">Nota de Aprobación</label>
-                                    <input type="number" required id="nota_apro" min="1" name="nota_apro" class="form-control" placeholder="Ingrese Nota" />    
-                                </div>  
-                                <div class="col-md col-sm col-xs"> 
+                                    <input type="number" required id="nota_apro" min="1" name="nota_apro" class="form-control" placeholder="Ingrese Nota" />
+                                </div>
+                                <div class="col-md col-sm col-xs">
                                     <label for="">Nota Maxima</label>
-                                    <input type="number" required id="nota_maxi" min="1" name="nota_maxi" class="form-control" placeholder="Ingrese Nota" />    
+                                    <input type="number" required id="nota_maxi" min="1" name="nota_maxi" class="form-control" placeholder="Ingrese Nota" />
                                 </div>
                             </div>
                             <br>
-                           
+
                                 <div class="col-md col-sm col-xs">
                                     <div class="inputGroup">
                                         <input id="cara_elim" name="cara_elim" value="S" type="checkbox"/>
                                         <label for="cara_elim">Carac. Eliminatorio</label><br>
                                     </div>
                                 </div>
-                                <div class="col-md col-sm col-xs"> 
+                                <div class="col-md col-sm col-xs">
                                     <div class="inputGroup">
                                         <input id="flag_jura" name="flag_jura" value="S" type="checkbox"/>
                                         <label for="flag_jura">Examen por Jurado</label><br>
                                     </div>
                                 </div>
-                           
+
                         </div>
                     </form>
                 </div>
@@ -124,7 +119,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="{{ route('examen.update') }}" method="POST" id='formularioupd'>
-                    @csrf   
+                    @csrf
                         <input type="text" id="id_examen" name="id_examen" style="display: none">
                         <input type="text" id="id_examen_admision" name="id_examen_admision" style="display: none">
                         <div class="form-group">
@@ -170,13 +165,13 @@
                             </div>
                             <br>
                             <div class="row ">
-                                <div class="col-md col-sm col-xs"> 
+                                <div class="col-md col-sm col-xs">
                                     <label for="">Nota de Aprobación</label>
-                                    <input type="number" required id="nota_aproupd" min="1" name="nota_apro" class="form-control" placeholder="Ingrese Nota" />    
-                                </div>  
-                                <div class="col-md col-sm col-xs"> 
+                                    <input type="number" required id="nota_aproupd" min="1" name="nota_apro" class="form-control" placeholder="Ingrese Nota" />
+                                </div>
+                                <div class="col-md col-sm col-xs">
                                     <label for="">Nota Maxima</label>
-                                    <input type="number" required id="nota_maxiupd" min="1" name="nota_maxi" class="form-control" placeholder="Ingrese Nota" />    
+                                    <input type="number" required id="nota_maxiupd" min="1" name="nota_maxi" class="form-control" placeholder="Ingrese Nota" />
                                 </div>
                             </div>
                             <br>
@@ -186,7 +181,7 @@
                                     <label for="cara_elimupd">Carac. Eliminatorio</label><br>
                                 </div>
                             </div>
-                            <div class="col-md col-sm col-xs"> 
+                            <div class="col-md col-sm col-xs">
                                 <div class="inputGroup">
                                     <input id="flag_juraupd" name="flag_jura" value="S" type="checkbox"/>
                                     <label for="flag_juraupd">Examen por Jurado</label><br>
@@ -240,10 +235,10 @@
                         <div class='col'>
                             <div class="row">
                                 <div class="col centrar-content">
-                                    <label>Descripcion</label> 
+                                    <label>Descripcion</label>
                                 </div>
                                 <div class="col-2 centrar-content">
-                                    <label>Porcentaje</label> 
+                                    <label>Porcentaje</label>
                                 </div>
                                 <div class="col-2"></div>
                             </div>
@@ -272,7 +267,7 @@
                 <button data-toggle="modal" data-target="#modaladd" class='btn btn-success'><i class="fa fa-plus" aria-hidden="true"></i> Nuevo</button>
             </div>
         </div>
-        <div class="card-body"> 
+        <div class="card-body">
             <table class="tablaresponse table tprincipal table-striped">
                 <thead class="thead">
                     <tr>
@@ -300,7 +295,7 @@
                         <td style="color:@if ($exa->cara_elim=='S') green  @elseif ($exa->cara_elim=='N')  red  @endif">@if ($exa->cara_elim=='S') Si  @elseif ($exa->cara_elim=='N')  No  @endif    </td>
                         <td style="color:@if ($exa->flag_jura=='S') green  @elseif ($exa->flag_jura=='N')  red  @endif">@if ($exa->flag_jura=='S') Si  @elseif ($exa->flag_jura=='N')  No  @endif    </td>
                         @if (!getSeccion())
-                            <td>{{ $exa->abre_tabl_det }}</td> 
+                            <td>{{ $exa->abre_tabl_det }}</td>
                         @endif
                         <td>
                             <button class='btn btn-primary fa fa-pencil' onclick="editarexamen({{ "'".$exa->id_examen."',".
@@ -325,14 +320,10 @@
             </table>
         </div>
     </div>
-    
+
 @stop
 @section('js')
 <script>
-    $(document).ready(function() {
-         if ({{ $cargar }}==0)
-             Cargar({{ $id_examen }});
-    });
     function editarexamen(id_examen,id_examen_admision,nombre,descripcion,id_seccion,nota_apro,nota_maxi,cara_elim,flag_jura,enlace,peso) {
         $("#id_examen").val(id_examen);
         $("#id_examen_admision").val(id_examen_admision);
@@ -355,7 +346,7 @@
         }
         $("#modaledit").modal('show');
     }
-    
+
     function eliminarexamen(id_examen){
         $("#id_examendel").val(id_examen);
         $("#modaldelete").modal('show');
@@ -386,7 +377,7 @@
     function eliminar(id){
         $(id).remove();
     }
-    
+
     function editar(id,idsec){
         valor1=$(id+" div .input1 label").html();
         valor2=$(id+" div .input2 label").html();
@@ -434,17 +425,17 @@
     function formulario(id) {
         var form = $(id);
         var url = form.attr('action');
-        
+
         $.ajax({
                type: form.attr('method'),
                url: url,
-               data: form.serialize(), 
+               data: form.serialize(),
                success: function(data){
                     Cargar(data);
                     $('.multi').multiselect();
                }
              });
     }
-    
+
 </script>
 @stop

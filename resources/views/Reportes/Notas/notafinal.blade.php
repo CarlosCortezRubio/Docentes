@@ -31,8 +31,12 @@
     <div class="card">
         <div class="card-header">
             <div class='col'>
-                <button id="btnExport" onclick="exportReportToExcel(this)" class='btn btn-success'><i class="fa fa-plus"
-                        aria-hidden="true"></i> Export</button>
+                <button id="btnExport" onclick="exportReportToCSV(this)" class='btn btn-success'><i class="fa fa-file-csv"
+                        aria-hidden="true"></i> CSV</button>
+            </div>
+            <div class='col'>
+                <button id="btnExport" onclick="exportReportToExcel(this)" class='btn btn-success'><i class="fa fa-file-csv"
+                        aria-hidden="true"></i> Excel</button>
             </div>
         </div>
         <div class="card-body">
@@ -121,17 +125,20 @@
             });
         }
     </script>
-    <script>
-        TableExport(document.getElementsByTagName("table"), {
-            filename: 'excelfile',
-            sheetname: "sheet1"
-        });
-    </script>
     <script type="text/javascript">
+        function exportReportToCSV() {
+            let table = document.getElementsByTagName("table");
+            TableToExcel.convert(table[0], {
+                name: `Promedios{{ date('Y') }}.csv`,
+                sheet: {
+                    name: 'Sheet 1'
+                }
+            });
+        }
         function exportReportToExcel() {
             let table = document.getElementsByTagName("table");
             TableToExcel.convert(table[0], {
-                name: `Promedios{{ date('Y') }}.xls`,
+                name: `Promedios{{ date('Y') }}.xlsx`,
                 sheet: {
                     name: 'Sheet 1'
                 }

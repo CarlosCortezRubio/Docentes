@@ -10,15 +10,15 @@
         .full-height {
             height: 100vh;
         }
-    
+
         .flex-center {
             align-items: center;
             display: flex;
             justify-content: center;
         }
-    
-     
-    
+
+
+
         .content {
             text-align: center;
         }
@@ -43,9 +43,8 @@
                 "stateSave": true,
                 "columnDefs": [{
                     "orderable": false,
-                    "targets": 0
                 }],
-                "pageLength": 100
+                "pageLength": 10
             });
         });
     </script>
