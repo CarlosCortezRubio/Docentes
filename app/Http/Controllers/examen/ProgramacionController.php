@@ -32,22 +32,22 @@ class ProgramacionController extends Controller
 {
     public function index(Request $request)
     {
-        $secciones = DB::table('bdsig.vw_sig_seccion as sec')
-            ->join('admision.adm_seccion_estudios as asec', 'asec.codi_secc_sec', 'sec.codi_secc_sec')
-            ->select('sec.abre_secc_sec', 'asec.*')
-            ->where('asec.estado', 'A')
-            ->get();
-        $aulas = Aula::where("estado", "A")->get();
-        $examenes = Examen::join('admision.adm_examen_admision as exd', 'exd.id_examen', 'admision.adm_examen.id_examen')
-            ->join('admision.adm_seccion_estudios as asec', 'asec.id_seccion', 'exd.id_seccion')
-            ->join('bdsig.ttablas_det as t', 'asec.codi_secc_sec', 't.codi_tabl_det')
-            ->where('admision.adm_examen.estado', 'A')
-            ->where('asec.estado', 'A')
-            ->select('exd.id_examen', 'nombre', 'asec.id_seccion', 'abre_tabl_det', 'asec.codi_secc_sec');
         $cupos = Cupos::join('admision.adm_periodo as p', 'p.id_periodo', 'admision.adm_cupos.id_periodo')
-            ->join('admision.adm_seccion_estudios as asec', 'asec.id_seccion', 'p.id_seccion')
-            ->join('bdsig.vw_sig_seccion as sec', 'sec.codi_secc_sec', 'asec.codi_secc_sec')
-            ->join('bdsig.vw_sig_seccion_especialidad as esp', 'esp.codi_espe_esp', 'admision.adm_cupos.codi_espe_esp')
+            ->join(
+                'admision.adm_seccion_estudios as asec',
+                'asec.id_seccion',
+                'p.id_seccion'
+            )
+            ->join(
+                'bdsig.vw_sig_seccion as sec',
+                'sec.codi_secc_sec',
+                'asec.codi_secc_sec'
+            )
+            ->join(
+                'bdsig.vw_sig_seccion_especialidad as esp',
+                'esp.codi_espe_esp',
+                'admision.adm_cupos.codi_espe_esp'
+            )
             ->where('p.estado', 'A')
             ->where('admision.adm_cupos.estado', 'A')
             ->where('asec.estado', 'A')
@@ -64,6 +64,7 @@ class ProgramacionController extends Controller
             )->distinct();
         $docentes = Persona::where('flag_trab_per', 'S')->where('tipo_trab_per', '03001')->get();
         $programaciones = ProgramacionExamen::join('admision.adm_examen as ex', 'ex.id_examen', 'admision.adm_programacion_examen.id_examen')
+            ->join('admision.adm_examen_admision as ae', 'ae.id_examen', 'ex.id_examen')
             ->join('admision.adm_cupos as cu', 'cu.id_cupos', 'admision.adm_programacion_examen.id_cupos')
             ->join('admision.adm_aula as au', 'au.id_aula', 'admision.adm_programacion_examen.id_aula')
             ->join('bdsig.vw_sig_seccion_especialidad as esp', 'esp.codi_espe_esp', 'cu.codi_espe_esp')
@@ -95,7 +96,7 @@ class ProgramacionController extends Controller
                 'p.id_seccion'
             )->distinct();
         if ($request->desc) {
-            $programaciones = $programaciones->where('admision.adm_programacion_examen.descripcion', 'like', '%'.$request->desc.'%');
+            $programaciones = $programaciones->where('admision.adm_programacion_examen.descripcion', 'like', '%' . $request->desc . '%');
         }
         if ($request->modalidad) {
             $programaciones = $programaciones->where('modalidad', 'like', $request->modalidad);
@@ -106,22 +107,18 @@ class ProgramacionController extends Controller
         if ($request->codi_espe_esp) {
             $programaciones = $programaciones->where('esp.codi_espe_esp', 'like', $request->codi_espe_esp);
         }
-        $anioexist=DB::table('admision.adm_periodo as pe')->distinct('anio')->get();
-        $programas = DB::table('bdsig.vw_sig_seccion_especialidad');
+        if ($request->jura) {
+            $programaciones = $programaciones->where('ae.flag_jura', 'like', $request->jura);
+        }
         if (getSeccion()) {
-            $examenes = $examenes->where('asec.id_seccion', getIdSeccion())->get();
             $cupos = $cupos->where('asec.id_seccion', getIdSeccion())->get();
             $programaciones = $programaciones->where('p.id_seccion', getIdSeccion())->get();
-            $programas = $programas->where('codi_secc_sec', getCodSeccion())->get();
-
         } else if (getTipoUsuario() == 'Administrador') {
-            $examenes = $examenes->get();
             $cupos = $cupos->get();
             if ($request->seccion) {
                 $programaciones = $programaciones->where('p.id_seccion', 'like', $request->seccion);
             }
             $programaciones = $programaciones->get();
-            $programas = $programas->distinct('codi_espe_esp')->get();
         }
         $alumnos[] = [];
         $arrayalumnos[] = [];
@@ -154,15 +151,10 @@ class ProgramacionController extends Controller
             'cargaalumno' => $cargaalumno,
             'arrayalumnos' => $arrayalumnos,
             'arraydoc' => $arraydoc,
-            'secciones' => $secciones,
-            "examenes" => $examenes,
-            "aulas" => $aulas,
             "cupos" => $cupos,
             'docentes' => $docentes,
             'programaciones' => $programaciones,
             'busqueda' => $request,
-            'anioexist'=> $anioexist,
-            'programas'=> $programas
         ]);
     }
     public function insert(Request $request)
@@ -603,9 +595,6 @@ class ProgramacionController extends Controller
         $texto = $texto . "</select>
                         </form>
                         </div>";
-        //return "hola";
-
-
         return $texto;
     }
     public function delete(Request $request)

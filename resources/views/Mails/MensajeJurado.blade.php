@@ -22,7 +22,7 @@
             </tr>
         </table>
     </div>
-    <p>Podrá visualizar los cursos programados para usted haciendo clic en el siguiente enlace:</p>
+    <p>Podrá visualizar los examenes programados para usted haciendo clic en el siguiente boton:</p>
     <table class="action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation"
         style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box; margin: 10px auto; padding: 0; text-align: center; width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; -premailer-width: 100%;">
         <tbody>

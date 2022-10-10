@@ -31,7 +31,7 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/Periodos/Actualizar', 'periodo\PeriodoController@update')->name('periodo.update');
     Route::post('/Periodos/ActualizarEstado', 'periodo\PeriodoController@updateEstado')->name('periodo.update.estado');
     Route::get('/Periodos/Mensaje', 'periodo\PeriodoController@MensajeEstado')->name('periodo.mensaje');
-    Route::get('/Periodos/export', 'periodo\PeriodoController@export')->name('periodo.export');
+    Route::post('/Periodos/export', 'periodo\PeriodoController@export')->name('periodo.export');
     ///////////////////////////////////////
     ///////////////CUPOS////////////////
     Route::get('/Cupos', 'cupo\CuposController@index')->name('cupo');
@@ -68,5 +68,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/NotasFinales', 'ReporteController@notafinal')->name('notafinal');
     Route::get('/NotasConocimiento', 'ReporteController@notaconocimiento')->name('notaconocimiento');
     Route::get('/NotasRubricas', 'ReporteController@notarubrica')->name('notarubrica');
+    Route::get('/NotasGenerales', 'ReporteController@DetalleJurado')->name('DetalleJurado');
+    Route::get('/NotasJurado', 'ReporteController@CargarNotas')->name('NotasJurado.cargar');
     Route::get('/', function () { return view('home');});
 });

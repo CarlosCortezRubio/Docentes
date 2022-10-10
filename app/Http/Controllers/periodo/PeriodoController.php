@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\periodo;
 
+use App\Exports\PeridoTodosExport;
 use App\Exports\PeriodoExport;
+use App\Exports\PeriodoTodosExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use App\Model\Periodo;
@@ -25,12 +27,6 @@ class PeriodoController extends Controller
         for ($i = 0; $i < 10; $i++) {
             $anios->push(date('Y') + $i);
         }
-        $anioexist = DB::table('admision.adm_periodo as pe')->distinct('anio')->get();
-        $secciones = DB::table('bdsig.vw_sig_seccion as sec')
-            ->join('admision.adm_seccion_estudios as asec', 'asec.codi_secc_sec', 'sec.codi_secc_sec')
-            ->where('asec.estado', 'A')
-            ->select('sec.abre_secc_sec', 'asec.*')
-            ->get();
         $periodos = Periodo::join('admision.adm_seccion_estudios as asec', 'asec.id_seccion', 'admision.adm_periodo.id_seccion')
             ->join('bdsig.vw_sig_seccion as sec', 'sec.codi_secc_sec', 'asec.codi_secc_sec')
             ->where('admision.adm_periodo.estado', '<>', 'E')
@@ -51,9 +47,7 @@ class PeriodoController extends Controller
         }
         return view('periodo.index', [
             'periodos' => $periodos,
-            'secciones' => $secciones,
             'anios' => $anios,
-            'anioexist' => $anioexist,
             'busqueda' => $request
         ]);
     }
@@ -150,9 +144,19 @@ class PeriodoController extends Controller
 
     public function export(Request $request)
     {
-        //$type = $request->type;
-        //return 'Periodos'.date('Ymmdd').'.xlsx';
-        return Excel::download(new PeriodoExport($request), 'Periodos'.date('Ymmdd').'.csv');
+        $seccion = null;
+        if (getSeccion()) {
+            $seccion = getIdSeccion();
+        }else if(isset($request->seccion)){
+            $seccion = $request->seccion;
+        }
+        if(isset($request->anio) && $seccion && isset($request->estado)){
+            return Excel::download(new PeriodoExport($request->anio, $request->seccion,$request->estado), 'Periodos'.date('Ymmdd').'.'.$request->tipo);
+
+        }else{
+            return Excel::download(new PeridoTodosExport, 'Periodos'.date('Ymmdd').'.'.$request->tipo);
+        }
+
     }
 
 }

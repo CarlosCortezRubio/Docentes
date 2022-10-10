@@ -54,7 +54,7 @@
 
             {{-- Default Tab --}}
             @if(! empty(config('adminlte.iframe.default_tab.url')))
-                <li class="nav-item active" role="presentation">
+                <li class="nav-item active hola" role="presentation">
                     <a id="tab-default" class="nav-link active" data-toggle="row" href="#panel-default"
                        role="tab" aria-controls="panel-default" aria-selected="true">
                         {{-- TODO: How to translate the configured title? --}}

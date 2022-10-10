@@ -1,3 +1,6 @@
+@php
+    $programas=getProgramas();
+@endphp
 <div class=" col-md col-sm col-xs">
     <label for="codi_espe_esp">Programa de Estudio</label>
     <select name="codi_espe_esp" id="especialidadsearch" class="buscar browser-default custom-select">

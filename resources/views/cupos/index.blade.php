@@ -1,14 +1,17 @@
 @extends('adminlte::page')
 @section('title', 'Cupos')
-
+@php
+$programas = getProgramas();
+$periodos = getPeriodos();
+@endphp
 @section('content_header')
     <form action="{{ route('cupo') }}" method="get">
         @csrf
         <div class="container">
             <div class="row">
-               @include('layouts.filter.ProgramaEstudio')
-               @include('layouts.filter.anio')
-               @include('layouts.filter.seccion')
+                @include('layouts.filter.ProgramaEstudio')
+                @include('layouts.filter.anio')
+                @include('layouts.filter.seccion')
                 <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
                     <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
                 </div>
@@ -100,8 +103,7 @@
                                         id="codi_espe_esp_edit">
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($programas as $k => $prog)
-                                            <option value="{{ $prog->codi_espe_esp }}">{{ $prog->abre_espe_esp }}
-                                            </option>
+                                            <option value="{{ $prog->codi_espe_esp }}">{{ $prog->abre_espe_esp }}</option>
                                         @endforeach
                                     </select>
                                 </div>

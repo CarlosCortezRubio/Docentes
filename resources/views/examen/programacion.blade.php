@@ -2,21 +2,32 @@
 
 @section('title', 'Programacion')
 @section('content_header')
-<form action="{{ route('programacion') }}" method="get">
-    @csrf
-    <div class="container">
-        <div class="row">
-            @include('layouts.filter.descripcionExamen')
-            @include('layouts.filter.seccion')
-            @include('layouts.filter.modalidad')
-            @include('layouts.filter.anio')
-            @include('layouts.filter.ProgramaEstudio')
-            <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
-                <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
+    @php
+        $aulas = getAulas();
+        $examenes = getExamenes();
+    @endphp
+    <form action="{{ route('programacion') }}" method="get">
+        @csrf
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        @include('layouts.filter.descripcionExamen')
+                        @include('layouts.filter.seccion')
+                        @include('layouts.filter.modalidad')
+                    </div>
+                    <div class="row">
+                        @include('layouts.filter.anio')
+                        @include('layouts.filter.ProgramaEstudio')
+                        @include('layouts.filter.exajura')
+                    </div>
+                </div>
+                <div class="col-2 centrar-content flex-center btn-search">
+                    <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
+                </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
 @stop
 @section('content')
     <div class="modal fade" id="modaladd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -74,7 +85,9 @@
                                     <select class="form-control" name="id_prog_requ" id="id_prog_requ">
                                         <option value="">Ninguno</option>
                                         @foreach ($programaciones as $k => $prog)
-                                            <option value="{{ $prog->id_programacion_examen }}">{{ $prog->examen.' - '.$prog->abre_espe_esp . '(' . $prog->abre_secc_sec . ')' }}</option>
+                                            <option value="{{ $prog->id_programacion_examen }}">
+                                                {{ $prog->examen . ' - ' . $prog->abre_espe_esp . '(' . $prog->abre_secc_sec . ')' }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -99,8 +112,13 @@
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($cupos as $k => $cu)
                                             <option value="{{ $cu->id_cupos }}">
-                                                {{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}
-                                                @if($cu->categoria) - {{ $cu->categoria }} @endif ) @endif</option>
+                                                {{ $cu->abre_espe_esp }}@if (is_admin())
+                                                    ({{ $cu->abre_secc_sec }}
+                                                    @if ($cu->categoria)
+                                                        - {{ $cu->categoria }}
+                                                    @endif )
+                                                @endif
+                                            </option>
                                             </option>
                                         @endforeach
                                     </select>
@@ -110,11 +128,10 @@
                             <div class='row'>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label class="row" for="">Jurados</label>
-                                    <select class="row buscar form-control" multiple="multiple"
-                                        name="codi_doce_per[]" id="codi_doce_per">
+                                    <select class="row buscar form-control" multiple="multiple" name="codi_doce_per[]"
+                                        id="codi_doce_per">
                                         @foreach ($docentes as $k => $doc)
                                             <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}</option>
-                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -125,13 +142,13 @@
                                 <div class="row">
                                     <div class="col-1"></div>
                                     <div class="col">
-                                        <input class="col-1" type="radio" id="modalidadV" value="V"
-                                        required  name="modalidad" />
+                                        <input class="col-1" type="radio" id="modalidadV" value="V" required
+                                            name="modalidad" />
                                         <label class="col-3 control control--radio" for="modalidadV">Virtual</label>
                                     </div>
                                     <div class="col">
-                                        <input class="col-1" type="radio" id="modalidadP" value="P"
-                                           required name="modalidad" />
+                                        <input class="col-1" type="radio" id="modalidadP" value="P" required
+                                            name="modalidad" />
                                         <label class="col-3 control control--radio" for="modalidadP">Presencial</label>
                                     </div>
                                 </div>
@@ -147,8 +164,7 @@
         </div>
     </div>
     <!---------------------------------------------------------------------------------------------------->
-    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-        aria-hidden="true">
+    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary">
@@ -160,13 +176,14 @@
                 <div class="modal-body">
                     <form action="{{ route('programacion.update') }}" method="POST" id='formularioupd'>
                         @csrf
-                        <input type="text" id="id_programacion_examen" name="id_programacion_examen" style="display: none">
+                        <input type="text" id="id_programacion_examen" name="id_programacion_examen"
+                            style="display: none">
                         <div class="form-group">
                             <div class="row ">
                                 <div class="col-md col-sm col-xs">
                                     <label for="descripcion">Descripcion</label>
-                                    <input type="text" required class="form-control" id="descripcionupd" name="descripcion"
-                                        placeholder="Ingrese descripcion" />
+                                    <input type="text" required class="form-control" id="descripcionupd"
+                                        name="descripcion" placeholder="Ingrese descripcion" />
                                 </div>
                             </div>
                             <br>
@@ -204,7 +221,9 @@
                                     <select class="form-control" name="id_prog_requ" id="id_prog_requupd">
                                         <option value="">Ninguno</option>
                                         @foreach ($programaciones as $k => $prog)
-                                            <option value="{{ $prog->id_programacion_examen }}">{{ $prog->examen.' - '.$prog->abre_espe_esp . '(' . $prog->abre_secc_sec . ')' }}</option>
+                                            <option value="{{ $prog->id_programacion_examen }}">
+                                                {{ $prog->examen . ' - ' . $prog->abre_espe_esp . '(' . $prog->abre_secc_sec . ')' }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -229,8 +248,13 @@
                                         <option value="">---- Seleccione -----</option>
                                         @foreach ($cupos as $k => $cu)
                                             <option value="{{ $cu->id_cupos }}">
-                                                {{ $cu->abre_espe_esp }}@if (is_admin()) ({{ $cu->abre_secc_sec }}
-                                                @if($cu->categoria) - {{ $cu->categoria }} @endif ) @endif</option>
+                                                {{ $cu->abre_espe_esp }}@if (is_admin())
+                                                    ({{ $cu->abre_secc_sec }}
+                                                    @if ($cu->categoria)
+                                                        - {{ $cu->categoria }}
+                                                    @endif )
+                                                @endif
+                                            </option>
                                             </option>
                                         @endforeach
                                     </select>
@@ -240,8 +264,8 @@
                             <div class='row'>
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <label class="row" for="">Jurados</label>
-                                    <select class="row buscar form-control" multiple="multiple"
-                                        name="codi_doce_per[]" id="codi_doce_perupd">
+                                    <select class="row buscar form-control" multiple="multiple" name="codi_doce_per[]"
+                                        id="codi_doce_perupd">
                                         @foreach ($docentes as $k => $doc)
                                             <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}
                                             </option>
@@ -278,14 +302,15 @@
         </div>
     </div>
     <!---------------------------------------------------------------------------------------------------->
-    <div class="modal fade show" id="modalplus" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade show" id="modalplus" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-dark">
                     <h5 class="modal-title">Programar Postulantes</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
 
@@ -303,25 +328,27 @@
                     <div id="cargar" class="row"></div>
                 </div>
                 <div class="modal-footer centrar-content">
-                    <button type="button" class="btn btn-danger"  data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
     <!---------------------------------------------------------------------------------------------------->
-    <div class="modal fade" id="modaldelete" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade" id="modaldelete" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger">
                     <h5 class="modal-title">Eliminar</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <form action="{{ route('programacion.delete') }}" method="post" id="formdelete">
                         @csrf
-                        <input type="text" id="id_programacion_examendel" name="id_programacion_examen" style="display: none">
+                        <input type="text" id="id_programacion_examendel" name="id_programacion_examen"
+                            style="display: none">
                     </form>
                     <p>¿Desea eliminar esta Programaciòn?</p>
                 </div>
@@ -360,9 +387,8 @@
                 <tbody style='font-size:15px'>
 
                     @foreach ($programaciones as $k => $prog)
-
                         @php
-                            $fecha=str_replace(" ","T",$prog->fecha_resol)
+                            $fecha = str_replace(' ', 'T', $prog->fecha_resol);
                         @endphp
                         <tr>
                             <th scope="row">{{ $k + 1 }}</th>
@@ -372,25 +398,57 @@
                             <td>{{ $prog->abre_secc_sec }}</td>
                             <td>{{ $prog->fecha_resol }}</td>
                             <td>{{ $prog->minutos }} min</td>
-                            <td>@if ($prog->modalidad == 'V') Virtual @elseif ($prog->modalidad=='P') Presencial @endif</td>
+                            <td>
+                                @if ($prog->modalidad == 'V')
+                                    Virtual
+                                @elseif ($prog->modalidad == 'P')
+                                    Presencial
+                                @endif
+                            </td>
                             <td>{{ $prog->aula }}</td>
 
-                    <td>
-                        <form action="{{ route('programacion.alumnos.cargar') }}" id="formcargaralumno{{ $prog->id_programacion_examen }}" method="get"> @csrf<input   type="number" style="display: none" name="id_programacion_examen" value="{{ $prog->id_programacion_examen }}"></form>
-                                <button class='btn btn-primary fa fa-pencil' onclick="editar({{ "'".$prog->id_programacion_examen."',".
-                                                                                                "'".$prog->descripcion."',".
-                                                                                                "'".$fecha."',".
-                                                                                                "'".$prog->minutos."',".
-                                                                                                "'".$prog->modalidad."',".
-                                                                                                "'".$prog->id_examen."',".
-                                                                                                "'".$prog->id_cupos."',".
-                                                                                                "'".$prog->id_aula."',".
-                                                                                                "'".$prog->id_prog_requ."',".
-                                                                                                "['".implode("','",$arraydoc[$prog->id_programacion_examen])."']" }});" aria-hidden="true"></button>
-                                <button class='btn btn-danger fa fa-trash' onclick="eliminar({{ $prog->id_programacion_examen }});" aria-hidden="true"></button>
-                                <button class='btn btn-success fa fa-plus-circle' onclick="formulario('#formcargaralumno{{ $prog->id_programacion_examen }}');" aria-hidden="true"></button>
-                                                                                                            {{--AgregarAlumnos({{ "'".$prog->id_programacion_examen."',".
-                                                                                                            "['".implode("','",$arrayalumnos[$prog->id_programacion_examen])."']" }});--}}
+                            <td>
+                                <form action="{{ route('programacion.alumnos.cargar') }}"
+                                    id="formcargaralumno{{ $prog->id_programacion_examen }}" method="get"> @csrf<input
+                                        type="number" style="display: none" name="id_programacion_examen"
+                                        value="{{ $prog->id_programacion_examen }}"></form>
+                                <button class='btn btn-primary fa fa-pencil'
+                                    onclick="editar({{ "'" .
+                                        $prog->id_programacion_examen .
+                                        "'," .
+                                        "'" .
+                                        $prog->descripcion .
+                                        "'," .
+                                        "'" .
+                                        $fecha .
+                                        "'," .
+                                        "'" .
+                                        $prog->minutos .
+                                        "'," .
+                                        "'" .
+                                        $prog->modalidad .
+                                        "'," .
+                                        "'" .
+                                        $prog->id_examen .
+                                        "'," .
+                                        "'" .
+                                        $prog->id_cupos .
+                                        "'," .
+                                        "'" .
+                                        $prog->id_aula .
+                                        "'," .
+                                        "'" .
+                                        $prog->id_prog_requ .
+                                        "'," .
+                                        "['" .
+                                        implode("','", $arraydoc[$prog->id_programacion_examen]) .
+                                        "']" }});"
+                                    aria-hidden="true"></button>
+                                <button class='btn btn-danger fa fa-trash'
+                                    onclick="eliminar({{ $prog->id_programacion_examen }});" aria-hidden="true"></button>
+                                <button class='btn btn-success fa fa-plus-circle'
+                                    onclick="formulario('#formcargaralumno{{ $prog->id_programacion_examen }}');"
+                                    aria-hidden="true"></button>
                             </td>
                         </tr>
                     @endforeach
@@ -402,8 +460,8 @@
 @stop
 @section('js')
     <script>
-
-        function editar(id,descripcion,fecha_resol,minutos,modalidad,id_examen,id_cupos,id_aula,id_prog_requ,docentes) {
+        function editar(id, descripcion, fecha_resol, minutos, modalidad, id_examen, id_cupos, id_aula, id_prog_requ,
+            docentes) {
             $("#id_programacion_examen").val(id);
             $("#descripcionupd").val(descripcion);
             $("#fecha_resolupd").val(fecha_resol);
@@ -413,24 +471,24 @@
             $("#id_aulaupd").val(id_aula);
             $("#codi_doce_perupd").val(docentes).trigger('change');
             $("#id_prog_requupd").val(id_prog_requ);
-            if(modalidad=='V'){
-                $("#modalidadVupd").attr('checked',true);
-                $("#modalidadPupd").attr('checked',false);
+            if (modalidad == 'V') {
+                $("#modalidadVupd").attr('checked', true);
+                $("#modalidadPupd").attr('checked', false);
 
-            }else if(modalidad=='P'){
-                $("#modalidadPupd").attr('checked',true);
-                $("#modalidadVupd").attr('checked',false);
+            } else if (modalidad == 'P') {
+                $("#modalidadPupd").attr('checked', true);
+                $("#modalidadVupd").attr('checked', false);
             }
             $("#modaledit").modal('show');
         }
 
-        function AgregarAlumnos(id,data){
+        function AgregarAlumnos(id, data) {
             $("#id_programacion_examenA").val(id);
             $("#nume_docu_sol").multiSelect('select', data);
             $("#modalplus").modal('show');
         }
 
-        function eliminar(id_programacion_examen){
+        function eliminar(id_programacion_examen) {
             $("#id_programacion_examendel").val(id_programacion_examen);
             $("#modaldelete").modal('show');
         }
@@ -440,15 +498,15 @@
             var url = form.attr('action');
 
             $.ajax({
-                   type: form.attr('method'),
-                   url: url,
-                   data: form.serialize(),
-                   success: function(data){
-                       //alert(data);
-                        $('#cargar').html(data);
-                        $("#modalplus").modal('show');
-                    }
-                 });
+                type: form.attr('method'),
+                url: url,
+                data: form.serialize(),
+                success: function(data) {
+                    //alert(data);
+                    $('#cargar').html(data);
+                    $("#modalplus").modal('show');
+                }
+            });
         }
     </script>
 @stop

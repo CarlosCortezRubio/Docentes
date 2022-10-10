@@ -1,7 +1,7 @@
 <?php
 
-        
- 
+
+
     return [
 
     /*
@@ -130,7 +130,7 @@
     'classes_content_header' => '',
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-success elevation-4',
-    'classes_sidebar_nav' => '',
+    'classes_sidebar_nav' => 'sidebar-dark-success',
     'classes_topnav' => 'navbar-primary navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
@@ -256,24 +256,24 @@
             'route' => 'programacion',
             'icon' => 'fa-fw fas fa-chalkboard-teacher',
             'can' => 'Administrador'
-        ],    
+        ],
         [
             'text' => 'Registro de Evaluaciones',
             'route'  => 'evaluacion',
             'icon' => 'fas fa-fw fa-check',
             'can' => 'Jurado'
         ],
-        [   
+        [
             'text'    => 'Reportes',
             'icon'    => 'fa-fw fas fa-table',
             'can' => 'Administrador',
             'submenu' => [
                 [
-                    'text' => 'Notas Finales',
+                    'text' => 'Notas Generales',
                     'can' => 'Administrador',
                     'route'  => 'notafinal',
                 ],
-                [
+                /*[
                     'text' => 'Notas por rubrica',
                     'can' => 'Administrador',
                     'route'  => 'notarubrica',
@@ -283,6 +283,14 @@
                     'can' => 'Administrador',
                     'route'  => 'notaconocimiento',
                 ]
+                ,*/
+                [
+                    'text' => 'Detalle de Notas por Jurado',
+                    'can' => 'Administrador',
+                    'route'  => 'DetalleJurado',
+                    'shift' => 'color-black',
+                ]
+
             ]
         ]
     ]
@@ -517,7 +525,7 @@
                 ],
             ],
         ],
-        
+
         'datepicker' => [
             'active' => false,
             'files' => [

@@ -3,26 +3,28 @@
 namespace App\Exports;
 
 use App\Model\Periodo;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class PeriodoExport implements FromQuery
+
+class PeridoTodosExport implements FromCollection,WithHeadings,WithMapping
+
 {
     /**
-     * @return \Illuminate\Support\Collection
-     */
-    use Exportable;
-
-
-    public function __construct($anio, $seccion, $estado)
+    * @return \Illuminate\Support\Collection
+    */
+    public function collection()
     {
-        $this->anio=$anio;
-        $this->seccion=$seccion;
-        $this->estado=$estado;
+        //if (getSeccion()) {
+        //    return Periodo::where('',getIdSeccion())->get();
+
+        //}else{
+            return Periodo::all();
+        //}
     }
 
-    /*public function headings(): array
+    public function headings(): array
     {
         return [
             'id_periodo',
@@ -54,15 +56,5 @@ class PeriodoExport implements FromQuery
             $perido->user_actu,
             $perido->id_seccion,
         ];
-    }*/
-
-    public function query()
-    {
-        $periodos = Periodo::query()->where('estado', '<>', 'E');
-        $periodos = $periodos->where('anio', 'like', $this->anio);
-        $periodos = $periodos->where('estado', 'like', $this->estado);
-        $periodos = $periodos->where('id_seccion', 'like', $this->seccion);
-        return $periodos;
     }
-
 }

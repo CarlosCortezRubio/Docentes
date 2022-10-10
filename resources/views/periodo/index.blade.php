@@ -1,6 +1,8 @@
 @extends('adminlte::page')
 @section('title', 'Periodos')
-
+@php
+$secciones = getSecciones();
+@endphp
 @section('content_header')
     <form action="{{ route('periodo') }}" method="get">
         @csrf
@@ -108,8 +110,7 @@
         </div>
     </div>
     <!-------------------------------------------------------------->
-    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-        aria-hidden="true">
+    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary">
@@ -259,14 +260,27 @@
                 <button data-toggle="modal" data-target="#modaladd" class='btn btn-success'><i class="fa fa-plus"
                         aria-hidden="true"></i> Nuevo</button>
             </div>
-            <div class='col'>
-                <a href='{{ route('periodo.export', ['type'=>'.xlsx']) }}' class='btn btn-success'><i class="fa fa-file-excel"
-                        aria-hidden="true"></i> Export</a>
+            {{-- <div class='col'>
+                <form action="{{ route('periodo.export', ['_token'=> csrf_token(),
+                                                          'anio'=>$busqueda->anio,
+                                                          'seccion'=>$busqueda->seccion,
+                                                          'estado'=>$busqueda->estado,
+                                                          'tipo'=> 'xlsx']) }}" method="post">
+                                                        <button class='btn btn-success'><i class="fa fa-file-excel"
+                                                            aria-hidden="true"></i> Export</button>
+                                                        </form>
             </div>
             <div class='col'>
-                <a href="{{ route('periodo.export', $busqueda ) }}" class='btn btn-success'><i class="fa fa-file-csv"
-                        aria-hidden="true"></i> Export</a>
-            </div>
+                <form action="{{ route('periodo.export', ['_token'=> csrf_token(),
+                                                          'anio'=>$busqueda->anio,
+                                                          'seccion'=>$busqueda->seccion,
+                                                          'estado'=>$busqueda->estado,
+                                                          'tipo'=> 'csv']) }}" method="post">
+                                                        <button class='btn btn-success'><i class="fa fa-file-csv"
+                                                            aria-hidden="true"></i> Export</button>
+                                                        </form>
+            </div> --}}
+
         </div>
         <div class="card-body">
             <table class="tablaresponse table tprincipal table-striped">
@@ -286,7 +300,6 @@
                 <tbody>
                     @foreach ($periodos as $key => $per)
                         @php
-
                             $peri_insc_inic = substr($per->peri_insc_inic, 0, strpos($per->peri_insc_inic, ' '));
                             $peri_insc_fin = substr($per->peri_insc_fin, 0, strpos($per->peri_insc_fin, ' '));
                             $peri_eval_inic = substr($per->peri_eval_inic, 0, strpos($per->peri_eval_inic, ' '));
@@ -375,6 +388,32 @@
                     $('#mensajeCambio').html(data);
                     $("#modalActivado").modal('show');
                     $("#id_periodo_act").val(id_periodo);
+                }
+            });
+        }
+
+        function exportar(tipo) {
+            $.ajax({
+                type: "POST",
+                url: '{{ route('periodo.export') }}',
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'anio': "{{ $busqueda->anio }}",
+                    'seccion': "{{ $busqueda->seccion }}",
+                    'estado': "{{ $busqueda->estado }}",
+                    'tipo': tipo
+
+                },
+                success: function(data) {
+                    return data;
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Your work has been saved',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+
                 }
             });
         }

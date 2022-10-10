@@ -59,7 +59,7 @@ class User extends Authenticatable
                                 ->select('id_tipo_usuario','codi_secc_sec')->first();
         $secc= DB::table('bdsig.vw_sig_seccion as sec')->where('sec.codi_secc_sec',$user_det->codi_secc_sec)->first();
         $tipo=TipoUsuario::where('id_tipo_usuario',$user_det->id_tipo_usuario)->first()->descripcion;
-        
+
         if($tipo){
             $desc=$tipo;
             if($secc){

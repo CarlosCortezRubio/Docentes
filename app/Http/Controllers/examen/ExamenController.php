@@ -26,11 +26,6 @@ class ExamenController extends Controller
 
     public function index(Request $request)
     {
-        $secciones = DB::table('bdsig.vw_sig_seccion as sec')
-            ->join('admision.adm_seccion_estudios as asec', 'asec.codi_secc_sec', 'sec.codi_secc_sec')
-            ->select('sec.abre_secc_sec', 'asec.*')
-            ->where('asec.estado', 'A')
-            ->get();
         $examenes = Examen::join('admision.adm_examen_admision as exd', 'exd.id_examen', 'admision.adm_examen.id_examen')
             ->join('admision.adm_seccion_estudios as asec', 'asec.id_seccion', 'exd.id_seccion')
             ->join('bdsig.ttablas_det as t', 'asec.codi_secc_sec', 't.codi_tabl_det')
@@ -44,7 +39,7 @@ class ExamenController extends Controller
             $examenes = $examenes->where('exd.flag_jura', 'like', $request->jura);
         }
         if ($request->nombre) {
-            $examenes = $examenes->where('admision.adm_examen.nombre', 'like', '%'.$request->nombre.'%');
+            $examenes = $examenes->where('admision.adm_examen.nombre', 'like', '%' . $request->nombre . '%');
         }
         if (getSeccion()) {
             $examenes = $examenes->where('asec.id_seccion', getIdSeccion())->get();
@@ -54,18 +49,8 @@ class ExamenController extends Controller
             }
             $examenes = $examenes->get();
         }
-        $ids = [];
-        foreach ($examenes as $k => $exa) {
-            $ids[$k] = $exa->id_examen;
-        }
-        $secexamen = SeccionExamen::whereIn('id_examen', $ids)
-            ->where('estado', 'A')
-            ->get();
         return view('examen.index', [
-            "secciones" => $secciones,
             "examenes" => $examenes,
-            "secexamen" => $secexamen,
-            "cargar" => true,
             'busqueda' => $request
         ]);
     }
@@ -144,7 +129,6 @@ class ExamenController extends Controller
 
             $examendet->id_seccion = $request->id_seccion;
             $examendet->update();
-
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
