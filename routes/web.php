@@ -55,9 +55,12 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/Evaluacion/Evaluar', 'evaluacion\EvaluacionController@Evaluar')->name('evaluacion.evaluar');
     Route::get('/Evaluacion/Abstener', 'evaluacion\EvaluacionController@Abstener')->name('evaluacion.abstener');
     Route::get('/Evaluacion/Cargar', 'evaluacion\EvaluacionController@Cargar')->name('evaluacion.cargar');
+    Route::post('/Evaluacion/generatePDF', 'evaluacion\EvaluacionController@generatePDF')->name('evaluacion.generatePDF');
     /////////////////////////////////////
     Route::get('/Programacion', 'examen\ProgramacionController@index')->name('programacion');
     Route::post('/Programacion/Nuevo', 'examen\ProgramacionController@insert')->name('programacion.insert');
+    Route::post('/Programacion/NuevoTeorico', 'examen\ProgramacionController@insertExamenTeorico')->name('programacion.insertTeorico');
+
     Route::post('/Programacion/Actualizar', 'examen\ProgramacionController@update')->name('programacion.update');
     //Route::post('/Programacion/AgregarAlumnos', 'examen\ProgramacionController@addAlumno')->name('programacion.alumnos');
     Route::get('/Programacion/CargarAlumnos', 'examen\ProgramacionController@CargarAlumnos')->name('programacion.alumnos.cargar');
@@ -65,10 +68,19 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/Programacion/AlumnoEliminar', 'examen\ProgramacionController@Eliminar')->name('programacion.alumnos.eliminar');
     Route::post('/Programacion/Eliminar', 'examen\ProgramacionController@delete')->name('programacion.delete');
     ///////////////////////////////////////
-    Route::get('/NotasFinales', 'ReporteController@notafinal')->name('notafinal');
-    Route::get('/NotasConocimiento', 'ReporteController@notaconocimiento')->name('notaconocimiento');
-    Route::get('/NotasRubricas', 'ReporteController@notarubrica')->name('notarubrica');
-    Route::get('/NotasGenerales', 'ReporteController@DetalleJurado')->name('DetalleJurado');
-    Route::get('/NotasJurado', 'ReporteController@CargarNotas')->name('NotasJurado.cargar');
+    Route::get('/NotasGenerales', 'ReporteController@NotasGenerales')->name('NotasGenerales');
+    Route::get('/CargarGenerales', 'ReporteController@CargarNotasGenerales')->name('NotasGenerales.cargar');
+    Route::get('/DetalleJurado', 'ReporteController@DetalleJurado')->name('DetalleJurado');
+    Route::get('/NotasJurado', 'ReporteController@CargarNotasJurado')->name('NotasJurado.cargar');
+    //////////////////////////////////////////
+    Route::get('/SoporteExamen', 'Soporte\ExamenController@index')->name('examensoporte');
+    Route::get('/SoporteExamen/cargarJurados', 'Soporte\ExamenController@cargarExamenJurado')->name('examensoporte.cargarJurados');
+    Route::get('/SoporteExamen/cargarTeoria', 'Soporte\ExamenController@cargarExamenTeorico')->name('examensoporte.cargarTeoria');
+    Route::get('/SoporteExamen/cargarAudio', 'Soporte\ExamenController@cargarExamenAudio')->name('examensoporte.cargarAudio');
+
+    Route::get('/SoporteExamen/ReiniciarNotas', 'Soporte\ExamenController@ReiniciarNotas')->name('reiniciar.notas');
+    Route::get('/SoporteExamen/ReiniciarExamen', 'Soporte\ExamenController@ReiniciarExamen')->name('reiniciar.examen');
+    Route::get('/SoporteExamen/ReiniciarAudio', 'Soporte\ExamenController@ReiniciarAudio')->name('reiniciar.audio');
+
     Route::get('/', function () { return view('home');});
 });

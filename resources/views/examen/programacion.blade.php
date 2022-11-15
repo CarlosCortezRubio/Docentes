@@ -1,5 +1,4 @@
 @extends('adminlte::page')
-
 @section('title', 'Programacion')
 @section('content_header')
     @php
@@ -30,7 +29,148 @@
     </form>
 @stop
 @section('content')
-    <div class="modal fade" id="modaladd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade" id="modaladdteorico" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title">Registrar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('programacion.insertTeorico') }}" method="POST" id='formularioaddteorico'>
+                        @csrf
+                        <div class="form-group">
+                            <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="fecha_resol">Fecha de Resoluciòn</label>
+                                    <input type="datetime-local" required class="form-control" id="fecha_resol"
+                                        name="fecha_resol" placeholder="Ingrese Fecha" />
+                                </div>
+
+                                <div class="col-md col-sm col-xs">
+                                    <label for="">Aula</label>
+                                    <select class="form-control" required name="id_aula" id="id_aula">
+                                        <option value="">---- Seleccione -----</option>
+                                        @foreach ($aulas as $k => $aul)
+                                            <option value="{{ $aul->id_aula }}">{{ $aul->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md col-sm col-xs">
+                                    <label class="row" for="">Modalidad</label>
+                                    <div class="row">
+                                        <div class="col-1"></div>
+                                        <div class="col">
+                                            <input class="col-1" type="radio" id="modalidadV" value="V" required
+                                                name="modalidad" />
+                                            <label class="col-3 control control--radio" for="modalidadV">Virtual</label>
+                                        </div>
+                                        <div class="col">
+                                            <input class="col-1" type="radio" id="modalidadP" value="P" required
+                                                name="modalidad" />
+                                            <label class="col-3 control control--radio" for="modalidadP">Presencial</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md col-sm col-xs">
+                                    <label class="row" for="">Programa de Estudio</label>
+                                    <select class="row buscar form-control" multiple="multiple" required name="id_cupos[]" id="id_cupos">
+                                        @foreach ($cupos as $k => $cu)
+                                            <option value="{{ $cu->id_cupos }}">
+                                                {{ $cu->abre_espe_esp }}@if (is_admin())
+                                                    ({{ $cu->abre_secc_sec }}
+                                                    @if ($cu->categoria)
+                                                        - {{ $cu->categoria }}
+                                                    @endif )
+                                                @endif
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <table class="table table-light">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Descripcion</th>
+                                            <th>Examen</th>
+                                            <th>Minutos</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaexamenadd">
+                                        <tr id="r1">
+                                            <td>1</td>
+                                            <td>
+                                                <input type="text" required class="form-control" name="descripcion[]"
+                                                    placeholder="Ingrese descripcion" />
+                                            </td>
+                                            <td>
+                                                <select class="form-control" required name="id_examen[]">
+                                                    <option value="">---- Seleccione -----</option>
+                                                    @foreach ($examenes as $k => $exa)
+                                                        <option value="{{ $exa->id_examen }}">{{ $exa->nombre }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="number" required class="form-control" name="minutos[]"
+                                                    placeholder="Ingrese Minutos de Resoluciòn" />
+                                            </td>
+                                            <td style="text-align: center"><a class="btn btn-danger"
+                                                    onclick="eliminarelemento('#r1')" type="button"><i class="fa fa-trash"
+                                                        aria-hidden="true"></i></a></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" style="text-align: center"><a class="btn btn-success"
+                                                    onclick="agregarexamen('#tablaexamenadd')">+</a></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            {{-- <div class="row ">
+                                <div class="col-md col-sm col-xs">
+                                    <label for="minutos">Minutos</label>
+                                    <input type="number" required class="form-control" id="minutos" name="minutos"
+                                        placeholder="Ingrese Minutos de Resoluciòn" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Examen</label>
+                                    <select class="form-control" required name="id_examen" id="id_examen">
+                                        <option value="">---- Seleccione -----</option>
+                                        @foreach ($examenes as $k => $exa)
+                                            <option value="{{ $exa->id_examen }}">{{ $exa->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div> --}}
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer centrar-content">
+                    <button type="submit" class="btn btn-success" form="formularioaddteorico">Guardar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------------------------------------------------------------------------------------------------->
+    <div class="modal fade" id="modaladd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success">
@@ -46,8 +186,8 @@
                             <div class="row ">
                                 <div class="col-md col-sm col-xs">
                                     <label for="descripcion">Descripcion</label>
-                                    <input type="text" required class="form-control" id="descripcion" name="descripcion"
-                                        placeholder="Ingrese descripcion" />
+                                    <input type="text" required class="form-control" id="descripcion"
+                                        name="descripcion" placeholder="Ingrese descripcion" />
                                 </div>
                             </div>
                             <br>
@@ -164,7 +304,8 @@
         </div>
     </div>
     <!---------------------------------------------------------------------------------------------------->
-    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary">
@@ -364,7 +505,11 @@
         <div class="card-header">
             <div class='col'>
                 <button data-toggle="modal" data-target="#modaladd" class='btn btn-success'><i class="fa fa-plus"
-                        aria-hidden="true"></i> Nuevo</button>
+                        aria-hidden="true"></i> Nuevo jurado</button>
+            </div>
+            <div class='col'>
+                <button data-toggle="modal" data-target="#modaladdteorico" class='btn btn-success'><i class="fa fa-plus"
+                        aria-hidden="true"></i> Nuevo Teorico</button>
             </div>
         </div>
         <div class="card-body">
@@ -460,6 +605,8 @@
 @stop
 @section('js')
     <script>
+        count = 1;
+
         function editar(id, descripcion, fecha_resol, minutos, modalidad, id_examen, id_cupos, id_aula, id_prog_requ,
             docentes) {
             $("#id_programacion_examen").val(id);
@@ -491,6 +638,23 @@
         function eliminar(id_programacion_examen) {
             $("#id_programacion_examendel").val(id_programacion_examen);
             $("#modaldelete").modal('show');
+        }
+
+        function agregarexamen(id) {
+            count++;
+            htmlexa = "<tr id='r" + count + "'><td>" + count +
+                "</td><td><input type='text' required class='form-control' name='descripcion[]' placeholder='Ingrese descripcion' /></td><td><select class='form-control' required name='id_examen[]' ><option value=''>---- Seleccione -----</option>";
+            @foreach ($examenes as $k => $exa)
+                htmlexa = htmlexa + "<option value='{{ $exa->id_examen }}'>{{ $exa->nombre }}</option>";
+            @endforeach
+            htmlexa = htmlexa +
+                "</select></td><td><input type='number' required class='form-control' name='minutos[]' placeholder='Ingrese Minutos de Resoluciòn' /></td><td style='text-align: center'><a class='btn btn-danger' onclick='eliminarelemento(" +
+                '"#r' + count + '"' + ")' type='button'><i class='fa fa-trash' aria-hidden='true'></i></a></td></tr>";
+            $(id).append(htmlexa)
+        }
+
+        function eliminarelemento(id) {
+            $(id).remove();
         }
 
         function formulario(id) {

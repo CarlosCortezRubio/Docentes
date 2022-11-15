@@ -9,57 +9,126 @@ use JeroenNoten\LaravelAdminLte\Components\Form\Select;
 
 class ReporteController extends Controller
 {
-    public function notafinal()
+    public function NotasGenerales(Request $request)
     {
-        $reporte = DB::table('admision.adm_postulante', 'ap')
-            ->join('admision.adm_programacion_examen as pr', 'pr.id_programacion_examen', 'ap.id_programacion_examen')
-            ->join('admision.adm_examen as e', 'e.id_examen', 'pr.id_examen')
-            ->join('admision.adm_examen_admision as ea', 'ea.id_examen', 'e.id_examen')
-            ->join('bdsig.persona as p', 'p.nume_docu_per', 'ap.nume_docu_sol')
-            ->join('bdsigunm.ad_postulacion as po', 'po.nume_docu_per', 'ap.nume_docu_sol')
-            ->join('bdsig.ttablas_det as tt', 'tt.codi_tabl_det', 'po.codi_espe_esp')
-            ->join('bdsigunm.ad_proceso as pro', 'po.codi_proc_adm', 'pro.codi_proc_adm')
-            ->whereIn('ap.estado', ['E', 'P'])
-            ->where('pro.esta_proc_adm', 'V')
-            ->where('po.esta_post_pos', 'V');
-
-        $especialidad = $reporte->select('tt.abre_tabl_det as  especialidad', DB::raw('count(tt.abre_tabl_det)'))
-            ->groupBy('tt.abre_tabl_det')
-            ->get();
-        $postulantes = $reporte->select(
-            'p.nomb_comp_per as nombre',
-            DB::raw('count(p.nomb_comp_per)'),
-            DB::raw('ROUND(sum(ap.nota*(ea.peso/100)),2) as final')
-        )
-            ->groupBy('p.nomb_comp_per')
-            ->get();
-        $reporte = $reporte->select(
-            'tt.abre_tabl_det as  especialidad',
-            'p.nomb_comp_per as nombre',
-            'pr.descripcion as examen',
-            'ap.nota as nota',
-            'ea.peso'
-        )
-            ->orderByDesc('tt.abre_tabl_det', 'p.nomb_comp_per', 'pr.descripcion', 'ap.nota')
-            ->groupBy("pr.descripcion", 'ap.nota', 'ea.peso')->get();
-
-        return view('Reportes.Notas.notafinal', ["reporte" => $reporte, "especialidad" => $especialidad, "postulantes" => $postulantes]);
+        return view('Reportes.NotasGenerales', ['busqueda' => $request]);
     }
-    public function notarubrica()
+    public function CargarNotasGenerales(Request $request)
     {
-        $reporte = Nota::all();
-        return view('Reportes.Notas.notarubrica', ["reporte" => $reporte]);
-    }
-    public function notaconocimiento()
-    {
-        $reporte = Nota::all();
-        return view('Reportes.Notas.notaconocimiento', ["reporte" => $reporte]);
+        $nivelmaximo = DB::table('admision.adm_nivelevaluacion', 'nv')
+            ->where('nv.id_seccion', $request->seccion)
+            ->select(DB::raw('max(nv.nivel)'))->get();
+        $resultado = '';
+        $eval = [];
+        if (count($nivelmaximo) > 0) {
+            $maxnivel = $nivelmaximo[0]->max;
+            for ($index = 1; $index <= $maxnivel; $index++) {
+                $niveles = DB::table('admision.adm_nivelevaluacion', 'nv')->where('nv.nivel', $index)
+                    ->where('nv.id_seccion', $request->seccion)
+                    ->orderBy('nv.id_up_nivel')
+                    ->orderBy('nv.id_nivel')->get();
+                if ($index == 1) {
+                    $resultado = "<thead class='thead'><tr>
+                      <th scope='col' rowspan='$maxnivel'>Nº</th>
+                      <th scope='col' rowspan='$maxnivel'>APELLIDOS Y NOMBRES</th>
+                      <th scope='col' rowspan='$maxnivel'>ESPECIALIDAD</th>";
+                }
+                foreach ($niveles as $nivelk => $nivelv) {
+                    $subnivel = DB::table('admision.adm_nivelevaluacion', 'nv')->where('nv.id_up_nivel', $nivelv->id_nivel)->get();
+                    if (count($subnivel) > 0) {
+                        $resultado = $resultado . "<th scope='col' colspan='" . count($subnivel) . "'>$nivelv->descripcion $nivelv->porcentaje%</th>
+                                             <th scope='col' rowspan='" . ($maxnivel - ($index - 1)) . "'>Promedio $nivelv->descripcion</th>";
+                    } else {
+                        $resultado = $resultado . "<th scope='col' rowspan='" . ($maxnivel - ($index - 1)) . "'>$nivelv->descripcion $nivelv->porcentaje%</th>";
+                        $eval[] = $nivelv;
+                        if (isset($niveles[$nivelk + 1])) {
+                            if ($nivelv->id_up_nivel != $niveles[$nivelk + 1]->id_up_nivel) {
+                                $evalindex = DB::table('admision.adm_nivelevaluacion', 'nv')->where('nv.id_nivel', $nivelv->id_up_nivel)->get();
+                                foreach ($evalindex as $evalindexk => $evalindexv) {
+                                    $eval[] = $evalindexv;
+                                }
+                            }
+                        } else {
+                            $evalindex = DB::table('admision.adm_nivelevaluacion', 'nv')->where('nv.id_nivel', $nivelv->id_up_nivel)->get();
+                            foreach ($evalindex as $evalindexk => $evalindexv) {
+                                $eval[] = $evalindexv;
+                            }
+                        }
+                    }
+                }
+                if ($index == 1) {
+                    $resultado = $resultado . "<th scope='col' rowspan='$maxnivel'>Promedio 100%</th></tr>";
+                } else {
+                    $resultado = $resultado . "</tr>";
+                }
+            }
+            $resultado = $resultado . "</thead><tbody>";
+
+            $alumnos = DB::table('admision.adm_programacion_examen', 'pr')
+                ->join('admision.adm_cupos as cu', 'pr.id_cupos', 'cu.id_cupos')
+                ->join('admision.adm_periodo as per', 'per.id_periodo', 'cu.id_periodo')
+                ->join('admision.adm_postulante as pos', 'pos.id_programacion_examen', 'pr.id_programacion_examen')
+                ->join('bdsig.persona as pe', 'pe.nume_docu_per', 'pos.nume_docu_sol')
+                ->join('bdsig.ttablas_det as t', 'cu.codi_espe_esp', 't.codi_tabl_det')
+                ->whereIn('pos.estado', ['E', 'P', 'I'])
+                ->where('pr.estado', 'A')
+                ->where('cu.estado', 'A')
+                ->where('per.anio', $request->anio)
+                ->where('per.id_seccion', 'like', $request->seccion)
+                ->select(
+                    'pe.nomb_comp_per',
+                    't.abre_tabl_det',
+                    'pos.nume_docu_sol'
+                )->distinct()->orderBy('t.abre_tabl_det')->get();
+            foreach ($alumnos as $alumnok => $alumnov) {
+                $resultado = $resultado . " <tr>
+                                                <td>" . ($alumnok + 1) . "</td>
+                                                <td>$alumnov->nomb_comp_per</td>
+                                                <td>$alumnov->abre_tabl_det</td>";
+                $promedio=0;
+                $subpromedio = 0;
+                foreach ($eval as $evalk => $evalv) {
+                    $nota = DB::table('admision.adm_examen_admision', 'ea')
+                        ->join('admision.adm_programacion_examen as pr', 'pr.id_examen', 'ea.id_examen')
+                        ->join('admision.adm_cupos as cu', 'pr.id_cupos', 'cu.id_cupos')
+                        ->join('admision.adm_periodo as per', 'per.id_periodo', 'cu.id_periodo')
+                        ->join('admision.adm_postulante as po', 'po.id_programacion_examen', 'pr.id_programacion_examen')
+                        ->whereIn('po.estado', ['E', 'P'])
+                        ->where('pr.estado', 'A')
+                        ->where('cu.estado', 'A')
+                        ->where('po.nume_docu_sol', $alumnov->nume_docu_sol)
+                        ->where('ea.id_nivel', $evalv->id_nivel)
+                        ->where('per.anio', $request->anio)
+                        ->where('per.id_seccion', 'like', $request->seccion)
+                        ->select('po.nota')
+                        ->first();
+                    if (isset($nota)) {
+                        $resultado = $resultado . "<td>$nota->nota</td>";
+                        $subpromedio = $subpromedio + ($nota->nota * ($evalv->porcentaje * 0.01));
+                        $promedio = $promedio + ($nota->nota * ($evalv->porcentaje * 0.01));
+                    } else {
+                        $subnivel = DB::table('admision.adm_nivelevaluacion', 'nv')->where('nv.id_up_nivel', $evalv->id_nivel)->get();
+                        if (count($subnivel) > 0) {
+                            $resultado = $resultado . "<td>" . number_format($subpromedio, 2) . "</td>";
+                            $subpromedio = 0;
+                        } else {
+                            $resultado = $resultado . "<td></td>";
+                            $subpromedio = $subpromedio + (0 * ($evalv->porcentaje * 0.01));
+                        }
+                    }
+                }
+                $resultado = $resultado . "<td>" . number_format($promedio, 2) . "</td>";
+                $resultado = $resultado . "</tr>";
+            }
+            $resultado = $resultado . "</tbody>";
+        }
+        return $resultado;
     }
     public function DetalleJurado(Request $request)
     {
         return view('Reportes.DetalleJurado', ['busqueda' => $request]);
     }
-    public function CargarNotas(Request $request)
+    public function CargarNotasJurado(Request $request)
     {
         $examenes = DB::table('admision.adm_examen', 'ex')
             ->select(
@@ -75,9 +144,9 @@ class ReporteController extends Controller
             ->where('ex.estado', 'A')
             ->where('pr.estado', 'A')
             ->where('cu.estado', 'A')
-            ->where('per.id_seccion','like' ,$request->seccion)
+            ->where('per.id_seccion', 'like', $request->seccion)
             ->where('per.anio', $request->anio)
-            ->where('ex.id_examen','like', $request->examen)
+            ->where('ex.id_examen', 'like', $request->examen)
             ->orderBy('ex.nombre')->get();
 
         $resultado = "";
@@ -95,7 +164,7 @@ class ReporteController extends Controller
                 ->where('ex.estado', 'A')
                 ->where('pr.estado', 'A')
                 ->where('cu.estado', 'A')
-                ->where('per.id_seccion','like', $request->seccion)
+                ->where('per.id_seccion', 'like', $request->seccion)
                 ->where('per.anio', $request->anio)
                 ->where('pr.id_programacion_examen', $vexamen->id_programacion_examen)
                 ->orderBy('pe.nomb_comp_per')
@@ -116,7 +185,7 @@ class ReporteController extends Controller
                 ->where('ea.flag_jura', 'S')
                 ->where('ex.estado', 'A')
                 ->where('par.estado', 'A')
-                ->where('par.id_examen','like', $vexamen->id_examen)
+                ->where('par.id_examen', 'like', $vexamen->id_examen)
                 ->orderBy('par.descripcion')->get();
             $indexal = DB::table('admision.adm_examen', 'ex')
                 ->join('admision.adm_examen_admision as ea', 'ea.id_examen', 'ex.id_examen')
@@ -125,13 +194,13 @@ class ReporteController extends Controller
                 ->join('admision.adm_periodo as per', 'per.id_periodo', 'cu.id_periodo')
                 ->join('admision.adm_postulante as pos', 'pos.id_programacion_examen', 'pr.id_programacion_examen')
                 ->join('bdsig.persona as pe', 'pe.nume_docu_per', 'pos.nume_docu_sol')
-                ->whereIn('pos.estado', ['E', 'P'])
+                ->whereIn('pos.estado', ['E', 'P', 'I'])
                 ->where('ea.flag_jura', 'S')
                 ->where('ex.estado', 'A')
                 ->where('pr.estado', 'A')
                 ->where('cu.estado', 'A')
                 ->where('per.anio', $request->anio)
-                ->where('per.id_seccion','like', $request->seccion)
+                ->where('per.id_seccion', 'like', $request->seccion)
                 ->where('pr.id_programacion_examen', $vexamen->id_programacion_examen)
                 ->select(
                     'pe.nomb_comp_per',
@@ -162,10 +231,10 @@ class ReporteController extends Controller
                             ->join('admision.adm_nota_jurado as no', 'no.id_seccion_examen', 'par.id_seccion_examen')
                             ->join('admision.adm_jurado_postulante as jp', 'no.id_jurado_postulante', 'jp.id_jurado_postulante')
                             //->whereIn('no.estado', ['E', 'A'])
-                            //->where('jp.estado', 'A')
+                            ->whereIn('jp.estado', ['N', 'A'])
                             //->where('ea.flag_jura', 'S')
                             //->where('ex.estado', 'A')
-                            ->where('ea.id_seccion', 'like',$request->seccion)
+                            ->where('ea.id_seccion', 'like', $request->seccion)
                             ->where('par.id_seccion_examen', $vparametro->id_seccion_examen)
                             ->where('jp.id_jurado', $vjurado->id_jurado)
                             ->where('jp.id_postulante', $valumno->id_postulante)
@@ -187,8 +256,8 @@ class ReporteController extends Controller
             }
             $resultado = $resultado . "</tbody>";
         }
-        if ($resultado=="") {
-            $resultado="<center>Datos no encontrados</center>";
+        if ($resultado == "") {
+            $resultado = "<center>Datos no encontrados</center>";
         }
         return $resultado;
     }

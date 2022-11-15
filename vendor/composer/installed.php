@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '61769d6069467063e5701f3d496b3526c243d8ea',
+    'reference' => '0594bd05a7a77afb3db51eef2ac7ab0f837a32bd',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -28,6 +28,15 @@
       array (
       ),
       'reference' => '9cb795bf30988e8c96dd3c40623c48a877bc6714',
+    ),
+    'barryvdh/laravel-dompdf' => 
+    array (
+      'pretty_version' => 'v2.0.0',
+      'version' => '2.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1d47648c6cef37f715ecb8bcc5f5a656ad372e27',
     ),
     'brick/math' => 
     array (
@@ -78,6 +87,15 @@
       array (
       ),
       'reference' => 'e864bbf5904cb8f5bb334f99209b48018522f042',
+    ),
+    'dompdf/dompdf' => 
+    array (
+      'pretty_version' => 'v2.0.1',
+      'version' => '2.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c5310df0e22c758c85ea5288175fc6cd777bc085',
     ),
     'dragonmantank/cron-expression' => 
     array (
@@ -440,7 +458,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '61769d6069467063e5701f3d496b3526c243d8ea',
+      'reference' => '0594bd05a7a77afb3db51eef2ac7ab0f837a32bd',
     ),
     'laravel/tinker' => 
     array (
@@ -522,6 +540,15 @@
       array (
       ),
       'reference' => 'c66aefcafb4f6c269510e9ac46b82619a904c576',
+    ),
+    'masterminds/html5' => 
+    array (
+      'pretty_version' => '2.7.6',
+      'version' => '2.7.6.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '897eb517a343a2281f11bc5556d6548db7d93947',
     ),
     'mockery/mockery' => 
     array (
@@ -616,6 +643,24 @@
       array (
       ),
       'reference' => 'bae7c545bef187884426f042434e561ab1ddb182',
+    ),
+    'phenx/php-font-lib' => 
+    array (
+      'pretty_version' => '0.5.4',
+      'version' => '0.5.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'dd448ad1ce34c63d09baccd05415e361300c35b4',
+    ),
+    'phenx/php-svg-lib' => 
+    array (
+      'pretty_version' => '0.5.0',
+      'version' => '0.5.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '76876c6cf3080bcb6f249d7d59705108166a6685',
     ),
     'phpdocumentor/reflection-common' => 
     array (
@@ -873,6 +918,15 @@
       array (
         0 => '4.2.3',
       ),
+    ),
+    'sabberworm/php-css-parser' => 
+    array (
+      'pretty_version' => '8.4.0',
+      'version' => '8.4.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e41d2140031d533348b2192a83f02d8dd8a71d30',
     ),
     'scrivo/highlight.php' => 
     array (

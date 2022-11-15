@@ -10,6 +10,7 @@ use App\Model\JuradoPostulante;
 use App\Model\Nota;
 use App\Model\Persona;
 use App\Model\Postulante;
+use PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -277,7 +278,8 @@ class EvaluacionController extends Controller
                 'ad.nume_docu_per',
                 'ad.nomb_pers_per',
                 'ad.apel_pate_per',
-                'ad.apel_mate_per'
+                'ad.apel_mate_per',
+                'ad.codi_post_pos'
             )->distinct()->get();
         $jurado = DB::table('admision.adm_jurado as jr')
             ->join('bdsig.persona as pe', 'pe.codi_pers_per', 'jr.codi_doce_per')
@@ -300,7 +302,8 @@ class EvaluacionController extends Controller
           <div class='col-12'>
             <div class='table-responsive'>
         <table class='table'><thead><tr>
-                    <th scope='col'>Alumno</th>";
+                    <th scope='col'>Alumno</th>
+                    <th scope='col'>Ficha</th>";
         foreach ($parametros as $key => $par) {
             $contenido = $contenido . "<th scope='col'>" . $par->descripcion . "</th>";
         }
@@ -336,7 +339,18 @@ class EvaluacionController extends Controller
                 }
             }
 
-            $contenido = $contenido . "</form></td>";
+            $contenido = $contenido . "</form></td>
+            <td>
+                <form id='ficha$pos->codi_post_pos' action='" . route('evaluacion.generatePDF') . "' method='POST' target='_blank' style='display: none;'>
+                    <input type='hidden' name='_token' value='".csrf_token()."'>
+                    <input type='hidden' name='codi_post_pos' value='$pos->codi_post_pos'>
+                </form>
+                <button class='btn btn-outline-primary' type='button' onclick='event.preventDefault();
+                    document.getElementById(".'"ficha'.$pos->codi_post_pos.'"'.").submit();'>
+                    <i class='fas fa-file-pdf'></i>
+                    <span class='d-none d-sm-inline-block pl-1'>Ver ficha</span>
+                </button>
+            </td>";
 
             foreach ($parametros as $key => $par) {
 
@@ -379,5 +393,96 @@ class EvaluacionController extends Controller
         }
         $contenido = $contenido . "</tbody></table></div></div></div></div>";
         return $contenido;
+    }
+
+    public function getUbigeo($ubigeo)
+    {
+        if (!(empty($ubigeo) || is_null($ubigeo))) {
+            $data = DB::table('bdsig.ubigeo as di')
+                      ->join('bdsig.ubigeo as dp', 'dp.codi_ubic_ubg', '=', DB::raw('substr(di.codi_ubic_ubg,1,2)'))
+                      ->join('bdsig.ubigeo as pr', 'pr.codi_ubic_ubg', '=', DB::raw('substr(di.codi_ubic_ubg,1,4)'))
+                      ->select('di.codi_ubic_ubg as codi_ubic_ubg','dp.abre_ubic_ubg as nomb_depa_ubg','pr.abre_ubic_ubg as nomb_prov_ubg','di.abre_ubic_ubg as nomb_dist_ubg')
+                      ->where('di.codi_ubic_ubg','LIKE',$ubigeo ? $ubigeo : '')
+                      ->where(DB::raw('length(di.codi_ubic_ubg)'),'=','6')
+                      ->orderBy('di.codi_ubic_ubg','asc')
+                      ->get();
+
+            if ($ubigeo!='%') {
+                $data = $data->first();
+            }
+
+            return ($data);
+
+        } else {
+            return ('');
+        }
+    }
+
+    public function generatePDF(Request $request)
+    {
+        if ($request) {
+            $id = $request->get('codi_post_pos');
+
+            $ficha = DB::table('bdsigunm.ad_postulacion AS a')
+                ->join('bdsig.ttablas_det AS b', 'b.codi_tabl_det', 'a.codi_espe_esp')
+                ->join('bdsig.ttablas_det AS c', 'c.codi_tabl_det', 'a.codi_secc_sec')
+                ->join('bdsig.ttablas_det AS d', 'd.codi_tabl_det', 'a.codi_pais_per')
+                ->join('bdsig.ttablas_det AS t', 't.codi_tabl_det', 'a.tipo_docu_per')
+                ->join('bdsigunm.ad_proceso AS e', 'e.codi_proc_adm', 'a.codi_proc_adm')
+                ->join('bdsig.sg_usuario_externo AS u', function ($join) {
+                    $join->on('u.tdocumento', '=', 'a.tipo_docu_per')
+                        ->on('u.ndocumento', '=', 'a.nume_docu_per');
+                })
+                ->where('a.codi_post_pos', '=', $id)
+                ->where('b.codi_tabl_tab', '=', '04')
+                ->where('c.codi_tabl_tab', '=', '05')
+                ->where('d.codi_tabl_tab', '=', '15')
+                ->where('t.codi_tabl_tab', '=', '01')
+                ->select(
+                    'a.*',
+                    'b.desc_tabl_det AS especialidad',
+                    'c.desc_tabl_det AS seccion',
+                    'd.desc_tabl_det AS pais',
+                    'e.nume_proc_adm AS proceso',
+                    't.abre_tabl_det AS abre_tipo_doc',
+                    'u.email',
+                    DB::raw("TO_CHAR(a.fech_naci_per, 'dd/mm/yyyy') AS fech_naci_pos"),
+                    DB::raw("DECODE(a.codi_secc_sec, '05001', 'S', '05002', 'P', 'E')||substr(e.nume_proc_adm, 3)||trim(to_char(a.nume_expe_pos, '0000')) AS nume_expe_exp")
+                )
+                ->first();
+            $profesor = '';
+            $especialidad_estudio = '';
+            if ($ficha->tipo_prep_pos == 'C') {
+                $especialidad_estudio = DB::table('bdsig.ttablas_det')->where('codi_tabl_det', $ficha->codi_espe_adm)->first()->desc_tabl_det;
+                $profesor = DB::table('bdsig.persona')->where('codi_pers_per', $ficha->codi_doce_adm)->first()->nomb_comp_per;
+            }
+
+            $repertorio = DB::table('bdsigunm.ad_repertorio')
+                ->where('codi_post_pos', '=', $id)
+                ->get();
+
+            $trabajos = DB::table('bdsigunm.ad_trabajo')
+                ->where('codi_post_pos', '=', $id)
+                ->get();
+
+            $ubigeoDom = $this->getUbigeo($ficha->ubig_domi_per);
+
+            $pdf = PDF::loadView(
+                'evaluacion.Ficha.ficha',
+                [
+                    'especialidad_estudio' => $especialidad_estudio,
+                    'profesor' => $profesor,
+                    "ficha"      => $ficha,
+                    "repertorio" => $repertorio,
+                    "trabajos"   => $trabajos,
+                    "ubigeoDom"  => $ubigeoDom
+                ]
+            );
+
+            $filename = 'fichainscripcion_' . $ficha->nume_expe_exp . '.pdf';
+            $pdf->setPaper('a4', 'portrait');
+
+            return $pdf->stream($filename);
+        }
     }
 }

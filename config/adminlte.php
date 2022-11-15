@@ -271,7 +271,7 @@
                 [
                     'text' => 'Notas Generales',
                     'can' => 'Administrador',
-                    'route'  => 'notafinal',
+                    'route'  => 'NotasGenerales',
                 ],
                 /*[
                     'text' => 'Notas por rubrica',
@@ -288,9 +288,20 @@
                     'text' => 'Detalle de Notas por Jurado',
                     'can' => 'Administrador',
                     'route'  => 'DetalleJurado',
-                    'shift' => 'color-black',
                 ]
 
+            ]
+        ],
+        [
+            'text'    => 'Soporte',
+            'icon'    => 'fa-fw fas fa-hammer',
+            'can' => 'Administrador',
+            'submenu' => [
+                [
+                    'text' => 'Administrar Exámenes',
+                    'can' => 'Administrador',
+                    'route'  => 'examensoporte',
+                ]
             ]
         ]
     ]

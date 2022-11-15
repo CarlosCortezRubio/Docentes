@@ -12,6 +12,7 @@ class Cupos extends Model
     protected $fillable = [
         'cant_cupo',
         'observacion',
+        'id_periodo',
         'created_at',
         'updated_at',
         'estado',

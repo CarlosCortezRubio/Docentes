@@ -120,8 +120,8 @@ class ProgramacionController extends Controller
             }
             $programaciones = $programaciones->get();
         }
-        $alumnos[] = [];
-        $arrayalumnos[] = [];
+        //$alumnos[] = [];
+        //$arrayalumnos[] = [];
         $arraydoc[] = [];
         foreach ($programaciones as $key => $pro) {
             $doc = DB::table('admision.adm_jurado')->where('id_programacion_examen', $pro->id_programacion_examen)->where('estado', 'A')->get();
@@ -129,27 +129,27 @@ class ProgramacionController extends Controller
             foreach ($doc as $key => $v) {
                 $arraydoc[$pro->id_programacion_examen][] = $v->codi_doce_per;
             }
-            $alm = DB::table('admision.adm_postulante')->where('id_programacion_examen', $pro->id_programacion_examen)->where('estado', 'A')->get();
-            $arrayalumnos[$pro->id_programacion_examen] = [];
-            foreach ($alm as $key => $v) {
-                $arrayalumnos[$pro->id_programacion_examen][] = $v->nume_docu_sol;
-            }
-            $cargaalumno = DB::table('bdsigunm.ad_postulacion')->where('codi_espe_esp', $pro->codi_espe_esp)
-                ->where('esta_post_pos', 'V')
-                ->whereYear('fech_regi_aud', $pro->anio)->get();
-            $alumnos[$pro->id_programacion_examen] = "[";
-            foreach ($cargaalumno as $key => $v) {
-                $alumnos[$pro->id_programacion_examen] = $alumnos[$pro->id_programacion_examen] . "{documento:'$v->nume_docu_per',nombre:'$v->nomb_pers_per $v->apel_pate_per $v->apel_mate_per'},";
-            }
-            $alumnos[$pro->id_programacion_examen] = $alumnos[$pro->id_programacion_examen] . "]";
+            //$alm = DB::table('admision.adm_postulante')->where('id_programacion_examen', $pro->id_programacion_examen)->where('estado', 'A')->get();
+            //$arrayalumnos[$pro->id_programacion_examen] = [];
+            //foreach ($alm as $key => $v) {
+            //    $arrayalumnos[$pro->id_programacion_examen][] = $v->nume_docu_sol;
+            //}
+            //$cargaalumno = DB::table('bdsigunm.ad_postulacion')->where('codi_espe_esp', $pro->codi_espe_esp)
+            //    ->where('esta_post_pos', 'V')
+            //    ->whereYear('fech_regi_aud', $pro->anio)->get();
+            //$alumnos[$pro->id_programacion_examen] = "[";
+            //foreach ($cargaalumno as $key => $v) {
+            //    $alumnos[$pro->id_programacion_examen] = $alumnos[$pro->id_programacion_examen] . "{documento:'$v->nume_docu_per',nombre:'$v->nomb_pers_per $v->apel_pate_per $v->apel_mate_per'},";
+            //}
+            //$alumnos[$pro->id_programacion_examen] = $alumnos[$pro->id_programacion_examen] . "]";
             //return $alumnos[$pro->id_programacion_examen];
         }
         ///////////////////////////////////
-        $cargaalumno = DB::table('bdsigunm.ad_postulacion')->where('esta_post_pos', 'V')->select('nomb_pers_per', 'apel_pate_per', 'apel_mate_per', 'nume_docu_per')->get();
+        //$cargaalumno = DB::table('bdsigunm.ad_postulacion')->where('esta_post_pos', 'V')->select('nomb_pers_per', 'apel_pate_per', 'apel_mate_per', 'nume_docu_per')->get();
         ///////////////////////////////////
         return view('examen.programacion', [
-            'cargaalumno' => $cargaalumno,
-            'arrayalumnos' => $arrayalumnos,
+            //'cargaalumno' => $cargaalumno,
+            //'arrayalumnos' => $arrayalumnos,
             'arraydoc' => $arraydoc,
             "cupos" => $cupos,
             'docentes' => $docentes,
@@ -157,7 +157,7 @@ class ProgramacionController extends Controller
             'busqueda' => $request,
         ]);
     }
-    public function insert(Request $request)
+    public function insertexamen(Request $request)
     {
         $program = new ProgramacionExamen();
         $cupo = Cupos::find($request->id_cupos);
@@ -210,15 +210,25 @@ class ProgramacionController extends Controller
                     $docente->save();
                 }
             }
-            DB::commit();
+            return $program->id_programacion_examen;
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            //dd($e);
+            return null;
             //return redirect()->back()
             //->with('no_success', $e->getMessage());
         }
-        return redirect()->back()
+    }
+    public function insert(Request $request)
+    {
+        $valid = $this->insertexamen($request);
+        if (is_null($valid) ) {
+            return redirect()->back()
+            ->with('no_success', 'Configuración guardada con éxito.');
+        }else{
+            return redirect()->back()
             ->with('success', 'Configuración guardada con éxito.');
+        }
     }
     public function update(Request $request)
     {
@@ -448,7 +458,7 @@ class ProgramacionController extends Controller
                         ->where('estado', 'P');
                     if ($postulante->count() != 0) {
                         $postulante = $postulante->first();
-                        $postulante->estado = 'I';
+                        $postulante->estado = 'N';
                         $postulante->update();
                     }
                 }
@@ -546,7 +556,7 @@ class ProgramacionController extends Controller
             ->where('codi_secc_sec', $program->codi_secc_sec)
             ->where('id_programacion_examen', $program->id_programacion_examen)
             ->where('esta_post_pos', 'V')
-            ->where('estado', 'P')
+            ->whereIn('estado', ['P', 'E'])
             ->where('pr.esta_proc_adm', 'V')
             ->select(
                 'pos.nume_docu_per',
@@ -618,5 +628,33 @@ class ProgramacionController extends Controller
         }
         return redirect()->back()
             ->with('success', 'Configuración guardada con éxito.');
+    }
+
+    public function insertExamenTeorico(Request $request)
+    {
+
+        foreach ($request->id_cupos as $id_cuposk => $id_cuposv) {
+            $valid=null;
+            foreach ($request->id_examen as $id_examenk => $id_examenv) {
+                $index = $request->except(['id_examen', 'minutos', 'descripcion', 'id_cupos']);
+                $index["id_examen"] = $id_examenv;
+                $index["minutos"] = $request["minutos"][$id_examenk];
+                $index["descripcion"] = $request["descripcion"][$id_examenk];
+                $index["id_cupos"] = $id_cuposv;
+                $index["id_prog_requ"] = $valid;
+                //$index->merge(['id_examen' => $value,'minutos' => $request->minutos[$key]]);
+                //return new Request($index);
+                return $this->insertexamen($request);
+            }
+        }
+        if (is_null($valid) ) {
+            return redirect()->back()
+            ->with('no_success', 'Configuración guardada con éxito.');
+        }else{
+            DB::commit();
+            return redirect()->back()
+            ->with('success', 'Configuración guardada con éxito.');
+        }
+        //return $request;
     }
 }
