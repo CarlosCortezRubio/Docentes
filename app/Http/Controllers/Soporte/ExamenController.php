@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Soporte;
 
 use App\Http\Controllers\Controller;
 use App\Model\Examen\Audio;
-use App\Model\Examen\ProgramacionExamen;
 use App\Model\ExamenPostulante;
 use App\Model\Nota;
 use App\Model\Postulante;

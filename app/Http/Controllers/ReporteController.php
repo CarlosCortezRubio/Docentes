@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Nota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use JeroenNoten\LaravelAdminLte\Components\Form\Select;
 
 class ReporteController extends Controller
 {

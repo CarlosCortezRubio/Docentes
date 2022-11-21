@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PeriodoController extends Controller
 {
@@ -68,6 +69,7 @@ class PeriodoController extends Controller
             $periodo->save();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -91,6 +93,7 @@ class PeriodoController extends Controller
             $periodo->update();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -122,6 +125,7 @@ class PeriodoController extends Controller
             $periodo->update();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');

@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CuposController extends Controller
 {
@@ -64,6 +65,7 @@ class CuposController extends Controller
             $cupo->save();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -84,6 +86,7 @@ class CuposController extends Controller
             $cupo->update();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -101,6 +104,7 @@ class CuposController extends Controller
             $cupo->update();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');

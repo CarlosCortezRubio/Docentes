@@ -4,12 +4,10 @@ namespace App\Http\Controllers\examen;
 
 use App\Http\Controllers\Controller;
 use App\Mail\EmailJurado;
-use App\Model\Aula;
 use App\Model\Comentario;
 use App\Model\Cupos;
 use App\Model\DetalleUsuario;
 use App\Model\Examen\DetalleExamen;
-use App\Model\Examen\Examen;
 use App\Model\Examen\ProgramacionExamen;
 use App\Model\Examen\SeccionExamen;
 use App\Model\ExamenPostulante;
@@ -26,7 +24,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+
+use function PHPSTORM_META\type;
 
 class ProgramacionController extends Controller
 {
@@ -120,8 +121,7 @@ class ProgramacionController extends Controller
             }
             $programaciones = $programaciones->get();
         }
-        //$alumnos[] = [];
-        //$arrayalumnos[] = [];
+        $examenesteoricos = getExamenesTeoricos();
         $arraydoc[] = [];
         foreach ($programaciones as $key => $pro) {
             $doc = DB::table('admision.adm_jurado')->where('id_programacion_examen', $pro->id_programacion_examen)->where('estado', 'A')->get();
@@ -155,6 +155,7 @@ class ProgramacionController extends Controller
             'docentes' => $docentes,
             'programaciones' => $programaciones,
             'busqueda' => $request,
+            'examenesteoricos' => $examenesteoricos
         ]);
     }
     public function insertexamen(Request $request)
@@ -210,8 +211,10 @@ class ProgramacionController extends Controller
                     $docente->save();
                 }
             }
+            DB::commit();
             return $program->id_programacion_examen;
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             //dd($e);
             return null;
@@ -222,12 +225,14 @@ class ProgramacionController extends Controller
     public function insert(Request $request)
     {
         $valid = $this->insertexamen($request);
-        if (is_null($valid) ) {
+        if (is_null($valid)) {
             return redirect()->back()
-            ->with('no_success', 'Configuración guardada con éxito.');
-        }else{
+                ->with('no_success', 'Ocurrió un error inesperado.');
+        } else if (is_int($valid)) {
             return redirect()->back()
-            ->with('success', 'Configuración guardada con éxito.');
+                ->with('success', 'Configuración guardada con éxito.');
+        } else {
+            return redirect()->back();
         }
     }
     public function update(Request $request)
@@ -349,6 +354,7 @@ class ProgramacionController extends Controller
             $program->update();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -369,80 +375,102 @@ class ProgramacionController extends Controller
     {
         $secciones = SeccionExamen::where('id_examen', $request->id_examen)->where('estado', 'A')->get();
         $detalle = DetalleExamen::where('id_examen', $request->id_examen)->first();
-        $programa = ProgramacionExamen::find($request->id_programacion_examen);
         $docentes = Jurado::where('id_programacion_examen', $request->id_programacion_examen)->where('estado', 'A')->get();
+        $programas[] = $request->id_programacion_examen;
+        $progup = $request->id_programacion_examen;
+        $progdown = $request->id_programacion_examen;
         try {
-            DB::beginTransaction();
-            if ($request->nume_docu_sol) {
-                foreach ($request->nume_docu_sol as $key => $nume) {
-                    $postulante = Postulante::where('id_programacion_examen', $request->id_programacion_examen)
-                        ->where('nume_docu_sol', $nume);
-                    if ($postulante->count() == 0) {
-                        $postulante = new Postulante();
-                        $postulante->id_programacion_examen = $request->id_programacion_examen;
-                        $postulante->nume_docu_sol = $nume;
-                        $postulante->nota = 0;
-                        $postulante->estado = 'P';
-                        $postulante->save();
-                    } else {
-                        $postulante = $postulante->first();
-                        $postulante->estado = 'P';
-                        $postulante->update();
-                    }
-                    if ($detalle->flag_jura == 'N') {
-                        $exampost = ExamenPostulante::where('id_postulante', $postulante->id_postulante);
-                        if ($exampost->count() == 0) {
-                            $exampost = new ExamenPostulante();
-                            $exampost->id_postulante = $postulante->id_postulante;
-                            $exampost->minutos = $programa->minutos;
-                            $exampost->segundos = 0;
-                            $exampost->estado = 'A';
-                            $exampost->save();
+            do {
+                $programa = ProgramacionExamen::find($progup);
+                if ($programa->id_prog_requ != null) {
+                    $programas[] = $programa->id_prog_requ;
+                }
+                $progup = $programa->id_prog_requ;
+            } while ($progup != null);
+            do {
+                $programa = ProgramacionExamen::where('id_prog_requ', $progdown)->first();
+                if (isset($programa)) {
+                    $programas[] = $programa->id_programacion_examen;
+                    $progdown = $programa->id_programacion_examen;
+                } else {
+                    break;
+                }
+            } while ($progdown != null);
+            foreach ($programas as $progv) {
+                $programa = ProgramacionExamen::find($progv);
+                DB::beginTransaction();
+                if ($request->nume_docu_sol) {
+                    foreach ($request->nume_docu_sol as $key => $nume) {
+                        $postulante = Postulante::where('id_programacion_examen', $progv)
+                            ->where('nume_docu_sol', $nume);
+                        if ($postulante->count() == 0) {
+                            $postulante = new Postulante();
+                            $postulante->id_programacion_examen = $progv;
+                            $postulante->nume_docu_sol = $nume;
+                            $postulante->nota = 0;
+                            $postulante->estado = 'P';
+                            $postulante->save();
                         } else {
-                            $exampost = $exampost->first();
-                            $exampost->estado = 'A';
-                            $exampost->update();
+                            $postulante = $postulante->first();
+                            $postulante->estado = 'P';
+                            $postulante->update();
                         }
-                    }
-                    foreach ($docentes as $key => $doc) {
-                        $jurapost = JuradoPostulante::where('id_postulante', $postulante->id_postulante)
-                            ->where('id_jurado', $doc->id_jurado);
-                        if ($jurapost->count() == 0) {
-                            $jurapost = new JuradoPostulante();
-                            $jurapost->id_jurado = $doc->id_jurado;
-                            $jurapost->id_postulante = $postulante->id_postulante;
-                            $jurapost->estado = 'A';
-                            $jurapost->save();
-                        } else {
-                            $jurapost = $jurapost->first();
-                            $jurapost->estado = 'A';
-                            $jurapost->update();
+                        if ($detalle->flag_jura == 'N') {
+                            $exampost = ExamenPostulante::where('id_postulante', $postulante->id_postulante);
+                            if ($exampost->count() == 0) {
+                                $exampost = new ExamenPostulante();
+                                $exampost->id_postulante = $postulante->id_postulante;
+                                $exampost->minutos = $programa->minutos;
+                                $exampost->segundos = 0;
+                                $exampost->estado = 'A';
+                                $exampost->save();
+                            } else {
+                                $exampost = $exampost->first();
+                                $exampost->estado = 'A';
+                                $exampost->update();
+                            }
                         }
-                        $coment = Comentario::where('id_jurado_postulante', $jurapost->id_jurado_postulante);
-                        if ($coment->count() == 0) {
-                            $coment = new Comentario();
-                            $coment->id_jurado_postulante = $jurapost->id_jurado_postulante;
-                            $coment->comentario = '';
-                            $coment->save();
-                        }
-                        foreach ($secciones as $key => $sec) {
-                            $nota = Nota::where('id_jurado_postulante', $jurapost->id_jurado_postulante)
-                                ->where('id_seccion_examen', $sec->id_seccion_examen);
-                            if ($nota->count() == 0) {
-                                $nota = new Nota();
-                                $nota->id_jurado_postulante = $jurapost->id_jurado_postulante;
-                                $nota->id_seccion_examen = $sec->id_seccion_examen;
-                                $nota->nota = 0;
-                                $nota->estado = 'A';
-                                $nota->save();
+                        foreach ($docentes as $key => $doc) {
+                            $jurapost = JuradoPostulante::where('id_postulante', $postulante->id_postulante)
+                                ->where('id_jurado', $doc->id_jurado);
+                            if ($jurapost->count() == 0) {
+                                $jurapost = new JuradoPostulante();
+                                $jurapost->id_jurado = $doc->id_jurado;
+                                $jurapost->id_postulante = $postulante->id_postulante;
+                                $jurapost->estado = 'A';
+                                $jurapost->save();
+                            } else {
+                                $jurapost = $jurapost->first();
+                                $jurapost->estado = 'A';
+                                $jurapost->update();
+                            }
+                            $coment = Comentario::where('id_jurado_postulante', $jurapost->id_jurado_postulante);
+                            if ($coment->count() == 0) {
+                                $coment = new Comentario();
+                                $coment->id_jurado_postulante = $jurapost->id_jurado_postulante;
+                                $coment->comentario = '';
+                                $coment->save();
+                            }
+                            foreach ($secciones as $key => $sec) {
+                                $nota = Nota::where('id_jurado_postulante', $jurapost->id_jurado_postulante)
+                                    ->where('id_seccion_examen', $sec->id_seccion_examen);
+                                if ($nota->count() == 0) {
+                                    $nota = new Nota();
+                                    $nota->id_jurado_postulante = $jurapost->id_jurado_postulante;
+                                    $nota->id_seccion_examen = $sec->id_seccion_examen;
+                                    $nota->nota = 0;
+                                    $nota->estado = 'A';
+                                    $nota->save();
+                                }
                             }
                         }
                     }
                 }
+                DB::commit();
             }
-            DB::commit();
             return $this->CargarAlumnos($request);
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             dd($e);
         }
@@ -466,6 +494,7 @@ class ProgramacionController extends Controller
             DB::commit();
             return $this->CargarAlumnos($request);
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -512,6 +541,7 @@ class ProgramacionController extends Controller
             }
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -622,6 +652,7 @@ class ProgramacionController extends Controller
             }
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -632,9 +663,8 @@ class ProgramacionController extends Controller
 
     public function insertExamenTeorico(Request $request)
     {
-
         foreach ($request->id_cupos as $id_cuposk => $id_cuposv) {
-            $valid=null;
+            $valid = null;
             foreach ($request->id_examen as $id_examenk => $id_examenv) {
                 $index = $request->except(['id_examen', 'minutos', 'descripcion', 'id_cupos']);
                 $index["id_examen"] = $id_examenv;
@@ -644,16 +674,16 @@ class ProgramacionController extends Controller
                 $index["id_prog_requ"] = $valid;
                 //$index->merge(['id_examen' => $value,'minutos' => $request->minutos[$key]]);
                 //return new Request($index);
-                return $this->insertexamen($request);
+                $valid = $this->insertexamen(new Request($index));
             }
         }
-        if (is_null($valid) ) {
+        if (is_null($valid)) {
             return redirect()->back()
-            ->with('no_success', 'Configuración guardada con éxito.');
-        }else{
-            DB::commit();
+                ->with('no_success', 'Error de parametros.');
+        } else {
+
             return redirect()->back()
-            ->with('success', 'Configuración guardada con éxito.');
+                ->with('success', 'Configuración guardada con éxito.');
         }
         //return $request;
     }

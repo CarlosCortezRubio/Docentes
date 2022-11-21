@@ -10,6 +10,7 @@ use App\Model\JuradoPostulante;
 use App\Model\Nota;
 use App\Model\Persona;
 use App\Model\Postulante;
+use Carbon\Carbon;
 use PDF;
 use Exception;
 use Illuminate\Http\Request;
@@ -53,8 +54,13 @@ class EvaluacionController extends Controller
             ->where('ex.estado', 'A')
             ->where('cu.estado', 'A')
             ->where('au.estado', 'A')
+            ->where('p.estado', 'A')
             ->where('asec.estado', 'A')
             ->where('adm.flag_jura', 'S')
+            //->where('p.peri_eval_inic','<=', Carbon::now())
+            //->where('p.peri_eval_fin','>=', date('Y-m-d')." 23:59:59")
+            ->where('admision.adm_programacion_examen.fecha_resol','<=', Carbon::now())
+            ->whereRaw("TO_TIMESTAMP(TO_CHAR(admision.adm_programacion_examen.fecha_resol, 'yyyy-mm-dd 23:59:59'),'YYYY-MM-DD HH24:MI:SS') >= NOW()")
             ->select(
                 'admision.adm_programacion_examen.descripcion',
                 'admision.adm_programacion_examen.id_programacion_examen',

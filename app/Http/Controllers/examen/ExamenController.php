@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ExamenController extends Controller
 {
@@ -93,6 +94,7 @@ class ExamenController extends Controller
 
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -103,14 +105,16 @@ class ExamenController extends Controller
 
     public function update(Request $request)
     {
+
         $examen = Examen::find($request->id_examen);
         $examendet = DetalleExamen::find($request->id_examen_admision);
         try {
+
             DB::beginTransaction();
             $examen->nombre = $request->nombre;
             $examen->descripcion = $request->descripcion;
             $examen->nota_apro = $request->nota_apro;
-            $examen->peso = $request->peso;
+
             $examen->nota_maxi = $request->nota_maxi;
             $examen->enlace = $request->enlace;
             $examen->user_actu = Auth::user()->id;
@@ -126,14 +130,16 @@ class ExamenController extends Controller
             } else {
                 $examendet->flag_jura = $request->flag_jura;
             }
-
+            $examendet->peso = $request->peso;
             $examendet->id_seccion = $request->id_seccion;
             $examendet->update();
+
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
-                ->with('no_success', $e->getMessage()); //'Existe un error en los parámetros.');
+                ->with('no_success', 'Existe un error en los parámetros.');
         }
         return redirect()->back()
             ->with('success', 'Configuración guardada con éxito.');
@@ -149,6 +155,7 @@ class ExamenController extends Controller
             $examen->update();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             return redirect()->back()
                 ->with('no_success', 'Existe un error en los parámetros.');
@@ -166,6 +173,7 @@ class ExamenController extends Controller
             $sec->update();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             //   return redirect()->back()
             //->with('no_success', 'Existe un error en los parámetros.');
@@ -183,6 +191,7 @@ class ExamenController extends Controller
             $sec->update();
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             //    return redirect()->back()
             //->with('no_success', 'Existe un error en los parámetros.');
@@ -238,6 +247,7 @@ class ExamenController extends Controller
 
             DB::commit();
         } catch (Exception $e) {
+            Log::error("(Ocurrio un error inesperado) \n" . $e->getMessage());
             DB::rollBack();
             //    return redirect()->back()
             //->with('no_success', 'Existe un error en los parámetros.');

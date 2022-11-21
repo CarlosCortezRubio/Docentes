@@ -185,3 +185,20 @@ if (! function_exists('getExamenesJurado')) {
         return $examenes;
     }
 }
+if (! function_exists('getExamenesTeoricos')) {
+    function getExamenesTeoricos() {
+        $examenes = Examen::join('admision.adm_examen_admision as exd', 'exd.id_examen', 'admision.adm_examen.id_examen')
+            ->join('admision.adm_seccion_estudios as asec', 'asec.id_seccion', 'exd.id_seccion')
+            ->join('bdsig.ttablas_det as t', 'asec.codi_secc_sec', 't.codi_tabl_det')
+            ->where('admision.adm_examen.estado', 'A')
+            ->where('asec.estado', 'A')
+            ->where('exd.flag_jura', 'N')
+            ->select('exd.id_examen', 'nombre', 'asec.id_seccion', 'abre_tabl_det', 'asec.codi_secc_sec');
+        if (getSeccion()) {
+            $examenes = $examenes->where('asec.id_seccion', getIdSeccion())->get();
+        } else if (getTipoUsuario() == 'Administrador') {
+            $examenes = $examenes->get();
+        }
+        return $examenes;
+    }
+}

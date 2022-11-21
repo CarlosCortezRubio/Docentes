@@ -117,7 +117,7 @@
                                             <td>
                                                 <select class="form-control" required name="id_examen[]">
                                                     <option value="">---- Seleccione -----</option>
-                                                    @foreach ($examenes as $k => $exa)
+                                                    @foreach ($examenesteoricos as $k => $exa)
                                                         <option value="{{ $exa->id_examen }}">{{ $exa->nombre }}</option>
                                                     @endforeach
                                                 </select>
@@ -199,38 +199,15 @@
                                 </div>
                             </div>
                             <br>
-                            <div class="row ">
+                            <div class="row d-none">
                                 <div class="col-md col-sm col-xs">
                                     <label for="minutos">Minutos</label>
-                                    <input type="number" required class="form-control" id="minutos" name="minutos"
+                                    <input type="number" required class="form-control" value='0' id="minutos" name="minutos"
                                         placeholder="Ingrese Minutos de Resoluciòn" />
                                 </div>
                             </div>
-                            <br>
                             <div class='row'>
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label for="">Examen</label>
-                                    <select class="form-control" required name="id_examen" id="id_examen">
-                                        <option value="">---- Seleccione -----</option>
-                                        @foreach ($examenes as $k => $exa)
-                                            <option value="{{ $exa->id_examen }}">{{ $exa->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <br>
-                            <div class='row'>
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label for="">Examen de Requerimiento</label>
-                                    <select class="form-control" name="id_prog_requ" id="id_prog_requ">
-                                        <option value="">Ninguno</option>
-                                        @foreach ($programaciones as $k => $prog)
-                                            <option value="{{ $prog->id_programacion_examen }}">
-                                                {{ $prog->examen . ' - ' . $prog->abre_espe_esp . '(' . $prog->abre_secc_sec . ')' }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                @include('layouts.filter.examenjurado')
                             </div>
                             <br>
                             <div class='row'>
@@ -644,7 +621,7 @@
             count++;
             htmlexa = "<tr id='r" + count + "'><td>" + count +
                 "</td><td><input type='text' required class='form-control' name='descripcion[]' placeholder='Ingrese descripcion' /></td><td><select class='form-control' required name='id_examen[]' ><option value=''>---- Seleccione -----</option>";
-            @foreach ($examenes as $k => $exa)
+            @foreach ($examenesteoricos as $k => $exa)
                 htmlexa = htmlexa + "<option value='{{ $exa->id_examen }}'>{{ $exa->nombre }}</option>";
             @endforeach
             htmlexa = htmlexa +
