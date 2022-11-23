@@ -87,7 +87,9 @@
                 justify-content: center;
                 padding-top: 25px
             }
-
+            .select2-container{
+                display: initial !important;
+            }
             [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active,
             [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active:focus,
             [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active:hover {

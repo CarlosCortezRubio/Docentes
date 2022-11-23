@@ -5,8 +5,8 @@
         @csrf
         <div class="container">
             <div class="row">
-                @include('layouts.filter.seccion')
-                @include('layouts.filter.ProgramaEstudio')
+                @include('layouts.filter.index', ['filtro' => 'seccion', 'tipo' => 1])
+                @include('layouts.filter.index', ['filtro' => 'ProgramaEstudio', 'tipo' => 1])
                 <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
                     <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
                 </div>
@@ -41,7 +41,7 @@
     <div class="card-header row">
     </div>
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="overflow: scroll;">
             <table class="tablaresponse table tprincipal table-striped">
                 <thead class="thead">
                     <tr>

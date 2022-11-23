@@ -5,8 +5,12 @@
         @csrf
         <div class="container">
             <div class="row">
-                @include('layouts.filter.anioObligatorio')
-                @include('layouts.filter.seccionObligatorio')
+                @include('layouts.filter.index', ['filtro' => 'anio', 'tipo' => 3, 'required' => 'true'])
+                @include('layouts.filter.index', [
+                    'filtro' => 'seccion',
+                    'tipo' => 3,
+                    'required' => 'true',
+                ])
                 <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
                     <a href="#" onclick="formulario('#busqueda')" type="submit" class="btn btn-info"><i
                             class="fas fa-search "></i> Buscar</a>

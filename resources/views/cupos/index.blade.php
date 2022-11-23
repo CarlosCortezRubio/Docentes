@@ -1,18 +1,22 @@
 @extends('adminlte::page')
 @section('title', 'Cupos')
 @php
-$programas = getProgramas();
-$periodos = getPeriodos();
+    $programas = getProgramas();
+    $periodos = getPeriodos();
 @endphp
 @section('content_header')
     <form action="{{ route('cupo') }}" method="get">
         @csrf
         <div class="container">
             <div class="row">
-                @include('layouts.filter.ProgramaEstudio')
-                @include('layouts.filter.anio')
-                @include('layouts.filter.seccion')
-                <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
+                <div class="col-12">
+                    <div class="row">
+                        @include('layouts.filter.index', ['filtro' => 'ProgramaEstudio', 'tipo' => 1])
+                        @include('layouts.filter.index', ['filtro' => 'anio', 'tipo' => 1])
+                        @include('layouts.filter.index', ['filtro' => 'seccion', 'tipo' => 1])
+                    </div>
+                </div>
+                <div class="col-12 centrar-content flex-center btn-search">
                     <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
                 </div>
             </div>
@@ -176,7 +180,7 @@ $periodos = getPeriodos();
                         aria-hidden="true"></i> Nuevo</button>
             </div>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="overflow: scroll;">
             <table class="table tablaresponse tprincipal table-striped">
                 <thead class="thead">
                     <tr>

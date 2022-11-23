@@ -4,7 +4,7 @@
 @stop
 @section('content')
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="overflow: scroll;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">

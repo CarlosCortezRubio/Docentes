@@ -9,19 +9,19 @@
         @csrf
         <div class="container">
             <div class="row">
-                <div class="col">
+                <div class="col-12">
                     <div class="row">
-                        @include('layouts.filter.descripcionExamen')
-                        @include('layouts.filter.seccion')
-                        @include('layouts.filter.modalidad')
+                        @include('layouts.filter.index', ['filtro' => 'descripcionExamen'])
+                        @include('layouts.filter.index', ['filtro' => 'seccion', 'tipo' => 1])
+                        @include('layouts.filter.index', ['filtro' => 'modalidad', 'tipo' => 1])
                     </div>
                     <div class="row">
-                        @include('layouts.filter.anio')
-                        @include('layouts.filter.ProgramaEstudio')
-                        @include('layouts.filter.exajura')
+                        @include('layouts.filter.index', ['filtro' => 'anio', 'tipo' => 1])
+                        @include('layouts.filter.index', ['filtro' => 'ProgramaEstudio', 'tipo' => 1])
+                        @include('layouts.filter.index', ['filtro' => 'exajura', 'tipo' => 1])
                     </div>
                 </div>
-                <div class="col-2 centrar-content flex-center btn-search">
+                <div class="col-12 centrar-content flex-center btn-search">
                     <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
                 </div>
             </div>
@@ -81,7 +81,8 @@
                             <div class='row'>
                                 <div class="col-md col-sm col-xs">
                                     <label class="row" for="">Programa de Estudio</label>
-                                    <select class="row buscar form-control" multiple="multiple" required name="id_cupos[]" id="id_cupos">
+                                    <select class="row buscar form-control" multiple="multiple" required name="id_cupos[]"
+                                        id="id_cupos">
                                         @foreach ($cupos as $k => $cu)
                                             <option value="{{ $cu->id_cupos }}">
                                                 {{ $cu->abre_espe_esp }}@if (is_admin())
@@ -202,12 +203,16 @@
                             <div class="row d-none">
                                 <div class="col-md col-sm col-xs">
                                     <label for="minutos">Minutos</label>
-                                    <input type="number" required class="form-control" value='0' id="minutos" name="minutos"
-                                        placeholder="Ingrese Minutos de Resoluciòn" />
+                                    <input type="number" required class="form-control" value='0' id="minutos"
+                                        name="minutos" placeholder="Ingrese Minutos de Resoluciòn" />
                                 </div>
                             </div>
                             <div class='row'>
-                                @include('layouts.filter.examenjurado')
+                                @include('layouts.filter.index', [
+                                    'filtro' => 'examenjurado',
+                                    'tipo' => 2,
+                                    'required' => 'true',
+                                ])
                             </div>
                             <br>
                             <div class='row'>
@@ -489,7 +494,7 @@
                         aria-hidden="true"></i> Nuevo Teorico</button>
             </div>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="overflow: scroll;">
             <table class="tablaresponse table tprincipal table-striped">
                 <thead class="thead">
                     <tr>

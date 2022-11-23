@@ -1,17 +1,20 @@
 @extends('adminlte::page')
 @section('title', 'Periodos')
 @php
-$secciones = getSecciones();
+    $secciones = getSecciones();
 @endphp
 @section('content_header')
     <form action="{{ route('periodo') }}" method="get">
         @csrf
         <div class="container">
-            <div class="row">
-                @include('layouts.filter.anio')
-                @include('layouts.filter.seccion')
-                @include('layouts.filter.estado')
-                <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
+            <div class="col">
+                <div class="row">
+                    @include('layouts.filter.index', ['filtro' => 'anio', 'tipo' => 1])
+                    @include('layouts.filter.index', ['filtro' => 'seccion', 'tipo' => 1])
+                    @include('layouts.filter.index', ['filtro' => 'estado', 'tipo' => 1])
+                </div>
+
+                <div class="row centrar-content flex-center btn-search">
                     <button type="submit" class="btn btn-info"><i class="fas fa-search "></i> Buscar</button>
                 </div>
             </div>
@@ -260,29 +263,8 @@ $secciones = getSecciones();
                 <button data-toggle="modal" data-target="#modaladd" class='btn btn-success'><i class="fa fa-plus"
                         aria-hidden="true"></i> Nuevo</button>
             </div>
-            {{-- <div class='col'>
-                <form action="{{ route('periodo.export', ['_token'=> csrf_token(),
-                                                          'anio'=>$busqueda->anio,
-                                                          'seccion'=>$busqueda->seccion,
-                                                          'estado'=>$busqueda->estado,
-                                                          'tipo'=> 'xlsx']) }}" method="post">
-                                                        <button class='btn btn-success'><i class="fa fa-file-excel"
-                                                            aria-hidden="true"></i> Export</button>
-                                                        </form>
-            </div>
-            <div class='col'>
-                <form action="{{ route('periodo.export', ['_token'=> csrf_token(),
-                                                          'anio'=>$busqueda->anio,
-                                                          'seccion'=>$busqueda->seccion,
-                                                          'estado'=>$busqueda->estado,
-                                                          'tipo'=> 'csv']) }}" method="post">
-                                                        <button class='btn btn-success'><i class="fa fa-file-csv"
-                                                            aria-hidden="true"></i> Export</button>
-                                                        </form>
-            </div> --}}
-
         </div>
-        <div class="card-body">
+        <div class="card-body" style="overflow: scroll;">
             <table class="tablaresponse table tprincipal table-striped">
                 <thead class="thead">
                     <tr>

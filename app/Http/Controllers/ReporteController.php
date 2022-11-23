@@ -144,7 +144,7 @@ class ReporteController extends Controller
             ->where('cu.estado', 'A')
             ->where('per.id_seccion', 'like', $request->seccion)
             ->where('per.anio', $request->anio)
-            ->where('ex.id_examen', 'like', $request->examen)
+            ->where('ex.id_examen', 'like', $request->id_examen)
             ->orderBy('ex.nombre')->get();
 
         $resultado = "";

@@ -5,9 +5,9 @@
         @csrf
         <div class="container">
             <div class="row">
-                @include('layouts.filter.anioObligatorio')
-                @include('layouts.filter.seccion')
-                @include('layouts.filter.examenjurado')
+                @include('layouts.filter.index', ['filtro' => 'anio', 'tipo' => 3, 'required' => 'true'])
+                @include('layouts.filter.index', ['filtro' => 'seccion', 'tipo' => 1])
+                @include('layouts.filter.index', ['filtro' => 'examenjurado', 'tipo' => 1])
                 <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
                     <a href="#" onclick="formulario('#busqueda')" type="submit" class="btn btn-info"><i
                             class="fas fa-search "></i> Buscar</a>
@@ -28,7 +28,7 @@
                         aria-hidden="true"></i> Excel</button>
             </div>
         </div>
-        <div class="card-body"  style="overflow: scroll;height: 65vh;">
+        <div class="card-body" style="overflow: scroll;height: 65vh;">
             <table id="table" class=" table tprincipal table-striped">
 
             </table>
