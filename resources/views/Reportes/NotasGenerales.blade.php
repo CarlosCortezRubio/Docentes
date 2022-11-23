@@ -5,7 +5,7 @@
         @csrf
         <div class="container">
             <div class="row">
-                @include('layouts.filter.index', ['filtro' => 'anio', 'tipo' => 3, 'required' => 'true'])
+                @include('layouts.filter.index', ['filtro' => 'anio', 'tipo' => 3, 'required' => true])
                 @include('layouts.filter.index', [
                     'filtro' => 'seccion',
                     'tipo' => 3,

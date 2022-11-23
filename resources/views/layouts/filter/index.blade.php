@@ -5,7 +5,7 @@
                 $anioexist = getAnios();
             @endphp
             <label class="row" for="anio">Año</label>
-            <select class="buscar row browser-default custom-select" required="{{ $required ?? 'false' }}" name="anio"
+            <select class="buscar row browser-default custom-select" {{'required' ? isset($required) : ''}} name="anio"
                 id="aniodosearch">
                 @switch($tipo)
                     @case(1)
@@ -28,7 +28,7 @@
 
         @case('descripcionExamen')
             <label class="row" for="desc">Descripción</label>
-            <input name="desc" required="{{ $required ?? 'false' }}"
+            <input name="desc" {{'required' ? isset($required) : ''}}
                 @if ($busqueda->desc) value='{{ $busqueda->desc }}' @endif placeholder="Ingrese Descripcion"
                 id="descsearch" class="form-control" />
         @break
@@ -39,7 +39,7 @@
                     $secciones = getSecciones();
                 @endphp
                 <label class="row" for="seccion">Sección</label>
-                <select required="{{ $required ?? 'false' }}" class="buscar form-control" name="seccion" id="seccionsearch">
+                <select {{'required' ? isset($required) : ''}} class="buscar form-control" name="seccion" id="seccionsearch">
                     @switch($tipo)
                         @case(1)
                             <option value="%">Todos</option>
@@ -66,7 +66,7 @@
 
         @case('modalidad')
             <label class="row" for="modalidad">Modalidad</label>
-            <select required="{{ $required ?? 'false' }}" class="buscar form-control" name="modalidad" id="modalidadsearch">
+            <select {{'required' ? isset($required) : ''}} class="buscar form-control" name="modalidad" id="modalidadsearch">
                 @switch($tipo)
                     @case(1)
                         <option value="%">Todos</option>
@@ -89,7 +89,7 @@
                 $programas = getProgramas();
             @endphp
             <label class="row" for="codi_espe_esp">Programa de Estudio</label>
-            <select required="{{ $required ?? 'false' }}" name="codi_espe_esp" id="especialidadsearch"
+            <select {{'required' ? isset($required) : ''}} name="codi_espe_esp" id="especialidadsearch"
                 class="buscar browser-default custom-select">
                 @switch($tipo)
                     @case(1)
@@ -112,7 +112,7 @@
 
         @case('exajura')
             <label class="row" for="jura">Examen por Jurado</label>
-            <select required="{{ $required ?? 'false' }}" class="buscar form-control" name="jura" id="jurasearch">
+            <select {{'required' ? isset($required) : ''}} class="buscar form-control" name="jura" id="jurasearch">
                 @switch($tipo)
                     @case(1)
                         <option value="%">Todos</option>
@@ -132,7 +132,7 @@
 
         @case('caracelim')
             <label class="row" for="carac">Carac. Eliminatorio</label>
-            <select required="{{ $required ?? 'false' }}" name="carac" id="caracsearch"
+            <select {{'required' ? isset($required) : ''}} name="carac" id="caracsearch"
                 class="buscar browser-default custom-select">
                 @switch($tipo)
                     @case(1)
@@ -153,14 +153,14 @@
 
         @case('nombreexamen')
             <label class="row" for="nombre">Nombre de Examen</label>
-            <input name="nombre" required="{{ $required ?? 'false' }}"
+            <input name="nombre" {{'required' ? isset($required) : ''}}
                 @if ($busqueda->nombre) value='{{ $busqueda->nombre }}' @endif placeholder="Ingrese Nombre"
                 id="nombresearch" class="form-control" />
         @break
 
         @case('estado')
             <label class="row" for="estado">Estado</label>
-            <select required="{{ $required ?? 'false' }}" class="buscar form-control" name="estado" id="estadosearch">
+            <select {{'required' ? isset($required) : ''}} class="buscar form-control" name="estado" id="estadosearch">
                 @switch($tipo)
                     @case(1)
                         <option value="%">Todos</option>
@@ -183,7 +183,7 @@
                 $examenes = getExamenesJurado();
             @endphp
             <label class="row" for="id_examen">Examen</label>
-            <select required="{{ $required ?? 'false' }}" class="buscar row form-control" style="width: 100%" name="id_examen"
+            <select {{'required' ? isset($required) : ''}} class="buscar row form-control" style="width: 100%" name="id_examen"
                 id="examensearch">
                 @switch($tipo)
                     @case(1)
