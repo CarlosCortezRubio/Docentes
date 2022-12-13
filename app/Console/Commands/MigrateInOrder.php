@@ -76,10 +76,11 @@ class MigrateInOrder extends Command
             '2022_01_18_163139_crear_tabla_audio_temporal.php'*/
             //'2022_02_09_144036_crear_tabla_respuestas.php',
 
-            '2022_10_11_000157_crear_tablanivel_evaluacion.php',
-            '2022_10_11_001102_crear_datos_nivel.php',
-            '2022_10_11_002830_update_examenes.php',
-            '2022_10_11_011934_actualizar_data_examen.php',
+            //'2022_10_11_000157_crear_tablanivel_evaluacion.php',
+            //'2022_10_11_001102_crear_datos_nivel.php',
+            //'2022_10_11_002830_update_examenes.php',
+            //'2022_10_11_011934_actualizar_data_examen.php',
+            '2022_11_29_105228_updateperiodo.php'
         ];
 
         foreach($migrations as $migration)

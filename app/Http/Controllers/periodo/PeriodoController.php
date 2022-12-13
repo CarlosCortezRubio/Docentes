@@ -58,11 +58,16 @@ class PeriodoController extends Controller
         $periodo = new Periodo;
         try {
             DB::beginTransaction();
+            $peri_insc_fin = substr($request->peri_insc_fin, 0, strpos($request->peri_insc_fin, ' ')).' 23:59:59';
+            $peri_eval_fin = substr($request->peri_eval_fin, 0, strpos($request->peri_eval_fin, ' ')).' 23:59:59';
+            $peri_show_fin = substr($request->peri_show_fin, 0, strpos($request->peri_show_fin, ' ')).' 23:59:59';
             $periodo->anio = $request->anio;
             $periodo->peri_insc_inic = $request->peri_insc_inic;
-            $periodo->peri_insc_fin = $request->peri_insc_fin;
+            $periodo->peri_insc_fin = $peri_insc_fin;
             $periodo->peri_eval_inic = $request->peri_eval_inic;
-            $periodo->peri_eval_fin = $request->peri_eval_fin;
+            $periodo->peri_eval_fin = $peri_eval_fin;
+            $periodo->peri_show_inic = $request->peri_show_inic;
+            $periodo->peri_show_fin = $peri_show_fin;
             $periodo->estado = 'I';
             $periodo->user_regi = Auth::user()->id;
             $periodo->id_seccion = $request->id_seccion;
@@ -83,11 +88,16 @@ class PeriodoController extends Controller
         $periodo = Periodo::find($request->id_periodo);
         try {
             DB::beginTransaction();
+            $peri_insc_fin = substr($request->peri_insc_fin, 0, strpos($request->peri_insc_fin, ' ')).' 23:59:59';
+            $peri_eval_fin = substr($request->peri_eval_fin, 0, strpos($request->peri_eval_fin, ' ')).' 23:59:59';
+            $peri_show_fin = substr($request->peri_show_fin, 0, strpos($request->peri_show_fin, ' ')).' 23:59:59';
             $periodo->anio = $request->anio;
             $periodo->peri_insc_inic = $request->peri_insc_inic;
-            $periodo->peri_insc_fin = $request->peri_insc_fin;
+            $periodo->peri_insc_fin = $peri_insc_fin;
             $periodo->peri_eval_inic = $request->peri_eval_inic;
-            $periodo->peri_eval_fin = $request->peri_eval_fin;
+            $periodo->peri_eval_fin = $peri_eval_fin;
+            $periodo->peri_show_inic = $request->peri_show_inic;
+            $periodo->peri_show_fin = $peri_show_fin;
             $periodo->user_actu = Auth::user()->id;
             $periodo->id_seccion = $request->id_seccion;
             $periodo->update();
@@ -151,16 +161,13 @@ class PeriodoController extends Controller
         $seccion = null;
         if (getSeccion()) {
             $seccion = getIdSeccion();
-        }else if(isset($request->seccion)){
+        } else if (isset($request->seccion)) {
             $seccion = $request->seccion;
         }
-        if(isset($request->anio) && $seccion && isset($request->estado)){
-            return Excel::download(new PeriodoExport($request->anio, $request->seccion,$request->estado), 'Periodos'.date('Ymmdd').'.'.$request->tipo);
-
-        }else{
-            return Excel::download(new PeridoTodosExport, 'Periodos'.date('Ymmdd').'.'.$request->tipo);
+        if (isset($request->anio) && $seccion && isset($request->estado)) {
+            return Excel::download(new PeriodoExport($request->anio, $request->seccion, $request->estado), 'Periodos' . date('Ymmdd') . '.' . $request->tipo);
+        } else {
+            return Excel::download(new PeridoTodosExport, 'Periodos' . date('Ymmdd') . '.' . $request->tipo);
         }
-
     }
-
 }

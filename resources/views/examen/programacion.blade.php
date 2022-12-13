@@ -211,7 +211,7 @@
                                 @include('layouts.filter.index', [
                                     'filtro' => 'examenjurado',
                                     'tipo' => 2,
-                                    'required' => 'true',
+                                    'required' => 'required',
                                 ])
                             </div>
                             <br>

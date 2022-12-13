@@ -42,6 +42,7 @@ return array(
     'App\\Model\\Cupos' => $baseDir . '/app/Model/Cupos.php',
     'App\\Model\\DetalleUsuario' => $baseDir . '/app/Model/DetalleUsuario.php',
     'App\\Model\\ExamenPostulante' => $baseDir . '/app/Model/ExamenPostulante.php',
+    'App\\Model\\Examen\\Audio' => $baseDir . '/app/Model/Examen/Audio.php',
     'App\\Model\\Examen\\DetalleExamen' => $baseDir . '/app/Model/Examen/DetalleExamen.php',
     'App\\Model\\Examen\\Examen' => $baseDir . '/app/Model/Examen/Examen.php',
     'App\\Model\\Examen\\ProgramacionExamen' => $baseDir . '/app/Model/Examen/ProgramacionExamen.php',

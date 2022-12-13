@@ -102,6 +102,25 @@
                                     </div>
                                 </div>
                             </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Periodo de Publicacion de notas</label>
+                                    <div class='row'>
+                                        <div class="col-md-5 col-sm-5 col-xs-5">
+                                            <input type="date" class=" form-control dateadd" required
+                                                name="peri_show_inic" id="peri_show_inic" />
+                                        </div>
+                                        <div class='col-md-2 col-sm-2 col-xs-2 centrar-content'>
+                                            <p></p>
+                                        </div>
+                                        <div class="col-md-5 col-sm-5 col-xs-5">
+                                            <input type="date" class="form-control dateadd" required name="peri_show_fin"
+                                                id="peri_show_fin" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -113,7 +132,8 @@
         </div>
     </div>
     <!-------------------------------------------------------------->
-    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary">
@@ -182,16 +202,33 @@
                                     <div class='row'>
                                         <div class="col-md-5 col-sm-5 col-xs-5">
                                             <input type="date" class="form-control dateedit" required
-                                                name="peri_eval_inic" id="peri_eval_inic_edit"
-                                                placeholder="Ingrese Cupos" />
+                                                name="peri_eval_inic" id="peri_eval_inic_edit" />
                                         </div>
                                         <div class='col-md-2 col-sm-2 col-xs-2 centrar-content'>
                                             <p></p>
                                         </div>
                                         <div class="col-md-5 col-sm-5 col-xs-5">
                                             <input type="date" class="form-control dateedit" required
-                                                name="peri_eval_fin" id="peri_eval_fin_edit"
-                                                placeholder="Ingrese Cupos" />
+                                                name="peri_eval_fin" id="peri_eval_fin_edit" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class='row'>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="">Periodo de Publicacion de notas</label>
+                                    <div class='row'>
+                                        <div class="col-md-5 col-sm-5 col-xs-5">
+                                            <input type="date" class=" form-control dateedit" required
+                                                name="peri_show_inic" id="peri_show_inic_edit" />
+                                        </div>
+                                        <div class='col-md-2 col-sm-2 col-xs-2 centrar-content'>
+                                            <p></p>
+                                        </div>
+                                        <div class="col-md-5 col-sm-5 col-xs-5">
+                                            <input type="date" class="form-control dateedit" required
+                                                name="peri_show_fin" id="peri_show_fin_edit" />
                                         </div>
                                     </div>
                                 </div>
@@ -275,6 +312,7 @@
                         @endif
                         <th scope="col">Peri. Inscripciones</th>
                         <th scope="col">Peri. Evaluaciones</th>
+                        <th scope="col">Peri. Publicación</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -286,6 +324,8 @@
                             $peri_insc_fin = substr($per->peri_insc_fin, 0, strpos($per->peri_insc_fin, ' '));
                             $peri_eval_inic = substr($per->peri_eval_inic, 0, strpos($per->peri_eval_inic, ' '));
                             $peri_eval_fin = substr($per->peri_eval_fin, 0, strpos($per->peri_eval_fin, ' '));
+                            $peri_show_inic = substr($per->peri_show_inic, 0, strpos($per->peri_show_inic, ' '));
+                            $peri_show_fin = substr($per->peri_show_fin, 0, strpos($per->peri_show_fin, ' '));
                         @endphp
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
@@ -298,6 +338,11 @@
                             @endif
                             <td>{{ $peri_insc_inic . '    ||    ' . $peri_insc_fin }}</td>
                             <td>{{ $peri_eval_inic . '    ||    ' . $peri_eval_fin }}</td>
+                            <td>
+                                @if ($peri_show_inic)
+                                    {{ $peri_show_inic . '    ||    ' . $peri_show_fin }}
+                                @endif
+                            </td>
                             <td
                                 style="color: @if ($per->estado == 'I') red @elseif ($per->estado == 'A') green @endif">
                                 @if ($per->estado == 'A')
@@ -315,7 +360,25 @@
                                         class='btn btn-success fa fa-check'></button>
                                 @endif
                                 <button
-                                    onclick=editar({{ "'" . $per->id_periodo . "','" . $per->anio . "','" . $per->id_seccion . "','" . $peri_insc_inic . "','" . $peri_insc_fin . "','" . $peri_eval_inic . "','" . $peri_eval_fin . "'" }});
+                                    onclick=editar({{ "'" .
+                                        $per->id_periodo .
+                                        "','" .
+                                        $per->anio .
+                                        "','" .
+                                        $per->id_seccion .
+                                        "','" .
+                                        $peri_show_inic .
+                                        "','" .
+                                        $peri_show_fin .
+                                        "','" .
+                                        $peri_insc_inic .
+                                        "','" .
+                                        $peri_insc_fin .
+                                        "','" .
+                                        $peri_eval_inic .
+                                        "','" .
+                                        $peri_eval_fin .
+                                        "'" }});
                                     class='btn btn-primary fa fa-pencil'></button>
                             </td>
                         </tr>
@@ -341,7 +404,7 @@
 
         });
 
-        function editar(id_periodo, anio, id_seccion, peri_insc_inic, peri_insc_fin, peri_eval_inic, peri_eval_fin) {
+        function editar(id_periodo, anio, id_seccion, peri_show_inic, peri_show_fin, peri_insc_inic, peri_insc_fin, peri_eval_inic, peri_eval_fin) {
             $("#id_periodo").val(id_periodo);
             $("#anio_edit").val(anio);
             $("#codi_secc_sec_edit").val(id_seccion);
@@ -349,6 +412,8 @@
             $("#peri_insc_fin_edit").val(peri_insc_fin);
             $("#peri_eval_inic_edit").val(peri_eval_inic);
             $("#peri_eval_fin_edit").val(peri_eval_fin);
+            $("#peri_show_inic_edit").val(peri_show_inic);
+            $("#peri_show_fin_edit").val(peri_show_fin);
             $("#modaledit").modal('show');
             $('.dateedit').attr('max', anio + '-12-31');
             $('.dateedit').attr('min', anio + '-01-01');
