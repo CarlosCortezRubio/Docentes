@@ -81,6 +81,10 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/SoporteExamen/ReiniciarNotas', 'Soporte\ExamenController@ReiniciarNotas')->name('reiniciar.notas');
     Route::get('/SoporteExamen/ReiniciarExamen', 'Soporte\ExamenController@ReiniciarExamen')->name('reiniciar.examen');
     Route::get('/SoporteExamen/ReiniciarAudio', 'Soporte\ExamenController@ReiniciarAudio')->name('reiniciar.audio');
+    ///////////////////////////////////////////////
+    Route::get('/asistencia', 'AsistenciaController@index')->name('asistencia');
+    Route::get('/asistencia/CargarDocentes', 'AsistenciaController@CargarDocentes')->name('CargarDocentes');
+
 
     Route::get('/', function () { return view('home');});
 });

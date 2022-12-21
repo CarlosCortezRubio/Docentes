@@ -4,6 +4,7 @@ use App\Model\Aula;
 use App\Model\DetalleUsuario;
 use App\Model\Examen\Examen;
 use App\Model\Periodo;
+use App\Model\Persona;
 use App\Model\TipoUsuario;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB as DB;
@@ -201,5 +202,12 @@ if (! function_exists('getExamenesTeoricos')) {
             $examenes = $examenes->get();
         }
         return $examenes;
+    }
+}
+if (! function_exists('getDocentes')) {
+    function getDocentes() {
+        $docentes = Persona::where('flag_trab_per', 'S')->where('tipo_trab_per', '03001')->get();
+
+        return $docentes;
     }
 }

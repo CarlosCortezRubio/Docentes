@@ -575,6 +575,7 @@ class ComposerStaticInitfcb7ac28c1917ec2a5e9b2aa5f94e2f4
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Exports\\PeridoTodosExport' => __DIR__ . '/../..' . '/app/Exports/PeridoTodosExport.php',
         'App\\Exports\\PeriodoExport' => __DIR__ . '/../..' . '/app/Exports/PeriodoExport.php',
+        'App\\Http\\Controllers\\AsistenciaController' => __DIR__ . '/../..' . '/app/Http/Controllers/AsistenciaController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',

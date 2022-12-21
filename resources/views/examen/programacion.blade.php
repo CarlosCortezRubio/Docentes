@@ -392,7 +392,6 @@
                                         @foreach ($docentes as $k => $doc)
                                             <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}
                                             </option>
-                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
