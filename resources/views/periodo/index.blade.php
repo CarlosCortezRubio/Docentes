@@ -188,7 +188,7 @@
                                             <p></p>
                                         </div>
                                         <div class="col-md-5 col-sm-5 col-xs-5">
-                                            <input type="date" class="form-control dateedit" max="2021-11-20" required
+                                            <input type="date" class="form-control dateedit" required
                                                 name="peri_insc_fin" id="peri_insc_fin_edit"
                                                 placeholder="Ingrese Cupos" />
                                         </div>
