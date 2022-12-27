@@ -211,3 +211,13 @@ if (! function_exists('getDocentes')) {
         return $docentes;
     }
 }
+if (! function_exists('getEstudiantes')) {
+    function getEstudiantes() {
+        $estudiantes = DB::table('bdsigunm.ad_postulacion','po')
+                      ->join('bdsigunm.ad_proceso as pr','pr.codi_proc_adm','po.codi_proc_adm')
+                      ->where('esta_proc_adm', 'V')
+                      ->select('po.*')->get();
+
+        return $estudiantes;
+    }
+}
