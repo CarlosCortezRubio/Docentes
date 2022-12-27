@@ -58,9 +58,9 @@ class PeriodoController extends Controller
         $periodo = new Periodo;
         try {
             DB::beginTransaction();
-            $peri_insc_fin = $request->peri_insc_fin. ' 23:59:59';
-            $peri_eval_fin = $request->peri_eval_fin. ' 23:59:59';
-            $peri_show_fin = $request->peri_show_fin. ' 23:59:59';
+            $peri_insc_fin = $request->peri_insc_fin . ' 23:59:59';
+            $peri_eval_fin = $request->peri_eval_fin . ' 23:59:59';
+            $peri_show_fin = $request->peri_show_fin . ' 23:59:59';
             $periodo->anio = $request->anio;
             $periodo->peri_insc_inic = $request->peri_insc_inic;
             $periodo->peri_insc_fin = $peri_insc_fin;
