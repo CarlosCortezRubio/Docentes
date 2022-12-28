@@ -308,7 +308,7 @@
             'text' => 'Registro de Asistencia',
             'route'  => 'asistencia',
             'icon' => 'fas fa-fw fa-check',
-            'can' => 'Administrador'
+            'can' => 'Seguridad'
         ],
     ]
 
