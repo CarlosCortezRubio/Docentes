@@ -80,9 +80,9 @@
                                 <select class="buscar row browser-default custom-select" required name="codi_pers_per"
                                     id="codi_pers_per">
                                     <option value=""> -- Seleccione Docente -- </option>
-                                    @foreach ($estudiantes as $k => $doc)
+                                    {{--@foreach ($estudiantes as $k => $doc)
                                         <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}</option>
-                                    @endforeach
+                                    @endforeach--}}
                                 </select>
                                 <input type="text" name="tipo" class="d-none" value="DC">
                             </div>
