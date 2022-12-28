@@ -257,12 +257,7 @@
             'icon' => 'fa-fw fas fa-chalkboard-teacher',
             'can' => 'Administrador'
         ],
-        [
-            'text' => 'Registro de Evaluaciones',
-            'route'  => 'evaluacion',
-            'icon' => 'fas fa-fw fa-check',
-            'can' => 'Jurado'
-        ],
+
         [
             'text'    => 'Reportes',
             'icon'    => 'fa-fw fas fa-table',
@@ -309,6 +304,12 @@
             'route'  => 'asistencia',
             'icon' => 'fas fa-fw fa-check',
             'can' => 'Seguridad'
+        ],
+        [
+            'text' => 'Registro de Evaluaciones',
+            'route'  => 'evaluacion',
+            'icon' => 'fas fa-fw fa-check',
+            'can' => 'Jurado'
         ],
     ]
 
