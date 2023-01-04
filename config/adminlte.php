@@ -257,7 +257,12 @@
             'icon' => 'fa-fw fas fa-chalkboard-teacher',
             'can' => 'Administrador'
         ],
-
+        [
+            'text' => 'Registro de Asistencia',
+            'route'  => 'asistencia',
+            'icon' => 'fas fa-fw fa-check',
+            'can' => 'Administrador'
+        ],
         [
             'text'    => 'Reportes',
             'icon'    => 'fa-fw fas fa-table',
