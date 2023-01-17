@@ -199,10 +199,16 @@
             <td width="120px">&nbsp;</td>
         </tr>
         <tr>
-            <th colspan="4" style="background-color: #d6d6d6; text-align: center;">TÉCNICA: Escalas y Estudios</th>
+            <th colspan="4" style="background-color: #d6d6d6; text-align: center;">TÉCNICAS</th>
         </tr>
         <tr>
-            <td colspan="4">{{ $ficha->tecn_post_pos }}</td>
+            <td colspan="4">
+                @foreach (explode('</br>', $postulacion->tecn_post_pos) as $k => $v)
+                    <div>
+                        <p>{{ $v }}</p>
+                    </div>
+                @endforeach
+            </td>
         </tr>
         <tr>
             <td colspan="4">&nbsp;</td>
@@ -224,7 +230,7 @@
                 <td>{{ $element->dura_repe_rep . ' min.' }}</td>
             </tr>
         @endforeach
-        {{--<tr>
+        {{-- <tr>
             <td colspan="4" height="20px">&nbsp;</td>
         </tr>
         <tr>
@@ -249,7 +255,7 @@
                 <td>{{ $element->inst_trab_tra }}</td>
                 <td>{{ $element->comn_trab_tra }}</td>
             </tr>
-        @endforeach--}}
+        @endforeach --}}
     </table>
 @endsection
 @section('footer')

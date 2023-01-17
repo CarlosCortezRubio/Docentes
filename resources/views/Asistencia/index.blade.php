@@ -25,7 +25,7 @@
 @stop
 @section('content')
     <!--------------------------MODALS------------------------------------>
-    <div class="modal fade" id="modaladd-do" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade" id="modaladd-do" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success">
@@ -64,7 +64,8 @@
         </div>
     </div>
     <!--------------------------------------------------------------------->
-    <div class="modal fade" id="modaladd-es" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade" id="modaladd-po" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success">
@@ -79,15 +80,15 @@
                             <div class="col-9">
                                 <select class="buscar row browser-default custom-select" required name="codi_pers_per"
                                     id="codi_pers_per">
-                                    <option value=""> -- Seleccione Docente -- </option>
-                                    {{--@foreach ($estudiantes as $k => $doc)
+                                    <option value=""> -- Seleccione Postulante -- </option>
+                                    @foreach ($estudiantes as $k => $doc)
                                         <option value="{{ $doc->codi_pers_per }}">{{ $doc->nomb_comp_per }}</option>
-                                    @endforeach--}}
+                                    @endforeach
                                 </select>
-                                <input type="text" name="tipo" class="d-none" value="DC">
+                                <input type="text" name="tipo" class="d-none" value="PO">
                             </div>
                             <div class="col-3">
-                                <a onclick="formulario('#formes')" class="btn btn-success">Marcar Entrada</a>
+                                <a onclick="formulariopo('#formes')" class="btn btn-success">Marcar Entrada</a>
                             </div>
                         </div>
                     </form>
@@ -140,11 +141,12 @@
             $.ajax({
                 type: 'get',
                 data: {
+                    tipo: 'DC',
                     token: '{{ csrf_token() }}'
                 },
                 url: url,
                 beforeSend: function() {
-                      $('#tdata').html("<center>Cargando...</center>");
+                    $('#tdata').html("<center>Cargando...</center>");
                 },
                 success: function(data) {
                     $('#asistencias').html(data);
@@ -158,6 +160,31 @@
             });
         }
 
+        function postulantes() {
+            var url = "{{ route('CargarPostulantes') }}";
+            $.ajax({
+                type: 'get',
+                data: {
+                    tipo: 'PO',
+                    token: '{{ csrf_token() }}'
+                },
+                url: url,
+                beforeSend: function() {
+                    $('#tdata').html("<center>Cargando...</center>");
+                },
+                success: function(data) {
+                    $('#asistenciases').html(data);
+                    $("#modaladd-po").modal('show');
+                    cargarpo();
+                },
+
+                error: function(data) {
+                    alert("ha  ocurrido un error");
+                }
+            });
+        }
+
+
         function cargar() {
             $(".buscar").select2({
                 dropdownParent: $('#modaladd-do')
@@ -167,7 +194,28 @@
                     "url": "{{ asset('js/datatables.spanish.json') }}"
                 },
                 "order": [
-                    [0, "asc"]
+                    [4, "asc"]
+                ],
+                "info": false,
+                "stateSave": true,
+                "columnDefs": [{
+                    "orderable": false,
+                    "targets": 0
+                }],
+                "pageLength": 10
+            });
+        }
+
+        function cargarpo() {
+            $(".buscar").select2({
+                dropdownParent: $('#modaladd-po')
+            });
+            $('#tablasasistenciapo').DataTable({
+                "language": {
+                    "url": "{{ asset('js/datatables.spanish.json') }}"
+                },
+                "order": [
+                    [4, "asc"]
                 ],
                 "info": false,
                 "stateSave": true,
@@ -189,7 +237,7 @@
                 data: form.serialize(),
 
                 beforeSend: function() {
-                      $('#tdata').html("<center>Cargando...</center>");
+                    $('#tdata').html("<center>Cargando...</center>");
                 },
                 success: function(data) {
                     $('#asistencias').html(data);
@@ -201,8 +249,26 @@
             });
         }
 
-        function postulantes() {
-            $("#modaladd-es").modal('show');
+        function formulariopo(id) {
+            var form = $(id);
+            var url = form.attr('action');
+
+            $.ajax({
+                type: form.attr('method'),
+                url: url,
+                data: form.serialize(),
+
+                beforeSend: function() {
+                    $('#tdata').html("<center>Cargando...</center>");
+                },
+                success: function(data) {
+                    $('#asistenciases').html(data);
+                    cargarpo();
+                },
+                error: function(data) {
+                    alert("ha  ocurrido un error, verifique los parámetros");
+                }
+            });
         }
     </script>
 @stop

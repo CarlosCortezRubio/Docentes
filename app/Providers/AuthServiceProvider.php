@@ -36,5 +36,23 @@ class AuthServiceProvider extends ServiceProvider
             }
             return false;
         });
+        Gate::define('Seguridad – emancipación', function ($user) {
+            if (getTipoUsuario() == 'Seguridad – emancipación'){
+                return true;
+            }
+            return false;
+        });
+        Gate::define('Seguridad – Salaverry', function ($user) {
+            if (getTipoUsuario() == 'Seguridad – Salaverry'){
+                return true;
+            }
+            return false;
+        });
+        Gate::define('Seguridad – Carabaya', function ($user) {
+            if (getTipoUsuario() == 'Seguridad – Carabaya'){
+                return true;
+            }
+            return false;
+        });
     }
 }

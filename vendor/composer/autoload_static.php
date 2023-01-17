@@ -602,6 +602,7 @@ class ComposerStaticInitfcb7ac28c1917ec2a5e9b2aa5f94e2f4
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Mail\\EmailJurado' => __DIR__ . '/../..' . '/app/Mail/EmailJurado.php',
+        'App\\Model\\Asistencia' => __DIR__ . '/../..' . '/app/Model/Asistencia.php',
         'App\\Model\\Aula' => __DIR__ . '/../..' . '/app/Model/Aula.php',
         'App\\Model\\Comentario' => __DIR__ . '/../..' . '/app/Model/Comentario.php',
         'App\\Model\\Cupos' => __DIR__ . '/../..' . '/app/Model/Cupos.php',

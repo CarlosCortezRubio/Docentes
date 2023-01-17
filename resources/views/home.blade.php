@@ -9,6 +9,8 @@
             </div>
             <div class="text-center">
                 {{ Auth::user()->name }}
+                <br>
+                {{getTipoUsuario()}}
             </div>
         </div>
     </div>

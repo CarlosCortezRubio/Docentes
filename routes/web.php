@@ -84,6 +84,7 @@ Route::middleware(['auth'])->group(function() {
     ///////////////////////////////////////////////
     Route::get('/asistencia', 'AsistenciaController@index')->name('asistencia');
     Route::get('/asistencia/CargarDocentes', 'AsistenciaController@CargarDocentes')->name('CargarDocentes');
+    Route::get('/asistencia/CargarPostulantes', 'AsistenciaController@CargarPostulantes')->name('CargarPostulantes');
     Route::get('/asistencia/addasistencia', 'AsistenciaController@addasistencia')->name('addasistencia');
     Route::get('/asistencia/addsalida', 'AsistenciaController@addsalida')->name('addsalida');
     Route::get('/', function () { return view('home');});

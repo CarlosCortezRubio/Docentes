@@ -261,7 +261,7 @@
             'text' => 'Registro de Asistencia',
             'route'  => 'asistencia',
             'icon' => 'fas fa-fw fa-check',
-            'can' => 'Administrador'
+            'can' => ['Administrador','Seguridad','Seguridad – Carabaya','Seguridad – Salaverry','Seguridad – emancipación']
         ],
         [
             'text'    => 'Reportes',
@@ -303,12 +303,6 @@
                     'route'  => 'examensoporte',
                 ]
             ]
-        ],
-        [
-            'text' => 'Registro de Asistencia',
-            'route'  => 'asistencia',
-            'icon' => 'fas fa-fw fa-check',
-            'can' => 'Seguridad'
         ],
         [
             'text' => 'Registro de Evaluaciones',

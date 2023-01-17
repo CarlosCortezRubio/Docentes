@@ -215,8 +215,9 @@ if (! function_exists('getEstudiantes')) {
     function getEstudiantes() {
         $estudiantes = DB::table('bdsigunm.ad_postulacion','po')
                       ->join('bdsigunm.ad_proceso as pr','pr.codi_proc_adm','po.codi_proc_adm')
+                      ->join('bdsig.persona as pe','pe.nume_docu_per','po.nume_docu_per')
                       ->where('esta_proc_adm', 'V')
-                      ->select('po.*')->get();
+                      ->select('pe.*')->get();
 
         return $estudiantes;
     }
