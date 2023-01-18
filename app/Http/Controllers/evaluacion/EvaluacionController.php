@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\evaluacion;
 
 use App\Http\Controllers\Controller;
+use App\Model\Asistencia;
 use App\Model\Comentario;
 use App\Model\Examen\Examen;
 use App\Model\Examen\ProgramacionExamen;
@@ -27,8 +28,16 @@ class EvaluacionController extends Controller
 
     public function index()
     {
-
-        $programaciones = $this->programaciones();
+        $persona = Persona::where('nume_docu_per',Auth::user()->ndocumento)->first();
+        $asistencia= Asistencia::where('fecha_asistencia','<',date('Y-m-d H:i:s'))
+        ->where('tipo','DC')
+        ->where('estado','E')
+        ->where('codi_pers_per',$persona->codi_pers_per)->count();
+        if ($asistencia>0) {
+            $programaciones = $this->programaciones();
+        }else {
+            $programaciones = [];
+        }
         Log::info("El Usuario " . Auth::user()->name . " ingresó a evaluar");
         return view('evaluacion.index', ['programaciones' => $programaciones]);
     }
