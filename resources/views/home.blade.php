@@ -8,9 +8,9 @@
                 Bienvenido
             </div>
             <div class="text-center">
-                {{ Auth::user()->name }}
+                <h4>{{ Auth::user()->name }}</h4>
                 <br>
-                {{getTipoUsuario()}}
+               <h5>{{getTipoUsuario()}}</h5>
             </div>
         </div>
     </div>

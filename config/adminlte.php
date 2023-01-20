@@ -2,7 +2,7 @@
 
 
 
-    return [
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -261,7 +261,14 @@
             'text' => 'Registro de Asistencia',
             'route'  => 'asistencia',
             'icon' => 'fas fa-fw fa-check',
-            'can' => ['Administrador','Seguridad','Seguridad – Carabaya','Seguridad – Salaverry','Seguridad – emancipación']
+            'can' => ['Administrador',
+                      'Seguridad',
+                      'Seguridad – Carabaya',
+                      'Seguridad – Salaverry',
+                      'Seguridad – emancipación',
+                      'Auxiliar - Salaverry',
+                      'Auxiliar - Emancipación',
+                      'Auxiliar - Carabaya']
         ],
         [
             'text'    => 'Reportes',
@@ -312,8 +319,8 @@
         ],
     ]
 
-        // Navbar items:
-        /*[
+    // Navbar items:
+    /*[
             'type'         => 'navbar-search',
             'text'         => 'search',
             'topnav_right' => true,
@@ -389,7 +396,7 @@
                 ],
             ],
         ],*/
-        /*['header' => 'labels'],
+    /*['header' => 'labels'],
         [
             'text'       => 'important',
             'icon_color' => 'red',
@@ -404,8 +411,7 @@
             'text'       => 'information',
             'icon_color' => 'cyan',
             'url'        => '#',
-        ],*/
-    ,
+        ],*/,
 
     /*
     |--------------------------------------------------------------------------
