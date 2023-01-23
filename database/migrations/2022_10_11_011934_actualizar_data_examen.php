@@ -32,6 +32,7 @@ class ActualizarDataExamen extends Migration
             DB::table('admision.adm_examen_admision')->where('id_examen',19)->update(["id_nivel" => 12]);
             DB::table('admision.adm_examen_admision')->where('id_examen',20)->update(["id_nivel" => 12]);
             DB::table('admision.adm_examen_admision')->where('id_examen',18)->update(["id_nivel" => 11]);
+            DB::table('admision.adm_examen_admision')->where('id_examen',49)->update(["id_nivel" => 11]);
             DB::table('admision.adm_examen_admision')->where('id_examen',16)->update(["id_nivel" => 10]);
             DB::table('admision.adm_examen_admision')->where('id_examen',17)->update(["id_nivel" => 10]);
             DB::table('admision.adm_examen_admision')->where('id_examen',14)->update(["id_nivel" => 9]);
