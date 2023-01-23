@@ -81,11 +81,10 @@ class MigrateInOrder extends Command
             //'2022_10_11_002830_update_examenes.php',
             //'2022_10_11_011934_actualizar_data_examen.php',
 
-            //'2022_11_29_105228_updateperiodo.php',
-            //'2022_12_21_004949_tabla_asistencia.php',
-
-            //'2023_01_16_121608_update_asistencia.php',
-            //'2023_01_16_175019_usuarios_seguridad.php',
+            '2022_11_29_105228_updateperiodo.php',
+            '2022_12_21_004949_tabla_asistencia.php',
+            '2023_01_16_121608_update_asistencia.php',
+            '2023_01_16_175019_usuarios_seguridad.php',
             '2023_01_20_083826_usuarios_auxiliar.php',
         ];
 
