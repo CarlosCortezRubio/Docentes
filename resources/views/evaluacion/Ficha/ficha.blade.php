@@ -203,7 +203,7 @@
         </tr>
         <tr>
             <td colspan="4">
-                @foreach (explode('</br>', $postulacion->tecn_post_pos) as $k => $v)
+                @foreach (explode('</br>', $ficha->tecn_post_pos) as $k => $v)
                     <div>
                         <p>{{ $v }}</p>
                     </div>
