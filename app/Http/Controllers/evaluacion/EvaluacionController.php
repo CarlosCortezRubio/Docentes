@@ -29,7 +29,8 @@ class EvaluacionController extends Controller
     public function index()
     {
         $persona = Persona::where('nume_docu_per',Auth::user()->ndocumento)->first();
-        $asistencia= Asistencia::where('fecha_asistencia','<',date('Y-m-d H:i:s'))
+        $asistencia= Asistencia::where('fecha_asistencia','<=', date('Y-m-d')." 23:59:59")
+        ->where('fecha_asistencia','>=', date('Y-m-d')." 08:00:00")
         ->where('tipo','DC')
         ->where('estado','E')
         ->where('codi_pers_per',$persona->codi_pers_per)->count();

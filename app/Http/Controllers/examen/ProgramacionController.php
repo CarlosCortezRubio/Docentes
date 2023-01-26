@@ -477,17 +477,40 @@ class ProgramacionController extends Controller
     }
     public function Eliminar(Request $request)
     {
+        $programas[] = $request->id_programacion_examen;
+        $progup = $request->id_programacion_examen;
+        $progdown = $request->id_programacion_examen;
+
         try {
             DB::beginTransaction();
-            if ($request->alumnodelete) {
-                foreach ($request->alumnodelete as $key => $nume) {
-                    $postulante = Postulante::where('id_programacion_examen', $request->id_programacion_examen)
-                        ->where('nume_docu_sol', $nume)
-                        ->where('estado', 'P');
-                    if ($postulante->count() != 0) {
-                        $postulante = $postulante->first();
-                        $postulante->estado = 'N';
-                        $postulante->update();
+            do {
+                $programa = ProgramacionExamen::find($progup);
+                if ($programa->id_prog_requ != null) {
+                    $programas[] = $programa->id_prog_requ;
+                }
+                $progup = $programa->id_prog_requ;
+            } while ($progup != null);
+            do {
+                $programa = ProgramacionExamen::where('id_prog_requ', $progdown)->first();
+                if (isset($programa)) {
+                    $programas[] = $programa->id_programacion_examen;
+                    $progdown = $programa->id_programacion_examen;
+                } else {
+                    break;
+                }
+            } while ($progdown != null);
+            foreach ($programas as $progv) {
+                $programa = ProgramacionExamen::find($progv);
+                if ($request->alumnodelete) {
+                    foreach ($request->alumnodelete as $key => $nume) {
+                        $postulante = Postulante::where('id_programacion_examen', $progv)
+                            ->where('nume_docu_sol', $nume)
+                            ->where('estado', 'P');
+                        if ($postulante->count() != 0) {
+                            $postulante = $postulante->first();
+                            $postulante->estado = 'N';
+                            $postulante->update();
+                        }
                     }
                 }
             }
