@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/CargarGenerales', 'ReporteController@CargarNotasGenerales')->name('NotasGenerales.cargar');
     Route::get('/DetalleJurado', 'ReporteController@DetalleJurado')->name('DetalleJurado');
     Route::get('/NotasJurado', 'ReporteController@CargarNotasJurado')->name('NotasJurado.cargar');
+    Route::get('/NotasJurado2', 'ReporteController@CargarNotasJurado2')->name('NotasJurado.cargar2');
     //////////////////////////////////////////
     Route::get('/SoporteExamen', 'Soporte\ExamenController@index')->name('examensoporte');
     Route::get('/SoporteExamen/cargarJurados', 'Soporte\ExamenController@cargarExamenJurado')->name('examensoporte.cargarJurados');

@@ -5,12 +5,34 @@
         @csrf
         <div class="container">
             <div class="row">
-                @include('layouts.filter.index', ['filtro' => 'anio', 'tipo' => 3, 'required' => 'required'])
+                @include('layouts.filter.index', [
+                    'filtro' => 'anio',
+                    'tipo' => 3,
+                    'required' => 'required',
+                ])
                 @include('layouts.filter.index', ['filtro' => 'seccion', 'tipo' => 1])
                 @include('layouts.filter.index', ['filtro' => 'examenjurado', 'tipo' => 1])
                 <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
                     <a href="#" onclick="formulario('#busqueda')" type="submit" class="btn btn-info"><i
-                            class="fas fa-search "></i> Buscar</a>
+                            class="fas fa-search "></i> Notas por Parametros</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form id="busqueda2" action="{{ route('NotasJurado.cargar2') }}" method="get">
+        @csrf
+        <div class="container">
+            <div class="row">
+                @include('layouts.filter.index', [
+                    'filtro' => 'anio',
+                    'tipo' => 3,
+                    'required' => 'required',
+                ])
+                @include('layouts.filter.index', ['filtro' => 'seccion', 'tipo' => 1])
+                @include('layouts.filter.index', ['filtro' => 'examenjurado', 'tipo' => 1])
+                <div class="col-md col-sm col-xs centrar-content flex-center btn-search">
+                    <a href="#" onclick="formulario('#busqueda2')" type="submit" class="btn btn-info"><i
+                            class="fas fa-search "></i> Notas Promediadas</a>
                 </div>
             </div>
         </div>
@@ -59,6 +81,21 @@
                 },
                 success: function(data) {
                     $('#table').html(data);
+                    $('#table').DataTable({
+                        "language": {
+                            "url": "{{ asset('js/datatables.spanish.json') }}"
+                        },
+                        "order": [
+                            [4, "asc"]
+                        ],
+                        "info": false,
+                        "stateSave": true,
+                        "columnDefs": [{
+                            "orderable": false,
+                            "targets": 0
+                        }],
+                        "pageLength": 10
+                    });
                 },
                 error: function(data) {
                     alert("ha  ocurrido un error");

@@ -30,7 +30,7 @@ class EvaluacionController extends Controller
     {
         $persona = Persona::where('nume_docu_per',Auth::user()->ndocumento)->first();
         $asistencia= Asistencia::where('fecha_asistencia','<=', date('Y-m-d')." 23:59:59")
-        ->where('fecha_asistencia','>=', date('Y-m-d')." 08:00:00")
+        ->where('fecha_asistencia','>=', date('Y-m-d')." 00:00:00")
         ->where('tipo','DC')
         ->where('estado','E')
         ->where('codi_pers_per',$persona->codi_pers_per)->count();
@@ -441,7 +441,7 @@ class EvaluacionController extends Controller
         if ($request) {
             $id = $request->get('codi_post_pos');
 
-            $ficha = DB::table('bdsigunm.ad_postulacion AS a')
+            /*$ficha = DB::table('bdsigunm.ad_postulacion AS a')
                 ->join('bdsig.ttablas_det AS b', 'b.codi_tabl_det', 'a.codi_espe_esp')
                 ->join('bdsig.ttablas_det AS c', 'c.codi_tabl_det', 'a.codi_secc_sec')
                 ->join('bdsig.ttablas_det AS d', 'd.codi_tabl_det', 'a.codi_pais_per')
@@ -500,7 +500,8 @@ class EvaluacionController extends Controller
             $filename = 'fichainscripcion_' . $ficha->nume_expe_exp . '.pdf';
             $pdf->setPaper('a4', 'portrait');
 
-            return $pdf->stream($filename);
+            return $pdf->stream($filename);*/
+            return redirect('https://admision.unm.edu.pe/fichaPDF?codi_post_pos='.$id);
         }
     }
 }

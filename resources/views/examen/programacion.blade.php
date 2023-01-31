@@ -484,14 +484,20 @@
     <!---------------------------------------------------------------------------------------------------->
     <div class="card">
         <div class="card-header">
-            <div class='col'>
-                <button data-toggle="modal" data-target="#modaladd" class='btn btn-success'><i class="fa fa-plus"
-                        aria-hidden="true"></i> Nuevo jurado</button>
+            <div class="row">
+                <div class='col'>
+                    <button data-toggle="modal" data-target="#modaladd" class='btn btn-success'><i class="fa fa-plus"
+                            aria-hidden="true"></i> Nuevo jurado</button>
+                </div>
+                <div class='col'>
+                    <button data-toggle="modal" data-target="#modaladdteorico" class='btn btn-success'><i class="fa fa-plus"
+                            aria-hidden="true"></i> Nuevo Teorico</button>
+                </div>
+                <div class="col-6">
+
+                </div>
             </div>
-            <div class='col'>
-                <button data-toggle="modal" data-target="#modaladdteorico" class='btn btn-success'><i class="fa fa-plus"
-                        aria-hidden="true"></i> Nuevo Teorico</button>
-            </div>
+
         </div>
         <div class="card-body" style="overflow: scroll;">
             <table class="tablaresponse table tprincipal table-striped">

@@ -9,6 +9,9 @@ class ReporteController extends Controller
 {
     public function NotasGenerales(Request $request)
     {
+        if (!$request->anio) {
+            $request['anio']=getAnioActivo();
+        }
         return view('Reportes.NotasGenerales', ['busqueda' => $request]);
     }
     public function CargarNotasGenerales(Request $request)
@@ -83,7 +86,8 @@ class ReporteController extends Controller
                                                 <td>" . ($alumnok + 1) . "</td>
                                                 <td>$alumnov->nomb_comp_per</td>
                                                 <td>$alumnov->abre_tabl_det</td>";
-                $promedio=0;
+                $promedio1 = 0;
+                $promedio2 = 0;
                 $subpromedio = 0;
                 foreach ($eval as $evalk => $evalv) {
                     $nota = DB::table('admision.adm_examen_admision', 'ea')
@@ -103,11 +107,12 @@ class ReporteController extends Controller
                     if (isset($nota)) {
                         $resultado = $resultado . "<td>$nota->nota</td>";
                         $subpromedio = $subpromedio + ($nota->nota * ($evalv->porcentaje * 0.01));
-                        $promedio = $promedio + ($nota->nota * ($evalv->porcentaje * 0.01));
+                        $promedio1 = $promedio1 + ($nota->nota * ($evalv->porcentaje * 0.01));
                     } else {
                         $subnivel = DB::table('admision.adm_nivelevaluacion', 'nv')->where('nv.id_up_nivel', $evalv->id_nivel)->get();
                         if (count($subnivel) > 0) {
                             $resultado = $resultado . "<td>" . number_format($subpromedio, 2) . "</td>";
+                            $promedio2 = $promedio2 +  number_format($subpromedio, 2);
                             $subpromedio = 0;
                         } else {
                             $resultado = $resultado . "<td></td>";
@@ -115,7 +120,8 @@ class ReporteController extends Controller
                         }
                     }
                 }
-                $resultado = $resultado . "<td>" . number_format($promedio, 2) . "</td>";
+                //$resultado = $resultado . "<td>" . number_format($promedio1, 2)."</td>";
+                $resultado = $resultado . "<td>" . $promedio2 . "</td>";
                 $resultado = $resultado . "</tr>";
             }
             $resultado = $resultado . "</tbody>";
@@ -124,7 +130,143 @@ class ReporteController extends Controller
     }
     public function DetalleJurado(Request $request)
     {
+        if (!$request->anio) {
+            $request['anio']=getAnioActivo();
+        }
         return view('Reportes.DetalleJurado', ['busqueda' => $request]);
+    }
+    public function CargarNotasJurado2(Request $request)
+    {
+        $examenes = DB::table('admision.adm_examen', 'ex')
+            ->select(
+                'ex.id_examen',
+                'ex.nombre',
+                'pr.id_programacion_examen'
+            )
+            ->join('admision.adm_examen_admision as ea', 'ea.id_examen', 'ex.id_examen')
+            ->join('admision.adm_programacion_examen as pr', 'pr.id_examen', 'ex.id_examen')
+            ->join('admision.adm_cupos as cu', 'pr.id_cupos', 'cu.id_cupos')
+            ->join('admision.adm_periodo as per', 'per.id_periodo', 'cu.id_periodo')
+            ->where('ea.flag_jura', 'S')
+            ->where('ex.estado', 'A')
+            ->where('pr.estado', 'A')
+            ->where('cu.estado', 'A')
+            ->where('per.id_seccion', 'like', $request->seccion)
+            ->where('per.anio', $request->anio)
+            ->where('ex.id_examen', 'like', $request->id_examen)
+            //->where('pr.fecha_resol', '>','14-12-2022 00:00:00')
+            //->where('pr.fecha_resol', '<','14-12-2022 23:59:59')
+            ->orderBy('ex.nombre')->get();
+
+        $resultado =  "<thead class='thead'><tr><th scope='col'>Seccion</th><th scope='col'>Especialidad</th><th scope='col'>Examen</th><th scope='col'>Programacion</th><th scope='col'>Alumnos</th>";
+        for ($i = 0; $i < 3; $i++) {
+            $resultado = $resultado . "<th scope='col' >Jurado " . ($i + 1) . "</th>";
+        }
+        foreach ($examenes as $kexamen => $vexamen) {
+
+            $indexju = DB::table('admision.adm_examen', 'ex')
+                ->join('admision.adm_examen_admision as ea', 'ea.id_examen', 'ex.id_examen')
+                ->join('admision.adm_programacion_examen as pr', 'pr.id_examen', 'ex.id_examen')
+                ->join('admision.adm_cupos as cu', 'pr.id_cupos', 'cu.id_cupos')
+                ->join('admision.adm_periodo as per', 'per.id_periodo', 'cu.id_periodo')
+                ->join('admision.adm_jurado as ju', 'ju.id_programacion_examen', 'pr.id_programacion_examen')
+                ->join('bdsig.persona as pe', 'pe.codi_pers_per', 'ju.codi_doce_per')
+                ->where('ju.estado', 'A')
+                ->where('ea.flag_jura', 'S')
+                ->where('ex.estado', 'A')
+                ->where('pr.estado', 'A')
+                ->where('cu.estado', 'A')
+                ->where('per.id_seccion', 'like', $request->seccion)
+                ->where('per.anio', $request->anio)
+                ->where('pr.id_programacion_examen', $vexamen->id_programacion_examen)
+                ->orderBy('pe.nomb_comp_per')
+                ->select(
+                    'pe.nomb_comp_per',
+                    'ju.id_programacion_examen',
+                    'ju.id_jurado'
+                )->get();
+            $indexpar = DB::table('admision.adm_examen', 'ex')
+                ->join('admision.adm_examen_admision as ea', 'ea.id_examen', 'ex.id_examen')
+                ->join('admision.adm_seccion_examen as par', 'ea.id_examen', 'par.id_examen')
+                ->select(
+                    'par.id_examen',
+                    'par.descripcion',
+                    'par.porcentaje',
+                    'par.id_seccion_examen'
+                )
+                ->where('ea.flag_jura', 'S')
+                ->where('ex.estado', 'A')
+                ->where('par.estado', 'A')
+                ->where('par.id_examen', 'like', $vexamen->id_examen)
+                ->orderBy('par.descripcion')->get();
+            $indexal = DB::table('admision.adm_examen', 'ex')
+                ->join('admision.adm_examen_admision as ea', 'ea.id_examen', 'ex.id_examen')
+                ->join('admision.adm_programacion_examen as pr', 'pr.id_examen', 'ex.id_examen')
+                ->join('admision.adm_cupos as cu', 'pr.id_cupos', 'cu.id_cupos')
+                ->join('admision.adm_periodo as per', 'per.id_periodo', 'cu.id_periodo')
+                ->join('admision.adm_postulante as pos', 'pos.id_programacion_examen', 'pr.id_programacion_examen')
+                ->join('bdsig.persona as pe', 'pe.nume_docu_per', 'pos.nume_docu_sol')
+                ->join('bdsig.ttablas_det as esp', 'esp.codi_tabl_det', 'cu.codi_espe_esp')
+                ->join('admision.adm_seccion_estudios as secc', 'secc.id_seccion', 'per.id_seccion')
+                ->join('bdsig.ttablas_det as sec', 'sec.codi_tabl_det', 'secc.codi_secc_sec')
+                ->whereIn('pos.estado', ['E', 'P', /*'I'*/])
+                ->where('ea.flag_jura', 'S')
+                ->where('ex.estado', 'A')
+                ->where('pr.estado', 'A')
+                ->where('cu.estado', 'A')
+                ->where('per.anio', $request->anio)
+                ->where('per.id_seccion', 'like', $request->seccion)
+                ->where('pr.id_programacion_examen', $vexamen->id_programacion_examen)
+                ->select(
+                    'pe.nomb_comp_per',
+                    'pr.id_programacion_examen',
+                    'ex.nombre as examen',
+                    'esp.desc_tabl_det as especialidad',
+                    'sec.abre_tabl_det as seccion',
+                    'pos.id_postulante',
+                    'pr.descripcion as programacion'
+                )->get();
+
+            $resultado = $resultado . "</tr></thead><tbody style='font-size:15px'>";
+            foreach ($indexal as $kalumno => $valumno) {
+                $resultado = $resultado . "<tr><td>$valumno->seccion</td><td>$valumno->especialidad</td><td>$valumno->examen</td><td>$valumno->programacion</td><td>$valumno->nomb_comp_per</td>";
+                foreach ($indexju as $kjurado => $vjurado) {
+                    $promedio = 0;
+                    foreach ($indexpar as $kparametro => $vparametro) {
+                        $notas = DB::table('admision.adm_examen', 'ex')
+                            ->join('admision.adm_examen_admision as ea', 'ea.id_examen', 'ex.id_examen')
+                            ->join('admision.adm_seccion_examen as par', 'par.id_examen', 'ex.id_examen')
+                            ->join('admision.adm_nota_jurado as no', 'no.id_seccion_examen', 'par.id_seccion_examen')
+                            ->join('admision.adm_jurado_postulante as jp', 'no.id_jurado_postulante', 'jp.id_jurado_postulante')
+                            //->whereIn('no.estado', ['E', 'A'])
+                            ->whereIn('jp.estado', ['N', 'A'])
+                            ->where('ea.flag_jura', 'S')
+                            //->where('ex.estado', 'A')
+                            ->where('ea.id_seccion', 'like', $request->seccion)
+                            ->where('par.id_seccion_examen', $vparametro->id_seccion_examen)
+                            ->where('jp.id_jurado', $vjurado->id_jurado)
+                            ->where('jp.id_postulante', $valumno->id_postulante)
+                            ->where('ex.id_examen', $vexamen->id_examen)
+                            ->select(
+                                'no.id_seccion_examen',
+                                'jp.id_jurado',
+                                'jp.id_postulante',
+                                'nota'
+                            )->get();
+                        foreach ($notas as $knota => $vnota) {
+                            $promedio += $vnota->nota * 0.01 * $vparametro->porcentaje;
+                        }
+                    }
+                    $resultado = $resultado . "<td>$promedio</td>";
+                }
+                $resultado = $resultado . "</tr>";
+            }
+            $resultado = $resultado . "</tbody>";
+        }
+        if ($resultado == "") {
+            $resultado = "<center>Datos no encontrados</center>";
+        }
+        return $resultado;
     }
     public function CargarNotasJurado(Request $request)
     {

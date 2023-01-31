@@ -104,6 +104,9 @@ class ProgramacionController extends Controller
         }
         if ($request->anio) {
             $programaciones = $programaciones->where('p.anio', 'like', $request->anio);
+        }else{
+            $programaciones = $programaciones->where('p.anio', 'like', getAnioActivo());
+            $request['anio']=getAnioActivo();
         }
         if ($request->codi_espe_esp) {
             $programaciones = $programaciones->where('esp.codi_espe_esp', 'like', $request->codi_espe_esp);

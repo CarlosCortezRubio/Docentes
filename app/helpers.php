@@ -126,6 +126,18 @@ if (! function_exists('getAnios')) {
         return $anioexist;
     }
 }
+if (! function_exists('getAnioActivo')) {
+    function getAnioActivo() {
+        $anioexist = DB::table('admision.adm_periodo as pe')->where('pe.estado','A')->distinct('anio')->first();
+        if ($anioexist) {
+            return $anioexist->anio;
+        } else {
+            return '%';
+        }
+
+        return $anioexist;
+    }
+}
 if (! function_exists('getProgramas')) {
     function getProgramas() {
         $programas = DB::table('bdsig.vw_sig_seccion_especialidad');
